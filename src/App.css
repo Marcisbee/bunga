@@ -1,38 +1,67 @@
-.App {
-  text-align: center;
+* {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
+#app {
+  display: flex;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#middle {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+}
+
+#top {
+  display: block;
+  height: 50px;
+  text-align: center;
+  background-color: rgb(206, 221, 235);
+}
+
+#canvas {
+  flex-grow: 1;
+  display: block;
+  overflow: hidden;
+  position: relative;
+  transform: translate3d(0,0,0);
+  will-change: transform;
+  background-color: aliceblue;
+  user-select: none;
+  background-size: 20px 20px;
+  background-image: radial-gradient(circle, rgb(214, 227, 240) 1px, rgba(0, 0, 0, 0) 1px);
+  background-position: 0px 0px;
+}
+
+#canvasRoot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(0,0,0);
+  will-change: transform;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+#canvasContainer {
+  top: 0;
+  left: 0;
+  transform: translate3d(-50%,-50%,0);
+  will-change: transform;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.canvasObject {
+  display: block;
+  position: absolute;
+  pointer-events: all;
+  overflow: hidden;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.canvasObject * {
+  pointer-events: none;
 }
