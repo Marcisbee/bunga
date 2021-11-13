@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom';
 
-export function Home() {
+export function SpacesPage() {
   return (
     <div>
       <nav>
         <Link to="/">Home</Link>
         <Link to="/spaces">Spaces</Link>
       </nav>
-      <div>Hello world</div>
+      <div>
+        <Link to="/space/123">Space 123</Link>
+      </div>
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 
 import { Router } from './router';
 import './index.css';
 
-ReactDOM.render(
+render(
   <React.StrictMode>
     <Router />
   </React.StrictMode>,
