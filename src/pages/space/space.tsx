@@ -1,10 +1,12 @@
 import TinyGesture from 'tinygesture';
 import { useLayoutEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
-import logo from './logo.svg';
+// @ts-ignore
+import logo from '../../logo.svg';
+import { positionStore } from '../../store';
 
-import './App.css';
-import { positionStore } from './store';
+import './space.css';
 
 function Counter() {
   const [count, setCount] = useState(0);
@@ -24,11 +26,12 @@ function Counter() {
   );
 }
 
-function App() {
+export function Space() {
+  const params = useParams();
   const canvas = useRef(null);
   const canvasRoot = useRef(null);
   // const position = useRef({ x: 0, y: 0 });
-  
+
   useLayoutEffect(() => {
     const gesture = new TinyGesture(canvas.current, {
       mouseSupport: false,
@@ -76,7 +79,7 @@ function App() {
   return (
     <div id="app">
       <div style={{ width: 200 }}>
-        Layers
+        Layers {params.id}
       </div>
 
       <div id="middle">
@@ -87,7 +90,7 @@ function App() {
           <span style={{ float: 'right' }}>current people</span>
         </div>
 
-        <div ref={canvas} id="canvas" style={{ backgroundPosition: `${positionStore.x}px ${positionStore.y}px`}}>
+        <div ref={canvas} id="canvas" style={{ backgroundPosition: `${positionStore.x}px ${positionStore.y}px` }}>
           <div ref={canvasRoot} id="canvasRoot" style={{ transform: `translate3d(${positionStore.x}px, ${positionStore.y}px)` }}>
             <div id="canvasContainer">
               <div
@@ -110,7 +113,7 @@ function App() {
               >
                 <h3>React</h3>
                 <Counter />
-                <div style={{ backgroundColor: 'red', boxShadow: '2px 10px 10px pink'}}>asd</div>
+                <div style={{ backgroundColor: 'red', boxShadow: '2px 10px 10px pink' }}>asd</div>
               </div>
             </div>
           </div>
@@ -123,5 +126,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
