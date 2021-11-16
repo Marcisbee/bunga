@@ -2,8 +2,15 @@ import dlv from 'dlv';
 import { dset } from 'dset';
 import { Exome, registerLoadable } from 'exome';
 
-import { activeElementStore } from './active-element.store';
 import { undoable } from './undo.store';
+
+export class ActiveElementStore extends Exome {
+  public active: ElementStore | null = null;
+
+  public setActive(element: ElementStore | null) {
+    this.active = element;
+  }
+}
 
 export class ElementStore<T extends Record<string, any> = Record<string, any>> extends Exome {
   constructor(
@@ -33,10 +40,10 @@ export class ElementStore<T extends Record<string, any> = Record<string, any>> e
 
     list.splice(index, 0, item);
 
-    // So if component is active, set it's new parent in active store
-    if (activeElementStore.active === item) {
-      activeElementStore.setActive(item, path, this);
-    }
+    // So if component is active, set its' new parent in active store
+    // if (activeElementStore.active === item) {
+    //   activeElementStore.setActive(item, path, this);
+    // }
   }
 
   @undoable
@@ -46,10 +53,10 @@ export class ElementStore<T extends Record<string, any> = Record<string, any>> e
 
     list.splice(index, 0, item);
 
-    // So if component is active, set it's new parent in active store
-    if (activeElementStore.active === item) {
-      activeElementStore.setActive(item, path, this);
-    }
+    // So if component is active, set its' new parent in active store
+    // if (activeElementStore.active === item) {
+    //   activeElementStore.setActive(item, path, this);
+    // }
   }
 
   @undoable

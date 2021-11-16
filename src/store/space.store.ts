@@ -5,17 +5,22 @@ import { permalink } from '../utils/permalink';
 import { ActiveComponentStore, ComponentPositionStore, ComponentStore } from './component.store';
 import { BoundaryStore } from './boundary.store';
 import { PositionStore } from './position.store';
+import { ActiveElementStore } from './element.store';
+import { ActiveStyleStore, StyleStore } from './style.store';
 
 export class SpaceStore extends Exome {
   public position = new PositionStore();
   public boundary = new BoundaryStore(this);
   public activeComponent = new ActiveComponentStore();
+  public activeElement = new ActiveElementStore();
+  public activeStyle = new ActiveStyleStore();
 
   constructor(
     public id: string,
     public name: string,
     public path: string = permalink(name),
     public components: ComponentStore[] = [],
+    public styles: StyleStore[] = [],
   ) {
     super();
   }
@@ -52,12 +57,18 @@ export class SpaceStore extends Exome {
       'Unnamed component',
     );
     this.components.push(component);
-
     this.activeComponent.setActive(component);
 
     this.boundary.updateBoundary();
 
     return component;
+  }
+
+  public addStyle() {
+    const style = new StyleStore('unnamed');
+
+    this.styles.push(style);
+    this.activeStyle.setActive(style);
   }
 
   public rename(name: string, path: string = permalink(name)) {

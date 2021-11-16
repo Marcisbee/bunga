@@ -3,6 +3,8 @@ import { useStore } from 'exome/react';
 import { ComponentStore } from '../../store/component.store';
 import { ElementStore } from '../../store/element.store';
 import { store } from '../../store/store';
+import { StyleStore } from '../../store/style.store';
+import { activeStyle } from '../component/component.css';
 
 function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
   return (
@@ -64,38 +66,48 @@ function ElementsLayersComponent({ elements }: { elements: ElementStore[] }) {
   );
 }
 
-function ActiveLayersComponent({ active }: { active: ComponentStore }) {
-  const { elements } = useStore(active);
+function ActiveStylesComponent({ active }: { active: StyleStore }) {
+  const { name, css, setName, setCss } = useStore(active);
 
   return (
     <div>
-      <ElementsLayersComponent elements={elements} />
-
-      <hr />
-
-      <ElementAddLayersComponent active={active} />
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => {
+          setName(e.target.value);
+        }}
+      />
+      <textarea
+        style={{ width: '100%' }}
+        rows={10}
+        value={css}
+        onChange={(e) => {
+          setCss(e.target.value);
+        }}
+      />
     </div>
   );
 }
 
-export function LayersComponent() {
-  const { activeComponent, addComponent } = useStore(store.activeSpace!);
-  const { active, setActive } = useStore(activeComponent!);
+export function StylesComponent() {
+  const { activeStyle, addStyle } = useStore(store.activeSpace!);
+  const { active, setActive } = useStore(activeStyle!);
 
   return (
     <div>
       <div>
-        <strong>Components</strong>
+        <strong>Styles manager</strong>
         <button
-          onClick={addComponent}
+          onClick={addStyle}
           style={{ float: 'right' }}
         >
           +
         </button>
         <div style={{ minHeight: 200 }}>
-          {store.activeSpace!.components.map((component) => (
-            <div onClick={() => setActive(component)}>
-              {active === component && '!'} {component.name}
+          {store.activeSpace!.styles.map((style) => (
+            <div onClick={() => setActive(style)}>
+              {active === style && '!'} {style.name}
             </div>
           ))}
         </div>
@@ -104,7 +116,7 @@ export function LayersComponent() {
       <div>
         <hr />
         {!!active && (
-          <ActiveLayersComponent active={active} />
+          <ActiveStylesComponent active={active} />
         )}
       </div>
     </div>
