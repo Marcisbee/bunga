@@ -5,6 +5,7 @@ import { store } from '../../store/store';
 import { CanvasComponent } from '../../components/canvas/canvas.component';
 
 import { appStyle, middleStyle, topStyle } from './space.css';
+import { LayersComponent } from '../../components/layers/layers.component';
 
 export function SpacePage() {
   const params = useParams();
@@ -26,6 +27,9 @@ export function SpacePage() {
           </ul>
           <button onClick={addComponent}>add component</button>
         </div>
+
+        Layers:
+        <LayersComponent />
       </div>
 
       <div className={middleStyle}>

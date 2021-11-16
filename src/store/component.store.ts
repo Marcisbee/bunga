@@ -63,6 +63,10 @@ export class ComponentStore extends Exome {
     this.name = name;
     this.path = path;
   }
+
+  public addElement(element: ElementStore) {
+    this.elements.push(element);
+  }
 }
 
 registerLoadable({ ComponentStore, ActiveComponentStore });
