@@ -23,10 +23,8 @@ export function SpacePage() {
 
       <div className={middleStyle}>
         <div className={topStyle}>
-          <button>add component</button>
-          <button>add action</button>
-
           <span style={{ float: 'right' }}>current people</span>
+          <button>add action</button>
         </div>
 
         <CanvasComponent
@@ -35,9 +33,7 @@ export function SpacePage() {
       </div>
 
       <div style={{ width: 240 }}>
-        <div>
-          <StylesComponent />
-        </div>
+        <StylesComponent />
       </div>
     </div>
   );
