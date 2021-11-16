@@ -12,10 +12,9 @@ export const nameStyle = style({
 
 export const containerStyle = style({
   display: 'flex',
+  flex: 1,
   alignItems: 'center',
   justifyContent: 'center',
-  width: 200,
-  height: 100,
   padding: 1,
   // boxShadow: '0 2px 4px rgba(0,0,0,0.12)',
   borderRadius: 5,
@@ -54,4 +53,13 @@ globalStyle(`${activeStyle} > ${nameStyle}`, {
 
 globalStyle(`${activeStyle} > ${containerStyle}::after`, {
   boxShadow: '0 2px 4px rgba(0,0,0,0.12), 0 0 0 2px #2196f3',
+});
+
+export const objectStyle = style({
+  display: 'flex',
+  position: 'absolute',
+  pointerEvents: 'all',
+  overflow: 'visible',
+  flexDirection: 'column',
+  alignItems: 'stretch',
 });

@@ -7,10 +7,41 @@ import { SpaceStore } from '../../store/space.store';
 import { store } from '../../store/store';
 import { ComponentComponent } from '../component/component.component';
 
-import { canvasContainerStyle, canvasObjectStyle, canvasRootStyle, canvasStyle } from './canvas.css';
+import { canvasContainerStyle, canvasRootStyle, canvasStyle } from './canvas.css';
 
 interface CanvasComponentProps {
   space: SpaceStore;
+}
+
+// @DEBUG: This is a debug component that renders the canvas boundaries.
+function DebugBoundary({ space }: CanvasComponentProps) {
+  const { x, y, width, height } = useStore(space.boundary);
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        zIndex: 2,
+        left: x,
+        top: y,
+        width,
+        height,
+        boxShadow: 'inset 0 0 0 1px orangered',
+      }}
+    >
+      <span
+        style={{
+          position: 'absolute',
+          marginTop: -20,
+          color: 'orangered',
+          fontSize: 12,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {JSON.stringify({ x, y, w: width, h: height })}
+      </span>
+    </div>
+  );
 }
 
 export function CanvasComponent({ space }: CanvasComponentProps) {
@@ -66,14 +97,12 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
     };
   }, []);
 
-  const positionCss = `${position.x}px ${position.y}px`;
-
   return (
     <div
       ref={canvas}
       className={canvasStyle}
       style={{
-        backgroundPosition: positionCss,
+        backgroundPosition: `${position.x}px ${position.y}px`,
       }}
       onClick={() => {
         setActive(null);
@@ -101,19 +130,13 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
           transform: `translateX(${position.x}px) translateY(${position.y}px)`,
         }}
       >
+        <DebugBoundary space={space} />
         <div className={canvasContainerStyle}>
           {components.map((component) => (
-            <div
+            <ComponentComponent
               key={`canvas-${component.id}`}
-              className={canvasObjectStyle}
-              style={{
-                transform: 'translate3d(-100px, -50px, 0)',
-              }}
-            >
-              <ComponentComponent
-                component={component}
-              />
-            </div>
+              component={component}
+            />
           ))}
         </div>
       </div>

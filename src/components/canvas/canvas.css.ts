@@ -24,15 +24,6 @@ export const canvasRootStyle = style({
 });
 
 export const canvasContainerStyle = style({
-  top: 0,
-  left: 0,
   transform: 'translate3d(-50%, -50%, 0)',
   willChange: 'transform',
-});
-
-export const canvasObjectStyle = style({
-  display: 'block',
-  position: 'absolute',
-  pointerEvents: 'all',
-  overflow: 'visible',
 });

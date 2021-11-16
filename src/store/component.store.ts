@@ -12,10 +12,26 @@ export class ActiveComponentStore extends Exome {
   }
 }
 
+export class ComponentPositionStore extends Exome {
+  constructor(
+    public x = 0,
+    public y = 0,
+    public width = 0,
+    public height = 0,
+  ) {
+    super();
+  }
+
+  public moveTo(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
 export class ComponentStore extends Exome {
-  // @TODO: Add position in canvas.
   constructor(
     public id: string,
+    public position: ComponentPositionStore,
     public name: string,
     public path: string = permalink(name),
     public elements: ElementStore[] = [],
