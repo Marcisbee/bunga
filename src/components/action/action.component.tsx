@@ -18,6 +18,7 @@ export function ActionComponent({ action }: ActionComponentProps) {
   const isActive = active === action;
 
   return (
+    <>
     <div
       className={cc([
         actionStyleStyle,
@@ -65,6 +66,50 @@ export function ActionComponent({ action }: ActionComponentProps) {
       {action instanceof ActionStyleStore && (
         <ActionStyleComponent action={action} />
       )}
-    </div>
+      </div>
+      <svg
+        width="611"
+        height="500"
+        className="react-flow__edges"
+      >
+        <defs>
+          <marker
+            className="react-flow__arrowhead"
+            id="react-flow__arrowclosed"
+            markerWidth="12.5"
+            markerHeight="12.5"
+            viewBox="-10 -10 20 20"
+            orient="auto"
+            refX="0"
+            refY="0"
+          >
+            <polyline stroke="#b1b1b7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" fill="#b1b1b7" points="-5,-4 0,0 -5,4 -5,-4"></polyline>
+          </marker>
+          <marker
+            className="react-flow__arrowhead"
+            id="react-flow__arrow"
+            markerWidth="12.5"
+            markerHeight="12.5"
+            viewBox="-10 -10 20 20"
+            orient="auto"
+            refX="0"
+            refY="0"
+          >
+            <polyline stroke="#b1b1b7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" fill="none" points="-5,-4 0,0 -5,4"></polyline>
+          </marker>
+        </defs>
+        <g transform="translate(-7.417973330832865,217.92908512897452) scale(0.5)">
+          <g className="react-flow__edge react-flow__edge-default animated">
+            <path d="M630,37 C676,37 676,201.5 722,201.5" className="react-flow__edge-path" marker-end="none"></path>
+          </g>
+          <g className="react-flow__edge react-flow__edge-default animated">
+            <path d="M580,182 C651,182 651,201.5 722,201.5" className="react-flow__edge-path" marker-end="none"></path>
+          </g>
+          <g className="react-flow__edge react-flow__edge-default animated">
+            <path d="M700,332 C711,332 711,201.5 722,201.5" className="react-flow__edge-path" marker-end="none"></path>
+          </g>
+        </g>
+      </svg>
+    </>
   );
 }

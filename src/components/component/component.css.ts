@@ -18,7 +18,7 @@ export const containerStyle = style({
   padding: 1,
   // boxShadow: '0 2px 4px rgba(0,0,0,0.12)',
   borderRadius: 5,
-  pointerEvents: 'none',
+  // pointerEvents: 'none',
   backgroundColor: '#fff',
   position: 'relative',
 });

@@ -75,3 +75,19 @@
     flex-direction: column;
   }
 }
+
+:global(.react-flow__edges) {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+:global(.react-flow__edge-path) {
+  fill: none;
+  stroke: #b1b1b7;
+  stroke-width: 1;
+}
+
+:global(.react-flow__edge) {
+  pointer-events: visibleStroke;
+}
