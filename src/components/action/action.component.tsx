@@ -33,36 +33,33 @@ export function ActionComponent({ action }: ActionComponentProps) {
         width,
         height,
       }}
-      tabIndex={1}
+      tabIndex={0}
       onKeyDown={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
         const modifier = e.shiftKey ? 30 : 10;
+
+        if (!e.key.startsWith('Arrow')) {
+          return;
+        }
 
         if (e.key === 'ArrowUp') {
           moveTo(x, y - modifier);
-          store.activeSpace!.boundary.updateBoundary();
-          return;
         }
 
         if (e.key === 'ArrowDown') {
           moveTo(x, y + modifier);
-          store.activeSpace!.boundary.updateBoundary();
-          return;
         }
 
         if (e.key === 'ArrowLeft') {
           moveTo(x - modifier, y);
-          store.activeSpace!.boundary.updateBoundary();
-          return;
         }
 
         if (e.key === 'ArrowRight') {
           moveTo(x + modifier, y);
-          store.activeSpace!.boundary.updateBoundary();
-          return;
         }
+
+        e.preventDefault();
+        e.stopPropagation();
+        store.activeSpace!.boundary.updateBoundary();
       }}
     >
       {action instanceof ActionStyleStore && (
