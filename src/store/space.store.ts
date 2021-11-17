@@ -7,6 +7,7 @@ import { BoundaryStore } from './boundary.store';
 import { PositionStore } from './position.store';
 import { ActiveElementStore } from './element.store';
 import { ActiveStyleStore, StyleStore } from './style.store';
+import { ActionPositionStore, ActionStore, ActionStyleStore } from './action.store';
 
 export class SpaceStore extends Exome {
   public position = new PositionStore();
@@ -21,6 +22,7 @@ export class SpaceStore extends Exome {
     public path: string = permalink(name),
     public components: ComponentStore[] = [],
     public styles: StyleStore[] = [],
+    public actions: ActionStore[] = [],
   ) {
     super();
   }
@@ -62,6 +64,41 @@ export class SpaceStore extends Exome {
     this.boundary.updateBoundary();
 
     return component;
+  }
+
+  public addAction() {
+    this.boundary.updateBoundary();
+
+    let { x, y, width, height } = this.boundary;
+
+    const active = this.activeComponent.active;
+    if (active) {
+      x = active.position.x;
+      y = active.position.y;
+      width = active.position.width;
+      height = active.position.height;
+    }
+
+    const position = new ActionPositionStore(
+      width + x + 20,
+      y,
+      170,
+      140,
+    );
+
+    // Center first action in space.
+    if (this.actions.length === 0) {
+      position.x = -(position.width / 2);
+      position.y = -(position.height / 2);
+    }
+
+    const action = new ActionStyleStore(position);
+    this.actions.push(action);
+    // this.activeComponent.setActive(action);
+
+    this.boundary.updateBoundary();
+
+    return action;
   }
 
   public addStyle() {

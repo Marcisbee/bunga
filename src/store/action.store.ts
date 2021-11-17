@@ -1,4 +1,5 @@
 import { Exome } from 'exome';
+
 import { StyleStore } from './style.store';
 
 export enum ActionType {
@@ -25,8 +26,11 @@ export class ActionPositionStore extends Exome {
 }
 
 export class ActionStore extends Exome {
-  public position = new ActionPositionStore();
   public type: ActionType = ActionType.PROP;
+
+  constructor(public position = new ActionPositionStore()) {
+    super();
+  }
 }
 
 export class ActionStyleStore extends ActionStore {

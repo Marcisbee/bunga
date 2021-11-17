@@ -24,7 +24,7 @@ export function SpacePage() {
       <div className={middleStyle}>
         <div className={topStyle}>
           <span style={{ float: 'right' }}>current people</span>
-          <button>add action</button>
+          <button onClick={space.addAction}>add action</button>
         </div>
 
         <CanvasComponent

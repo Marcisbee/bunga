@@ -1,3 +1,4 @@
+import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import { useLayoutEffect, useRef } from 'react';
 // @ts-ignore
@@ -5,6 +6,7 @@ import TinyGesture from 'tinygesture';
 
 import { SpaceStore } from '../../store/space.store';
 import { store } from '../../store/store';
+import { ActionComponent } from '../action/action.component';
 import { ComponentComponent } from '../component/component.component';
 
 import { canvasContainerStyle, canvasRootStyle, canvasStyle } from './canvas.css';
@@ -48,7 +50,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
   const canvas = useRef<HTMLDivElement>(null);
   const canvasRoot = useRef<HTMLDivElement>(null);
 
-  const { position, components } = useStore(space);
+  const { position, components, actions } = useStore(space);
   const { resetPosition } = useStore(position);
   const { setActive } = useStore(store.activeSpace!.activeComponent!);
 
@@ -132,6 +134,12 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
       >
         <DebugBoundary space={space} />
         <div className={canvasContainerStyle}>
+          {actions.map((action) => (
+            <ActionComponent
+              key={`action-${getExomeId(action)}`}
+              action={action}
+            />
+          ))}
           {components.map((component) => (
             <ComponentComponent
               key={`canvas-${component.id}`}

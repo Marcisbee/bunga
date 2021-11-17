@@ -35,6 +35,7 @@ globalStyle(`${containerStyle}::after`, {
   content: '',
   boxShadow: '0 2px 4px rgba(0,0,0,0.12)',
   borderRadius: 'inherit',
+  pointerEvents: 'none',
 });
 
 globalStyle(`:not(${activeStyle}):hover > ${containerStyle}::after`, {
