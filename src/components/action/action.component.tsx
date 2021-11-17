@@ -23,42 +23,51 @@ export function ActionComponent({ action }: ActionComponentProps) {
         actionStyleStyle,
         isActive && activeStyle,
       ])}
-      // onClick={(e) => {
-      //   e.preventDefault();
-      //   e.stopPropagation();
-      //   setActive(component);
-      // }}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // setActive(action);
+      }}
       style={{
         transform: `translate3d(${x}px, ${y}px, 0)`,
         width,
         height,
       }}
+      tabIndex={1}
+      onKeyDown={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const modifier = e.shiftKey ? 30 : 10;
+
+        if (e.key === 'ArrowUp') {
+          moveTo(x, y - modifier);
+          store.activeSpace!.boundary.updateBoundary();
+          return;
+        }
+
+        if (e.key === 'ArrowDown') {
+          moveTo(x, y + modifier);
+          store.activeSpace!.boundary.updateBoundary();
+          return;
+        }
+
+        if (e.key === 'ArrowLeft') {
+          moveTo(x - modifier, y);
+          store.activeSpace!.boundary.updateBoundary();
+          return;
+        }
+
+        if (e.key === 'ArrowRight') {
+          moveTo(x + modifier, y);
+          store.activeSpace!.boundary.updateBoundary();
+          return;
+        }
+      }}
     >
       {action instanceof ActionStyleStore && (
         <ActionStyleComponent action={action} />
       )}
-      <div>
-        <input
-          type="number"
-          defaultValue={x}
-          style={{ width: 50 }}
-          step={10}
-          onChange={(e) => {
-            moveTo(parseInt(e.target.value, 10), y);
-            store.activeSpace!.boundary.updateBoundary();
-          }}
-        />
-        <input
-          type="number"
-          defaultValue={y}
-          style={{ width: 50 }}
-          step={10}
-          onChange={(e) => {
-            moveTo(x, parseInt(e.target.value, 10));
-            store.activeSpace!.boundary.updateBoundary();
-          }}
-        />
-      </div>
     </div>
   );
 }

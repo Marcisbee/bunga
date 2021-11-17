@@ -83,7 +83,7 @@ export class SpaceStore extends Exome {
       width + x + 20,
       y,
       170,
-      140,
+      120,
     );
 
     // Center first action in space.
