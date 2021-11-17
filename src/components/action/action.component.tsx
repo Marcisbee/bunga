@@ -1,13 +1,10 @@
-import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import { ActionStore, ActionStyleStore } from '../../store/action.store';
 
 import { store } from '../../store/store';
-import { StyleStore } from '../../store/style.store';
 import { cc } from '../../utils/class-names';
-import { ShadowView } from '../shadow/shadow.component';
 
-import { activeStyle, containerStyle, actionStyleStyle, actionStylePreviewStyle } from './action.css';
+import { activeStyle, actionStyleStyle } from './action.css';
 import { ActionStyleComponent } from './components/action-style/action-style.component';
 
 interface ActionComponentProps {
