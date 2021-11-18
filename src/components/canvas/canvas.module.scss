@@ -1,0 +1,27 @@
+.canvas {
+  flex-grow: 1;
+  display: block;
+  overflow: hidden;
+  position: relative;
+  transform: translate3d(0,0,0);
+  will-change: transform;
+  background-color: aliceblue;
+  user-select: none;
+  background-size: 20px 20px;
+  background-image: radial-gradient(circle, rgb(214, 227, 240) 1px, rgba(0, 0, 0, 0) 1px);
+  background-position: 0px 0px;
+}
+
+.root {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(0,0,0);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.container {
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
+}

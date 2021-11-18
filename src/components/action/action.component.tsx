@@ -4,8 +4,9 @@ import { ActionStore, ActionStyleStore } from '../../store/action.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 
-import { activeStyle, actionStyleStyle } from './action.css';
 import { ActionStyleComponent } from './components/action-style/action-style.component';
+
+import style from './action.module.scss';
 
 interface ActionComponentProps {
   action: ActionStore;
@@ -13,16 +14,16 @@ interface ActionComponentProps {
 
 export function ActionComponent({ action }: ActionComponentProps) {
   const { x, y, width, height, moveTo } = useStore(action.position);
-  const { active, setActive } = useStore(store.activeSpace!.activeComponent!);
+  // const { active, setActive } = useStore(store.activeSpace!.activeComponent!);
 
-  const isActive = active === action;
+  // const isActive = active === action;
 
   return (
     <>
     <div
       className={cc([
-        actionStyleStyle,
-        isActive && activeStyle,
+        style.action,
+        // isActive && activeStyle,
       ])}
       onClick={(e) => {
         e.preventDefault();

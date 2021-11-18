@@ -6,7 +6,7 @@ import { cc } from '../../utils/class-names';
 import { ElementChildrenComponent } from '../element/element.component';
 import { ShadowView } from '../shadow/shadow.component';
 
-import { activeStyle, containerStyle, nameStyle, objectStyle } from './component.css';
+import style from './component.module.scss';
 
 interface ComponentComponentProps {
   component: ComponentStore;
@@ -17,11 +17,11 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
 
   return (
     <>
-      <span className={nameStyle}>
+      <span className={style.name}>
         {name}
       </span>
 
-      <div className={containerStyle}>
+      <div className={style.container}>
         <ShadowView>
           <ElementChildrenComponent
             elements={elements}
@@ -41,8 +41,8 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
   return (
     <div
       className={cc([
-        objectStyle,
-        isActive && activeStyle,
+        style.object,
+        isActive && style.active,
       ])}
       onClick={(e) => {
         e.preventDefault();

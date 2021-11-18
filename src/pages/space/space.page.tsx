@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom';
 
 import { store } from '../../store/store';
 import { CanvasComponent } from '../../components/canvas/canvas.component';
-
-import { appStyle, middleStyle, topStyle } from './space.css';
 import { LayersComponent } from '../../components/layers/layers.component';
 import { StylesComponent } from '../../components/styles/styles.component';
+
+import style from './space.module.scss';
 
 export function SpacePage() {
   const params = useParams();
@@ -14,15 +14,15 @@ export function SpacePage() {
   const space = setActiveSpace(params.id!);
 
   return (
-    <div className={appStyle}>
+    <div className={style.app}>
       <div style={{ width: 240 }}>
         Space: {params.id}
         <hr />
         <LayersComponent />
       </div>
 
-      <div className={middleStyle}>
-        <div className={topStyle}>
+      <div className={style.middle}>
+        <div className={style.top}>
           <span style={{ float: 'right' }}>current people</span>
           <button onClick={space.addAction}>add action</button>
         </div>

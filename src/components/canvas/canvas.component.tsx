@@ -9,7 +9,7 @@ import { store } from '../../store/store';
 import { ActionComponent } from '../action/action.component';
 import { ComponentComponent } from '../component/component.component';
 
-import { canvasContainerStyle, canvasRootStyle, canvasStyle } from './canvas.css';
+import styles from './canvas.module.scss';
 
 interface CanvasComponentProps {
   space: SpaceStore;
@@ -102,7 +102,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
   return (
     <div
       ref={canvas}
-      className={canvasStyle}
+      className={styles.canvas}
       style={{
         backgroundPosition: `${position.x}px ${position.y}px`,
       }}
@@ -127,13 +127,13 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
 
       <div
         ref={canvasRoot}
-        className={canvasRootStyle}
+        className={styles.root}
         style={{
           transform: `translateX(${position.x}px) translateY(${position.y}px)`,
         }}
       >
         <DebugBoundary space={space} />
-        <div className={canvasContainerStyle}>
+        <div className={styles.container}>
           {actions.map((action) => (
             <ActionComponent
               key={`action-${getExomeId(action)}`}
