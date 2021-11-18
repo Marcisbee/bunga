@@ -1,6 +1,6 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 // @ts-ignore
 import TinyGesture from 'tinygesture';
 
@@ -8,6 +8,7 @@ import { SpaceStore } from '../../store/space.store';
 import { store } from '../../store/store';
 import { ActionComponent } from '../action/action.component';
 import { ComponentComponent } from '../component/component.component';
+import { EdgeComponent } from '../edge/edge';
 
 import styles from './canvas.module.scss';
 
@@ -49,10 +50,29 @@ function DebugBoundary({ space }: CanvasComponentProps) {
 export function CanvasComponent({ space }: CanvasComponentProps) {
   const canvas = useRef<HTMLDivElement>(null);
   const canvasRoot = useRef<HTMLDivElement>(null);
+  const svgRoot = useRef<SVGGElement>(null);
+
+  const [centerModifier, setCenterModifier] = useState<[number, number]>([0, 0]);
 
   const { position, components, actions } = useStore(space);
   const { resetPosition } = useStore(position);
   const { setActive } = useStore(store.activeSpace!.activeComponent!);
+
+  useLayoutEffect(() => {
+    const target = canvasRoot.current!;
+
+    function handler() {
+      setCenterModifier([target.offsetLeft, target.offsetTop]);
+    }
+
+    handler();
+
+    window.addEventListener('resize', handler, { passive: true });
+
+    return () => {
+      window.removeEventListener('resize', handler);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     const gesture = new TinyGesture(canvas.current, {
@@ -61,7 +81,8 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
 
     function setCanvasStylePosition(x: string, y: string) {
       canvas.current!.style.backgroundPosition = `${x} ${y}`;
-      canvasRoot.current!.style.transform = `translateX(${position.x}px) translateY(${position.y}px)`;
+      canvasRoot.current!.style.transform = `translate(${position.x}px, ${position.y}px)`;
+      svgRoot.current!.style.transform = `translate(${position.x + centerModifier[0]}px, ${position.y + centerModifier[1]}px)`;
     }
 
     const handler = (e: WheelEvent) => {
@@ -97,7 +118,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
       canvas.current!.removeEventListener('wheel', handler);
       gesture.destroy();
     };
-  }, []);
+  }, [centerModifier[0], centerModifier[1]]);
 
   return (
     <div
@@ -129,25 +150,76 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
         ref={canvasRoot}
         className={styles.root}
         style={{
-          transform: `translateX(${position.x}px) translateY(${position.y}px)`,
+          transform: `translate(${position.x}px, ${position.y}px)`,
         }}
       >
         <DebugBoundary space={space} />
         <div className={styles.container}>
-          {actions.map((action) => (
-            <ActionComponent
-              key={`action-${getExomeId(action)}`}
-              action={action}
-            />
-          ))}
           {components.map((component) => (
             <ComponentComponent
               key={`canvas-${component.id}`}
               component={component}
             />
           ))}
+          {actions.map((action) => (
+            <ActionComponent
+              key={`action-${getExomeId(action)}`}
+              action={action}
+            />
+          ))}
         </div>
       </div>
+
+      <svg className={styles.edges}>
+        {/* <defs>
+          <marker
+            className="react-flow__arrowhead"
+            id="react-flow__arrowclosed"
+            markerWidth="12.5"
+            markerHeight="12.5"
+            viewBox="-10 -10 20 20"
+            orient="auto"
+            refX="0"
+            refY="0"
+          >
+            <polyline stroke="#b1b1b7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" fill="#b1b1b7" points="-5,-4 0,0 -5,4 -5,-4"></polyline>
+          </marker>
+          <marker
+            className="react-flow__arrowhead"
+            id="react-flow__arrow"
+            markerWidth="12.5"
+            markerHeight="12.5"
+            viewBox="-10 -10 20 20"
+            orient="auto"
+            refX="0"
+            refY="0"
+          >
+            <polyline stroke="#b1b1b7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" fill="none" points="-5,-4 0,0 -5,4"></polyline>
+          </marker>
+        </defs> */}
+        <g
+          ref={svgRoot}
+          style={{
+            transform: `translate(${position.x + centerModifier[0]}px, ${position.y + centerModifier[1]}px)`,
+          }}
+        >
+          {actions.map((action) => (
+            <EdgeComponent
+              key={`edge-${getExomeId(action)}`}
+              action={action}
+            />
+          ))}
+          {/* <g className="react-flow__edge react-flow__edge-default animated">
+            <path d="M630,37 C676,37 676,201.5 722,201.5" className="react-flow__edge-path" marker-end="none"></path>
+          </g>
+          <g className="react-flow__edge react-flow__edge-default animated">
+            <path d="M580,182 C651,182 651,201.5 722,201.5" className="react-flow__edge-path" marker-end="none"></path>
+          </g> */}
+          {/* <g className="react-flow__edge react-flow__edge-default animated">
+            <path d="M0,0 C100,0 100,200 200,200" className="react-flow__edge-path" markerEnd="none"></path>
+          </g> */}
+        </g>
+      </svg>
     </div>
   );
 }

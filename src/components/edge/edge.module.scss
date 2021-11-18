@@ -1,0 +1,15 @@
+.edge {
+  pointer-events: visibleStroke;
+}
+
+.path {
+  fill: none;
+  stroke: #b1b1b7;
+  stroke-width: 1.5;
+}
+
+.styleEdge {
+  .path {
+    stroke: #c9a6fd
+  }
+}
