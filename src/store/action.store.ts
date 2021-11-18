@@ -1,4 +1,5 @@
 import { Exome } from 'exome';
+import { ElementStore } from './element.store';
 
 import { StyleStore } from './style.store';
 
@@ -25,8 +26,23 @@ export class ActionPositionStore extends Exome {
   }
 }
 
+export class ActionConnectionStore extends Exome {
+  constructor(
+    public type: ActionType,
+    public from: ActionStore,
+    public to: (ActionStore | ElementStore)[] = [],
+  ) {
+    super();
+  }
+
+  public addTo(to: ActionStore | ElementStore) {
+    this.to.push(to);
+  }
+}
+
 export class ActionStore extends Exome {
   public type: ActionType = ActionType.PROP;
+  public connections: ActionConnectionStore[] = [];
 
   constructor(public position = new ActionPositionStore()) {
     super();
@@ -36,6 +52,14 @@ export class ActionStore extends Exome {
 export class ActionStyleStore extends ActionStore {
   public type = ActionType.STYLE;
   public style?: StyleStore;
+
+  constructor(public position = new ActionPositionStore()) {
+    super(position);
+
+    this.connections.push(
+      new ActionConnectionStore(ActionType.STYLE, this),
+    );
+  }
 
   public setStyle(style: StyleStore) {
     this.style = style;
