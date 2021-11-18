@@ -2,6 +2,7 @@ import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 
 import { ActionConnectionStore, ActionStore, ActionStyleStore } from '../../store/action.store';
+import { ElementStore } from '../../store/element.store';
 import { cc } from '../../utils/class-names';
 
 import styles from './edge.module.scss';
@@ -25,14 +26,20 @@ function EdgeConnectionComponent({ action, connection }: EdgeConnectionComponent
         action instanceof ActionStyleStore && styles.styleEdge,
       ])}
     >
-      {to.map((end) => (
-        <path
-          key={`con-end-${getExomeId(end)}`}
-          d={`M${startX},${startY} C${startX + 100},${startY} 100,200 200,200`}
-          className={styles.path}
-          markerEnd="none"
-        />
-      ))}
+      {to.map((end) => {
+        const rect = (end as ElementStore).getDomOffset();
+        const endX = rect.x;
+        const endY = rect.y + (rect.height / 2);
+
+        return (
+          <path
+            key={`con-end-${getExomeId(end)}`}
+            d={`M${startX},${startY} C${startX + 100},${startY} ${endX - 100},${endY} ${endX},${endY}`}
+            className={styles.path}
+            markerEnd="none"
+          />
+        );
+      })}
     </g>
   );
 }

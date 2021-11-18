@@ -148,12 +148,13 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
 
       <div
         ref={canvasRoot}
+        id="canvasRoot"
         className={styles.root}
         style={{
           transform: `translate(${position.x}px, ${position.y}px)`,
         }}
       >
-        <DebugBoundary space={space} />
+        {/* <DebugBoundary space={space} /> */}
         <div className={styles.container}>
           {components.map((component) => (
             <ComponentComponent

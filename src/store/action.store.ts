@@ -36,8 +36,16 @@ export class ActionConnectionStore extends Exome {
   }
 
   public addTo(to: ActionStore | ElementStore) {
+    activeActionConnection.setFrom(null);
     this.to.push(to);
+
+    if (to instanceof ElementStore) {
+      to.addConnection(this);
+    }
   }
+
+  // Allows dom rect to be checked.
+  public async reflow() {}
 }
 
 export class ActionStore extends Exome {
@@ -65,3 +73,13 @@ export class ActionStyleStore extends ActionStore {
     this.style = style;
   }
 }
+
+export class ActiveActionConnection extends Exome {
+  public from: ActionConnectionStore | null = null;
+
+  public setFrom(from: ActionConnectionStore | null) {
+    this.from = from;
+  }
+}
+
+export const activeActionConnection = new ActiveActionConnection();

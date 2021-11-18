@@ -1,6 +1,7 @@
-import { Exome, registerLoadable } from 'exome';
+import { Exome, onAction, registerLoadable } from 'exome';
 
 import { permalink } from '../utils/permalink';
+import { ActionConnectionStore } from './action.store';
 
 import { ElementStore } from './element.store';
 
@@ -29,6 +30,20 @@ export class ComponentPositionStore extends Exome {
 }
 
 export class ComponentStore extends Exome {
+  private getAllElementConnections = (elements: ElementStore[] = this.elements) => {
+    const connections: ActionConnectionStore[] = [];
+
+    elements.forEach((element) => {
+      connections.push(...element.connections);
+
+      if (element.children?.length) {
+        connections.push(...this.getAllElementConnections(element.children));
+      }
+    });
+
+    return connections;
+  }
+
   constructor(
     public id: string,
     public position: ComponentPositionStore,
@@ -57,6 +72,17 @@ export class ComponentStore extends Exome {
         }),
       ]),
     ]);
+
+    onAction(ComponentPositionStore, 'moveTo', (instance) => {
+      if (instance !== this.position) {
+        return;
+      }
+
+      this.getAllElementConnections()
+        .forEach((connection) => {
+          connection.reflow();
+        });
+    });
   }
 
   public rename(name: string, path: string = permalink(name)) {

@@ -1,7 +1,7 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 
-import { ActionStyleStore } from '../../../../store/action.store';
+import { ActionStyleStore, activeActionConnection } from '../../../../store/action.store';
 import { store } from '../../../../store/store';
 import { StyleStore } from '../../../../store/style.store';
 import { ShadowView } from '../../../shadow/shadow.component';
@@ -41,6 +41,7 @@ function ActionStylePreviewComponent({ style }: { style?: StyleStore }) {
 export function ActionStyleComponent({ action }: ActionStyleComponentProps) {
   const { style, setStyle } = useStore(action);
   const { styles: stylesList } = useStore(store.activeSpace!);
+  const { setFrom } = useStore(activeActionConnection);
 
   return (
     <div className={styles.container}>
@@ -78,6 +79,10 @@ export function ActionStyleComponent({ action }: ActionStyleComponentProps) {
 
             <span
               className={styles.output}
+              onClick={() => {
+                setFrom(action.connections[0]);
+                console.log('Listening for connection', action.connections[0]);
+              }}
             />
           </span>
         </li>
