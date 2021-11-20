@@ -8,6 +8,11 @@
   color: #7e38e0;
   background-color: #c9a6fd;
   border: 1px solid #b59adb;
+  outline: none;
+
+  &:focus-within {
+    box-shadow: 0 0 0 2px aliceblue, 0 0 0 4px #7e38e0;
+  }
 }
 
 .head {
@@ -43,7 +48,7 @@
   }
 }
 
-.output {
+.input {
   width: 11px;
   height: 11px;
   display: inline-block;
@@ -54,10 +59,52 @@
   margin-top: 2px;
   cursor: crosshair;
   position: absolute;
-  right: -18px;
+  left: -18px;
 
   &:hover {
     border-color: orangered;
+  }
+}
+
+.outputGroup {
+  display: flex;
+  text-align: center;
+  border-top: 1px solid #b994ed;
+  background-color: #b994ed;
+  box-shadow: 0 0 0 2px #b994ed;
+  margin-top: 2px;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+
+  & > div {
+    position: relative;
+    flex: 1;
+    padding: 2px;
+    font-size: 12px;
+  }
+}
+
+.output {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  display: block;
+  background-color: transparent;
+  color: currentColor;
+  margin-top: 2px;
+  cursor: crosshair;
+  position: absolute;
+  margin-top: 6px;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  &:hover {
+    color: orangered;
+  }
+
+  svg {
+    display: inline-block;
   }
 }
 

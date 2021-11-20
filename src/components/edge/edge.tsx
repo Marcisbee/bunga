@@ -14,10 +14,10 @@ interface EdgeConnectionComponentProps {
 
 function EdgeConnectionComponent({ action, connection }: EdgeConnectionComponentProps) {
   const { from, to } = useStore(connection);
-  const { x, y, width } = useStore(from.position);
+  const { x, y, width, height } = useStore(from.position);
 
-  const startX = x + width + 17;
-  const startY = y + 41;
+  const startX = x + width / 2;
+  const startY = y + height + 37;
 
   return (
     <g
@@ -34,7 +34,7 @@ function EdgeConnectionComponent({ action, connection }: EdgeConnectionComponent
         return (
           <path
             key={`con-end-${getExomeId(end)}`}
-            d={`M${startX},${startY} C${startX + 100},${startY} ${endX - 100},${endY} ${endX},${endY}`}
+            d={`M${startX},${startY} C${startX},${startY + (Math.abs(startY - endY) / 2)} ${endX - Math.abs(startX - endX) / 2},${endY} ${endX},${endY}`}
             className={styles.path}
             markerEnd="none"
           />
