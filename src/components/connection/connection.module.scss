@@ -1,0 +1,20 @@
+.connection {
+  pointer-events: visibleStroke;
+  color: orange;
+
+  &:hover {
+    color: orangered;
+  }
+}
+
+.path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+// .styleConnection {
+//   .path {
+//     stroke: #c9a6fd
+//   }
+// }

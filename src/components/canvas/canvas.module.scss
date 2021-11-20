@@ -19,6 +19,7 @@
   transform: translate3d(0,0,0);
   will-change: transform;
   pointer-events: none;
+  z-index: 2;
 }
 
 .container {
@@ -35,11 +36,12 @@ pointer-events: all !important; on all child elements.
 
 When mouseup happens, connect action node and unsubscribe from events.
 */
-.edges {
+.connections {
   position: fixed;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 1;
 }

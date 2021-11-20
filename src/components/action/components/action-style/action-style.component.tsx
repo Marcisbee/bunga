@@ -91,7 +91,7 @@ export function ActionStyleComponent({ action }: ActionStyleComponentProps) {
 
       <div className={styles.outputGroup}>
         <div>
-          <strong>then</strong>
+          <strong>output</strong>
           <span
             className={styles.output}
             onClick={() => {
@@ -104,7 +104,7 @@ export function ActionStyleComponent({ action }: ActionStyleComponentProps) {
             </svg>
           </span>
         </div>
-        <div>
+        {/* <div>
           <strong>else</strong>
           <span
             className={styles.output}
@@ -117,7 +117,7 @@ export function ActionStyleComponent({ action }: ActionStyleComponentProps) {
               <path d="M7.73223 10.6109L2.88909 5.76777C1.31418 4.19286 2.42959 1.5 4.65686 1.5H14.3431C16.5704 1.5 17.6858 4.19285 16.1109 5.76777L11.2678 10.6109C10.2915 11.5872 8.70854 11.5872 7.73223 10.6109Z" stroke="currentColor" strokeWidth="2" />
             </svg>
           </span>
-        </div>
+        </div> */}
       </div>
     </div>
   );

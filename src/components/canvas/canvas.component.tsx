@@ -8,7 +8,8 @@ import { SpaceStore } from '../../store/space.store';
 import { store } from '../../store/store';
 import { ActionComponent } from '../action/action.component';
 import { ComponentComponent } from '../component/component.component';
-import { EdgeComponent } from '../edge/edge';
+import { ConnectionComponent } from '../connection/connection.component';
+import { EdgeComponent } from '../edge/edge.component';
 
 import styles from './canvas.module.scss';
 
@@ -54,7 +55,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
 
   const [centerModifier, setCenterModifier] = useState<[number, number]>([0, 0]);
 
-  const { position, components, actions } = useStore(space);
+  const { position, components, actions, edges } = useStore(space);
   const { resetPosition } = useStore(position);
   const { setActive } = useStore(store.activeSpace!.activeComponent!);
 
@@ -168,10 +169,16 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
               action={action}
             />
           ))}
+          {edges.map((edge) => (
+            <EdgeComponent
+              key={`edge-${getExomeId(edge)}`}
+              edge={edge}
+            />
+          ))}
         </div>
       </div>
 
-      <svg className={styles.edges}>
+      <svg className={styles.connections}>
         {/* <defs>
           <marker
             className="react-flow__arrowhead"
@@ -204,10 +211,10 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
             transform: `translate(${position.x + centerModifier[0]}px, ${position.y + centerModifier[1]}px)`,
           }}
         >
-          {actions.map((action) => (
-            <EdgeComponent
-              key={`edge-${getExomeId(action)}`}
-              action={action}
+          {edges.map((edge) => (
+            <ConnectionComponent
+              key={`edge-c-${getExomeId(edge)}`}
+              edge={edge}
             />
           ))}
           {/* <g className="react-flow__edge react-flow__edge-default animated">
