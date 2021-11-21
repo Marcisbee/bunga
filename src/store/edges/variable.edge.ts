@@ -12,7 +12,7 @@ export class VariableEdge extends Edge {
   public connectableTo: Record<string, typeof Edge[]> = {};
 
   public output: { default: Connection } = {
-    default: new Connection(this, []),
+    default: new Connection(this, 'default'),
   };
 
   public evaluate = async () => {

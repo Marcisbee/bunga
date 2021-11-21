@@ -3,6 +3,7 @@
 $style-color: #8c00ff;
 $variable-color: #004a8f;
 $operation-color: #181611;
+$element-color: orangered;
 
 .container {
   --edge-color: #{color.change($operation-color, $blackness: 70%)};
@@ -25,6 +26,12 @@ $operation-color: #181611;
     --edge-color: #{color.change($operation-color, $blackness: 70%)};
     --edge-bg: #{color.change($operation-color, $lightness: 90%)};
     --edge-hr: #{color.change($operation-color, $lightness: 84%)};
+  }
+
+  &.element {
+    --edge-color: #{color.change($element-color, $blackness: 70%)};
+    --edge-bg: #{color.change($element-color, $lightness: 90%)};
+    --edge-hr: #{color.change($element-color, $lightness: 84%)};
   }
 
   flex: 1;
@@ -90,21 +97,21 @@ $operation-color: #181611;
 }
 
 .input {
-  width: 11px;
-  height: 11px;
   display: inline-block;
-  border-radius: 50%;
   background-color: transparent;
-  border: 2px solid currentColor;
-  vertical-align: middle;
-  margin-top: 2px;
+  border: 0;
   cursor: crosshair;
   position: absolute;
   left: -18px;
+  margin-top: 1px;
   color: orange;
 
   &:hover {
-    border-color: orangered;
+    color: orangered;
+  }
+
+  svg {
+    display: inline-block;
   }
 }
 
@@ -159,13 +166,15 @@ $operation-color: #181611;
   background-color: #fff;
   justify-content: center;
   border-radius: 4px;
-  margin: 2px;
-  height: 60px;
+  margin: 1px;
+  height: 50px;
   overflow: hidden;
 
   & > div {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    // @TODO: Test performance of this scale transform.
+    transform: scale(0.8);
   }
 }

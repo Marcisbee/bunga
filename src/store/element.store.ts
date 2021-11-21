@@ -1,8 +1,8 @@
 import dlv from 'dlv';
 import { dset } from 'dset';
 import { Exome, registerLoadable } from 'exome';
-import { ActionConnectionStore } from './action.store';
 
+import { ElementTextStore } from './element-text.store';
 import { undoable } from './undo.store';
 
 export class ActiveElementStore extends Exome {
@@ -14,25 +14,19 @@ export class ActiveElementStore extends Exome {
 }
 
 export class ElementStore<T extends Record<string, any> = Record<string, any>> extends Exome {
-  public getDomOffset = () => ({
+  public getPosition = () => ({
     x: 0,
     y: 0,
     width: 0,
     height: 0,
   });
 
-  public connections: ActionConnectionStore[] = [];
-
   constructor(
     public type: string,
     public props: T = {} as T,
-    public children?: ElementStore[],
+    public children?: (ElementStore | ElementTextStore)[],
   ) {
     super();
-  }
-
-  public addConnection(connection: ActionConnectionStore) {
-    this.connections.push(connection);
   }
 
   @undoable

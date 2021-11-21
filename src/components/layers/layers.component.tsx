@@ -1,6 +1,7 @@
 import { useStore } from 'exome/react';
 
 import { ComponentStore } from '../../store/component.store';
+import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { store } from '../../store/store';
 
@@ -20,11 +21,9 @@ function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
           return;
         }
 
-        active.addElement(new ElementStore(typeValue, {
-          dangerouslySetInnerHTML: {
-            __html: 'another',
-          },
-        }));
+        active.addElement(new ElementStore(typeValue, undefined, [
+          new ElementTextStore('another'),
+        ]));
       }}
     >
       <select name="type" defaultValue="">

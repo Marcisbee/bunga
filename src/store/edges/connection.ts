@@ -5,7 +5,8 @@ import { Edge } from './edge';
 export class Connection extends Exome {
   constructor(
     public from: Edge,
-    public to: [string, Edge][],
+    public path: string,
+    public to: [string, Edge][] = [],
   ) {
     super();
   }

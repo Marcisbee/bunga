@@ -68,7 +68,30 @@ interface EndConnectionComponentProps {
 }
 
 function EndConnectionComponent({ startX, startY, index, position }: EndConnectionComponentProps) {
-  const { x, y } = useStore(position);
+  const { x, y, width, height, type } = useStore(position);
+
+  if (!width && !height) {
+    return (
+      <path
+        d={`M${startX},${startY} C${startX},${startY + (Math.abs(startY - y) / 2)} ${x},${y - Math.abs(startY - y) / 2} ${x},${y}`}
+        className={styles.path}
+        markerEnd="none"
+      />
+    );
+  }
+
+  if (type === 'element') {
+    const endX = x;
+    const endY = y + (height / 2);
+
+    return (
+      <path
+        d={`M${startX},${startY} C${startX},${startY + (Math.abs(startY - endY) / 2)} ${endX - Math.abs(startX - endX) / 2},${endY} ${endX},${endY}`}
+        className={styles.path}
+        markerEnd="none"
+      />
+    );
+  }
 
   const endX = x - 15;
   const endY = y + 25 + (index * 16);

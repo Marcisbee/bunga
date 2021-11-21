@@ -6,7 +6,6 @@ import TinyGesture from 'tinygesture';
 
 import { SpaceStore } from '../../store/space.store';
 import { store } from '../../store/store';
-import { ActionComponent } from '../action/action.component';
 import { ComponentComponent } from '../component/component.component';
 import { ConnectionComponent } from '../connection/connection.component';
 import { EdgeComponent } from '../edge/edge.component';
@@ -51,19 +50,22 @@ function DebugBoundary({ space }: CanvasComponentProps) {
 export function CanvasComponent({ space }: CanvasComponentProps) {
   const canvas = useRef<HTMLDivElement>(null);
   const canvasRoot = useRef<HTMLDivElement>(null);
+  // const canvasRoot2 = useRef<HTMLDivElement>(null);
   const svgRoot = useRef<SVGGElement>(null);
 
   const [centerModifier, setCenterModifier] = useState<[number, number]>([0, 0]);
 
-  const { position, components, actions, edges } = useStore(space);
+  const { position, components, edges } = useStore(space);
   const { resetPosition } = useStore(position);
   const { setActive } = useStore(store.activeSpace!.activeComponent!);
 
   useLayoutEffect(() => {
     const target = canvasRoot.current!;
+    // const target2 = canvasRoot2.current!;
 
     function handler() {
       setCenterModifier([target.offsetLeft, target.offsetTop]);
+      // setCenterModifier([target2.offsetLeft, target2.offsetTop]);
     }
 
     handler();
@@ -83,6 +85,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
     function setCanvasStylePosition(x: string, y: string) {
       canvas.current!.style.backgroundPosition = `${x} ${y}`;
       canvasRoot.current!.style.transform = `translate(${position.x}px, ${position.y}px)`;
+      // canvasRoot2.current!.style.transform = `translate(${position.x}px, ${position.y}px)`;
       svgRoot.current!.style.transform = `translate(${position.x + centerModifier[0]}px, ${position.y + centerModifier[1]}px)`;
     }
 
@@ -163,12 +166,6 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
               component={component}
             />
           ))}
-          {actions.map((action) => (
-            <ActionComponent
-              key={`action-${getExomeId(action)}`}
-              action={action}
-            />
-          ))}
           {edges.map((edge) => (
             <EdgeComponent
               key={`edge-${getExomeId(edge)}`}
@@ -177,6 +174,24 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
           ))}
         </div>
       </div>
+
+      {/* <div
+        ref={canvasRoot2}
+        className={styles.root}
+        style={{
+          transform: `translate(${position.x}px, ${position.y}px)`,
+          zIndex: 1,
+        }}
+      >
+        <div className={styles.container}>
+          {components.map((component) => (
+            <ComponentComponent
+              key={`canvas-${component.id}`}
+              component={component}
+            />
+          ))}
+        </div>
+      </div> */}
 
       <svg className={styles.connections}>
         {/* <defs>

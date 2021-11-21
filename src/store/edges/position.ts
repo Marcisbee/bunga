@@ -2,6 +2,7 @@ import { Exome } from 'exome';
 
 export class EdgePosition extends Exome {
   constructor(
+    public type: 'edge' | 'element' = 'edge',
     public x = 0,
     public y = 0,
     public width = 0,

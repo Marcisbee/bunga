@@ -1,8 +1,8 @@
 import { Exome, onAction, registerLoadable } from 'exome';
 
 import { permalink } from '../utils/permalink';
-import { ActionConnectionStore } from './action.store';
 
+import { ElementTextStore } from './element-text.store';
 import { ElementStore } from './element.store';
 
 export class ActiveComponentStore extends Exome {
@@ -30,19 +30,25 @@ export class ComponentPositionStore extends Exome {
 }
 
 export class ComponentStore extends Exome {
-  private getAllElementConnections = (elements: ElementStore[] = this.elements) => {
-    const connections: ActionConnectionStore[] = [];
+  // private getAllElementConnections = (elements: (ElementStore | ElementTextStore)[] = this.elements) => {
+  //   const connections: ElementTextStore[] = [];
 
-    elements.forEach((element) => {
-      connections.push(...element.connections);
+  //   elements.forEach((element) => {
+  //     // if ((element as ElementStore).connections) {
+  //     //   connections.push(...(element as ElementStore).connections);
+  //     // }
 
-      if (element.children?.length) {
-        connections.push(...this.getAllElementConnections(element.children));
-      }
-    });
+  //     if ((element as ElementTextStore).edge && (element as ElementTextStore).edge.input.text) {
+  //       connections.push(element as ElementTextStore);
+  //     }
 
-    return connections;
-  }
+  //     if ((element as ElementStore)?.children?.length) {
+  //       connections.push(...this.getAllElementConnections((element as ElementStore).children));
+  //     }
+  //   });
+
+  //   return connections;
+  // }
 
   constructor(
     public id: string,
@@ -60,29 +66,29 @@ export class ComponentStore extends Exome {
           margin: 10,
         },
       }, [
-        new ElementStore('span', {
-          dangerouslySetInnerHTML: {
-            __html: 'Hello ',
-          },
-        }),
-        new ElementStore('strong', {
-          dangerouslySetInnerHTML: {
-            __html: 'world',
-          },
-        }),
+        new ElementTextStore('Hello '),
+        new ElementStore('strong', undefined, [
+          new ElementTextStore('world2'),
+        ]),
       ]),
     ]);
 
-    onAction(ComponentPositionStore, 'moveTo', (instance) => {
-      if (instance !== this.position) {
-        return;
-      }
+    // onAction(ComponentPositionStore, 'moveTo', (instance) => {
+    //   if (instance !== this.position) {
+    //     return;
+    //   }
 
-      this.getAllElementConnections()
-        .forEach((connection) => {
-          connection.reflow();
-        });
-    });
+    //   this.getAllElementConnections()
+    //     .forEach((connection) => {
+    //       Promise.resolve().then(() => {
+    //         const { x, y, width, height } = connection.getPosition();
+
+    //         connection.edge.position.width = width;
+    //         connection.edge.position.height = height;
+    //         connection.edge.position.moveTo(x, y);
+    //       });
+    //     });
+    // });
   }
 
   public rename(name: string, path: string = permalink(name)) {

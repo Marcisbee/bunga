@@ -6,25 +6,40 @@ export class MathAddEdge extends Edge {
   public name = 'Math (+)';
   public style = 'operation';
 
-  public input: { a: Connection | null, b: Connection | null } = {
-    a: null,
-    b: null,
+  public input: { first: Connection | null, second: Connection | null } = {
+    first: null,
+    second: null,
   };
   public connectableTo: Record<string, typeof Edge[]> = {
-    a: [VariableEdge],
-    b: [VariableEdge],
+    first: [
+      VariableEdge,
+      MathAddEdge,
+    ],
+    second: [
+      VariableEdge,
+      MathAddEdge,
+    ],
   };
 
   public output: { default: Connection } = {
-    default: new Connection(this, []),
+    default: new Connection(this, 'default'),
   };
 
   public evaluate = async () => {
-    const a = await this.input.a?.from.evaluate();
-    const b = await this.input.b?.from.evaluate();
+    const first = this.input.first;
+    const second = this.input.second;
+
+    if (!first || !second) {
+      return {
+        default: undefined,
+      };
+    }
+
+    const firstValue = await first.from.evaluate();
+    const secondValue = await second.from.evaluate();
 
     return {
-      default: a.default + b.default,
+      default: firstValue?.[first.path] + secondValue?.[second.path],
     };
   }
 }
