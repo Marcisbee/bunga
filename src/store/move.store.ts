@@ -6,9 +6,56 @@ import { Edge } from './edges/edge';
 export class MoveStore extends Exome {
   public selectedEdges: Edge[] = [];
   public selectedComponents: ComponentStore[] = [];
+  public mouseMove: [number, number] | null = null;
+  public didMouseMove: boolean = false;
 
   public get selectedAll(): (Edge | ComponentStore)[] {
     return ([] as (Edge | ComponentStore)[]).concat(this.selectedEdges, this.selectedComponents);
+  }
+
+  public startMouseMove(x: number, y: number) {
+    this.didMouseMove = false;
+    this.mouseMove = [x, y];
+
+    const handlerMove = (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      this.didMouseMove = true;
+
+      const diffX = e.pageX - this.mouseMove![0];
+      const diffY = e.pageY - this.mouseMove![1];
+
+      if (diffX === 0 && diffY === 0) {
+        return;
+      }
+
+      this.moveAllBy(diffX, diffY);
+
+      this.mouseMove = [e.pageX, e.pageY];
+    }
+
+    window.addEventListener('mousemove', handlerMove);
+
+    const handlerEnd = (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      window.removeEventListener('mousemove', handlerMove);
+
+      window.removeEventListener('mouseup', handlerEnd);
+      window.removeEventListener('mouseleave', handlerEnd);
+      window.removeEventListener('mouseout', handlerEnd);
+
+      this.endMouseMove();
+    }
+
+    window.addEventListener('mouseup', handlerEnd);
+    window.addEventListener('mouseleave', handlerEnd);
+  }
+
+  public endMouseMove() {
+    this.mouseMove = null;
   }
 
   public selectEdge(edge: Edge, shiftKey: boolean = false) {

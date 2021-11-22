@@ -16,7 +16,7 @@ interface EdgeComponentProps {
 export function EdgeComponent({ edge }: EdgeComponentProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { x, y, width } = useStore(edge.position);
-  const { selectedEdges, selectEdge } = useStore(moveStore);
+  const { selectedEdges, selectEdge, startMouseMove, selectedAll } = useStore(moveStore);
 
   const isActive = selectedEdges.indexOf(edge) > -1;
 
@@ -33,9 +33,32 @@ export function EdgeComponent({ edge }: EdgeComponentProps) {
         isActive && style.active,
       ])}
       onClick={(e) => {
+        // Stop bubbling to top canvas.
+        e.stopPropagation();
+
+        if (!e.shiftKey) {
+          if (!moveStore.didMouseMove) {
+            selectEdge(edge, e.shiftKey);
+          }
+
+          return;
+        }
+
+        selectEdge(edge, e.shiftKey);
+      }}
+      onMouseDown={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        selectEdge(edge, e.shiftKey);
+
+        if (e.shiftKey) {
+          return;
+        }
+
+        if (selectedAll.length <= 1) {
+          selectEdge(edge, e.shiftKey);
+        }
+
+        startMouseMove(e.pageX, e.pageY);
       }}
       style={{
         transform: `translate3d(${x}px, ${y}px, 0)`,

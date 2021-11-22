@@ -34,7 +34,7 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
 
 export function ComponentComponent({ component }: ComponentComponentProps) {
   const { x, y, width, height } = useStore(component.position);
-  const { selectedComponents, selectComponent } = useStore(moveStore);
+  const { selectedAll, selectedComponents, selectComponent, startMouseMove } = useStore(moveStore);
 
   const isActive = selectedComponents.indexOf(component) > -1;
 
@@ -45,9 +45,32 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
         isActive && style.active,
       ])}
       onClick={(e) => {
+        // Stop bubbling to top canvas.
+        e.stopPropagation();
+
+        if (!e.shiftKey) {
+          if (!moveStore.didMouseMove) {
+            selectComponent(component, e.shiftKey);
+          }
+
+          return;
+        }
+
+        selectComponent(component, e.shiftKey);
+      }}
+      onMouseDown={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        selectComponent(component, e.shiftKey);
+
+        if (e.shiftKey) {
+          return;
+        }
+
+        if (selectedAll.length <= 1) {
+          selectComponent(component, e.shiftKey);
+        }
+
+        startMouseMove(e.pageX, e.pageY);
       }}
       style={{
         transform: `translate3d(${x}px, ${y}px, 0)`,
