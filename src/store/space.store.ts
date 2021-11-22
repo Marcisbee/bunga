@@ -9,6 +9,7 @@ import { ActiveElementStore } from './element.store';
 import { ActiveStyleStore, StyleStore } from './style.store';
 import { Edge } from './edges/edge';
 import { EdgePosition } from './edges/position';
+import { TokenStore } from './token.store';
 
 export class SpaceStore extends Exome {
   public position = new PositionStore();
@@ -24,6 +25,9 @@ export class SpaceStore extends Exome {
     public components: ComponentStore[] = [],
     public styles: StyleStore[] = [],
     public edges: Edge[] = [],
+    public tokens: TokenStore[] = [
+      new TokenStore(name),
+    ],
   ) {
     super();
   }

@@ -1,15 +1,18 @@
 import { useStore } from 'exome/react';
 
+import { StyleStore } from '../style.store';
+import { store } from '../store';
+
 import { Edge } from './edge';
 import { Connection } from './connection';
 import { StyleEdge } from './style.edge';
-import { StyleStore } from '../style.store';
 
 function RenderCss({ style }: { style: StyleStore }) {
   const { css } = useStore(style);
+  const { tokens } = useStore(store.activeSpace!.tokens[0]);
 
   return (
-    <style>{`#obj { ${css}}`}</style>
+    <style>{`:host {${tokens}}`}{`#obj { ${css}}`}</style>
   );
 }
 

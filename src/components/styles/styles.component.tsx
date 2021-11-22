@@ -1,4 +1,5 @@
 import { useStore } from 'exome/react';
+import { useState } from 'react';
 
 import { store } from '../../store/store';
 import { ActiveStyleStore, StyleStore } from '../../store/style.store';
@@ -38,7 +39,7 @@ function ListStylesComponent({ activeStyle, style }: { activeStyle: ActiveStyleS
   );
 }
 
-export function StylesComponent() {
+function StylesManagerComponent() {
   const { activeStyle, addStyle } = useStore(store.activeSpace!);
   const { active } = useStore(activeStyle);
 
@@ -66,6 +67,63 @@ export function StylesComponent() {
         <hr />
         {!!active && (
           <ActiveStylesComponent active={active} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function TokensManagerComponent() {
+  const space = useStore(store.activeSpace!);
+  // @TODO: Add more tokens?? (figure out how this would work UX wise)
+  const { name, tokens, setName, setTokens } = useStore(space.tokens[0]);
+
+  return (
+    <div>
+      <div>
+        <strong>Tokens manager</strong>
+      </div>
+
+      <div>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+        />
+        <textarea
+          style={{ width: '100%' }}
+          rows={10}
+          value={tokens}
+          onChange={(e) => {
+            setTokens(e.target.value);
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+export function StylesComponent() {
+  const [tab, setTab] = useState('styles');
+
+  return (
+    <div>
+      <div>
+        <button onClick={() => setTab('styles')}>
+          {tab === 'styles' && '!'}Styles
+        </button>
+        <button onClick={() => setTab('tokens')}>
+          {tab === 'tokens' && '!'}Tokens
+        </button>
+      </div>
+      <div>
+        {tab === 'styles' && (
+          <StylesManagerComponent />
+        )}
+        {tab === 'tokens' && (
+          <TokensManagerComponent />
         )}
       </div>
     </div>
