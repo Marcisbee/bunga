@@ -57,4 +57,3 @@ export class ElementTextEdge extends Edge {
 
   public render = () => <Render edge={this} />;
 }
-

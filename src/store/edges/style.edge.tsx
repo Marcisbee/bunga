@@ -1,3 +1,4 @@
+import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 
 import { StyleStore } from '../style.store';
@@ -5,7 +6,6 @@ import { store } from '../store';
 
 import { Edge } from './edge';
 import { Connection } from './connection';
-import { getExomeId } from 'exome';
 
 function RenderSource({ edge }: { edge: StyleEdge }) {
   const { input, setPrimitiveInput } = useStore(edge);
@@ -57,4 +57,3 @@ export class StyleEdge extends Edge {
     source: () => <RenderSource edge={this} />,
   };
 }
-

@@ -21,4 +21,3 @@ export class VariableEdge extends Edge {
     };
   }
 }
-
