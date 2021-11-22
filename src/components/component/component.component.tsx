@@ -2,7 +2,6 @@ import { useStore } from 'exome/react';
 
 import { ComponentStore } from '../../store/component.store';
 import { moveStore } from '../../store/move.store';
-import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 import { ElementChildrenComponent } from '../element/element.component';
 import { ShadowView } from '../shadow/shadow.component';
@@ -34,7 +33,7 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
 }
 
 export function ComponentComponent({ component }: ComponentComponentProps) {
-  const { x, y, width, height, moveTo } = useStore(component.position);
+  const { x, y, width, height } = useStore(component.position);
   const { selectedComponents, selectComponent } = useStore(moveStore);
 
   const isActive = selectedComponents.indexOf(component) > -1;
@@ -56,33 +55,6 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
         height,
       }}
       tabIndex={0}
-      onKeyDown={(e) => {
-        const modifier = e.shiftKey ? 30 : 10;
-
-        if (!e.key.startsWith('Arrow')) {
-          return;
-        }
-
-        if (e.key === 'ArrowUp') {
-          moveTo(x, y - modifier);
-        }
-
-        if (e.key === 'ArrowDown') {
-          moveTo(x, y + modifier);
-        }
-
-        if (e.key === 'ArrowLeft') {
-          moveTo(x - modifier, y);
-        }
-
-        if (e.key === 'ArrowRight') {
-          moveTo(x + modifier, y);
-        }
-
-        e.preventDefault();
-        e.stopPropagation();
-        store.activeSpace!.boundary.updateBoundary();
-      }}
     >
       <ComponentRenderComponent component={component} />
     </div>
