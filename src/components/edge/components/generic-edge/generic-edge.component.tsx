@@ -1,6 +1,6 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
-import { createElement, useEffect, useState } from 'react';
+import { createElement, memo, useEffect, useState } from 'react';
 
 import { Edge } from '../../../../store/edges/edge';
 import { pendingEdge } from '../../../../store/edges/pending';
@@ -14,8 +14,8 @@ interface GenericEdgeComponentProps {
   edge: Edge;
 }
 
-export function GenericEdgeComponent({ edge }: GenericEdgeComponentProps) {
-  const { input, connectableTo, output, setPrimitiveInput, customControls, render } = useStore(edge);
+export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) => {
+  const { input, connectableTo, output, setPrimitiveInput, customControls } = useStore(edge);
   const { setFrom, connectTo } = useStore(pendingEdge);
 
   return (
@@ -124,7 +124,7 @@ export function GenericEdgeComponent({ edge }: GenericEdgeComponentProps) {
       </div>
     </div>
   );
-}
+}, () => true);
 
 function EdgeOutput({ edge, id }: { edge: Edge, id: string }) {
   const [value, setValue] = useState('');

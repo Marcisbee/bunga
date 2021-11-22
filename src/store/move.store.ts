@@ -24,7 +24,6 @@ export class MoveStore extends Exome {
     this.mouseMove = [x, y];
 
     const handlerMove = (e: MouseEvent) => {
-      e.preventDefault();
       e.stopPropagation();
 
       this.didMouseMove = true;
