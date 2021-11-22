@@ -1,6 +1,7 @@
 import { useStore } from 'exome/react';
 
 import { ComponentStore } from '../../store/component.store';
+import { moveStore } from '../../store/move.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 import { ElementChildrenComponent } from '../element/element.component';
@@ -34,9 +35,9 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
 
 export function ComponentComponent({ component }: ComponentComponentProps) {
   const { x, y, width, height, moveTo } = useStore(component.position);
-  const { active, setActive } = useStore(store.activeSpace!.activeComponent!);
+  const { selectedComponents, selectComponent } = useStore(moveStore);
 
-  const isActive = active === component;
+  const isActive = selectedComponents.indexOf(component) > -1;
 
   return (
     <div
@@ -47,7 +48,7 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        setActive(component);
+        selectComponent(component, e.shiftKey);
       }}
       style={{
         transform: `translate3d(${x}px, ${y}px, 0)`,

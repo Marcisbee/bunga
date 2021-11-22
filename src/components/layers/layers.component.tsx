@@ -3,6 +3,7 @@ import { useStore } from 'exome/react';
 import { ComponentStore } from '../../store/component.store';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
+import { moveStore } from '../../store/move.store';
 import { store } from '../../store/store';
 
 function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
@@ -78,8 +79,8 @@ function ActiveLayersComponent({ active }: { active: ComponentStore }) {
 }
 
 export function LayersComponent() {
-  const { activeComponent, addComponent } = useStore(store.activeSpace!);
-  const { active, setActive } = useStore(activeComponent!);
+  const { selectedComponents, selectComponent } = useStore(moveStore);
+  const { addComponent } = useStore(store.activeSpace!);
 
   return (
     <div>
@@ -93,8 +94,10 @@ export function LayersComponent() {
         </button>
         <div style={{ minHeight: 200 }}>
           {store.activeSpace!.components.map((component) => (
-            <div onClick={() => setActive(component)}>
-              {active === component && '!'} {component.name}
+            <div
+              onClick={(e) => selectComponent(component, e.shiftKey)}
+            >
+              {selectedComponents.indexOf(component) > -1 && '!'} {component.name}
             </div>
           ))}
         </div>
@@ -102,8 +105,8 @@ export function LayersComponent() {
 
       <div>
         <hr />
-        {!!active && (
-          <ActiveLayersComponent active={active} />
+        {!!selectedComponents[0] && (
+          <ActiveLayersComponent active={selectedComponents[0]} />
         )}
       </div>
     </div>

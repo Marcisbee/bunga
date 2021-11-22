@@ -5,14 +5,6 @@ import { permalink } from '../utils/permalink';
 import { ElementTextStore } from './element-text.store';
 import { ElementStore } from './element.store';
 
-export class ActiveComponentStore extends Exome {
-  public active: ComponentStore | null = null;
-
-  public setActive(component: ComponentStore | null) {
-    this.active = component;
-  }
-}
-
 export class ComponentPositionStore extends Exome {
   constructor(
     public x = 0,
@@ -101,4 +93,4 @@ export class ComponentStore extends Exome {
   }
 }
 
-registerLoadable({ ComponentStore, ActiveComponentStore });
+registerLoadable({ ComponentStore });

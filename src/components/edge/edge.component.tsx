@@ -1,7 +1,8 @@
 import { useStore } from 'exome/react';
+import { useLayoutEffect, useRef } from 'react';
 
 import { Edge } from '../../store/edges/edge';
-import { VariableEdge } from '../../store/edges/variable.edge';
+import { moveStore } from '../../store/move.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 
@@ -13,59 +14,36 @@ interface EdgeComponentProps {
 }
 
 export function EdgeComponent({ edge }: EdgeComponentProps) {
-  const { x, y, width, height, moveTo } = useStore(edge.position);
-  // const { active, setActive } = useStore(store.activeSpace!.activeComponent!);
+  const ref = useRef<HTMLDivElement>(null);
+  const { x, y, width } = useStore(edge.position);
+  const { selectedEdges, selectEdge } = useStore(moveStore);
 
-  // const isActive = active === action;
+  const isActive = selectedEdges.indexOf(edge) > -1;
+
+  useLayoutEffect(() => {
+    edge.position.setHeight(ref.current!.offsetHeight);
+    store.activeSpace!.boundary.updateBoundary();
+  }, []);
 
   return (
-    <>
-      <div
-        className={cc([
-          style.edge,
-          // isActive && activeStyle,
-        ])}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          // setActive(action);
-        }}
-        style={{
-          transform: `translate3d(${x}px, ${y}px, 0)`,
-          width,
-          // height,
-        }}
-        tabIndex={0}
-        onKeyDown={(e) => {
-          const modifier = e.shiftKey ? 30 : 10;
-
-          if (!e.key.startsWith('Arrow')) {
-            return;
-          }
-
-          if (e.key === 'ArrowUp') {
-            moveTo(x, y - modifier);
-          }
-
-          if (e.key === 'ArrowDown') {
-            moveTo(x, y + modifier);
-          }
-
-          if (e.key === 'ArrowLeft') {
-            moveTo(x - modifier, y);
-          }
-
-          if (e.key === 'ArrowRight') {
-            moveTo(x + modifier, y);
-          }
-
-          e.preventDefault();
-          e.stopPropagation();
-          store.activeSpace!.boundary.updateBoundary();
-        }}
-      >
-        <GenericEdgeComponent edge={edge} />
-      </div>
-    </>
+    <div
+      ref={ref}
+      className={cc([
+        style.edge,
+        isActive && style.active,
+      ])}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        selectEdge(edge, e.shiftKey);
+      }}
+      style={{
+        transform: `translate3d(${x}px, ${y}px, 0)`,
+        width,
+      }}
+      tabIndex={0}
+    >
+      <GenericEdgeComponent edge={edge} />
+    </div>
   );
 }

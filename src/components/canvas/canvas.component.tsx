@@ -3,6 +3,7 @@ import { useStore } from 'exome/react';
 import { useLayoutEffect, useRef, useState } from 'react';
 // @ts-ignore
 import TinyGesture from 'tinygesture';
+import { moveStore } from '../../store/move.store';
 
 import { SpaceStore } from '../../store/space.store';
 import { store } from '../../store/store';
@@ -50,22 +51,19 @@ function DebugBoundary({ space }: CanvasComponentProps) {
 export function CanvasComponent({ space }: CanvasComponentProps) {
   const canvas = useRef<HTMLDivElement>(null);
   const canvasRoot = useRef<HTMLDivElement>(null);
-  // const canvasRoot2 = useRef<HTMLDivElement>(null);
   const svgRoot = useRef<SVGGElement>(null);
 
   const [centerModifier, setCenterModifier] = useState<[number, number]>([0, 0]);
 
+  const { moveAllBy, reset } = useStore(moveStore);
   const { position, components, edges } = useStore(space);
   const { resetPosition } = useStore(position);
-  const { setActive } = useStore(store.activeSpace!.activeComponent!);
 
   useLayoutEffect(() => {
     const target = canvasRoot.current!;
-    // const target2 = canvasRoot2.current!;
 
     function handler() {
       setCenterModifier([target.offsetLeft, target.offsetTop]);
-      // setCenterModifier([target2.offsetLeft, target2.offsetTop]);
     }
 
     handler();
@@ -85,7 +83,6 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
     function setCanvasStylePosition(x: string, y: string) {
       canvas.current!.style.backgroundPosition = `${x} ${y}`;
       canvasRoot.current!.style.transform = `translate(${position.x}px, ${position.y}px)`;
-      // canvasRoot2.current!.style.transform = `translate(${position.x}px, ${position.y}px)`;
       svgRoot.current!.style.transform = `translate(${position.x + centerModifier[0]}px, ${position.y + centerModifier[1]}px)`;
     }
 
@@ -132,7 +129,34 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
         backgroundPosition: `${position.x}px ${position.y}px`,
       }}
       onClick={() => {
-        setActive(null);
+        reset();
+      }}
+      onKeyDown={(e) => {
+        const modifier = e.shiftKey ? 30 : 10;
+
+        if (!e.key.startsWith('Arrow')) {
+          return;
+        }
+
+        if (e.key === 'ArrowUp') {
+          moveAllBy(0, -modifier);
+        }
+
+        if (e.key === 'ArrowDown') {
+          moveAllBy(0, modifier);
+        }
+
+        if (e.key === 'ArrowLeft') {
+          moveAllBy(-modifier, 0);
+        }
+
+        if (e.key === 'ArrowRight') {
+          moveAllBy(modifier, 0);
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+        store.activeSpace!.boundary.updateBoundary();
       }}
     >
       <div
@@ -158,7 +182,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
           transform: `translate(${position.x}px, ${position.y}px)`,
         }}
       >
-        {/* <DebugBoundary space={space} /> */}
+        <DebugBoundary space={space} />
         <div className={styles.container}>
           {components.map((component) => (
             <ComponentComponent
@@ -174,24 +198,6 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
           ))}
         </div>
       </div>
-
-      {/* <div
-        ref={canvasRoot2}
-        className={styles.root}
-        style={{
-          transform: `translate(${position.x}px, ${position.y}px)`,
-          zIndex: 1,
-        }}
-      >
-        <div className={styles.container}>
-          {components.map((component) => (
-            <ComponentComponent
-              key={`canvas-${component.id}`}
-              component={component}
-            />
-          ))}
-        </div>
-      </div> */}
 
       <svg className={styles.connections}>
         {/* <defs>

@@ -15,4 +15,12 @@ export class EdgePosition extends Exome {
     this.x = x;
     this.y = y;
   }
+
+  public setHeight(height: number) {
+    this.height = height;
+  }
+
+  public setWidth(width: number) {
+    this.width = width;
+  }
 }
