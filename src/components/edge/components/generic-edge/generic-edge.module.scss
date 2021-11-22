@@ -45,9 +45,6 @@ $element-color: orangered;
   border: 1px solid var(--edge-hr);
   outline: none;
 
-  &:hover {
-    box-shadow: 0 0 0 2px aliceblue, 0 0 0 3px var(--edge-hr);
-  }
 }
 
 .head {

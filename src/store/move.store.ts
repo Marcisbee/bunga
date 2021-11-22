@@ -9,8 +9,14 @@ export class MoveStore extends Exome {
   public mouseMove: [number, number] | null = null;
   public didMouseMove: boolean = false;
 
+  private cachedAll: (Edge | ComponentStore)[] | null = null;
+
   public get selectedAll(): (Edge | ComponentStore)[] {
-    return ([] as (Edge | ComponentStore)[]).concat(this.selectedEdges, this.selectedComponents);
+    if (this.cachedAll !== null) {
+      return this.cachedAll;
+    }
+
+    return this.cachedAll = ([] as (Edge | ComponentStore)[]).concat(this.selectedEdges, this.selectedComponents);
   }
 
   public startMouseMove(x: number, y: number) {
@@ -35,7 +41,7 @@ export class MoveStore extends Exome {
       this.mouseMove = [e.pageX, e.pageY];
     }
 
-    window.addEventListener('mousemove', handlerMove);
+    window.addEventListener('mousemove', handlerMove, { passive: true });
 
     const handlerEnd = (e: MouseEvent) => {
       e.preventDefault();
@@ -59,6 +65,8 @@ export class MoveStore extends Exome {
   }
 
   public selectEdge(edge: Edge, shiftKey: boolean = false) {
+    this.cachedAll = null;
+
     if (!shiftKey) {
       this.selectedEdges = [edge];
       this.selectedComponents = [];
@@ -76,6 +84,8 @@ export class MoveStore extends Exome {
   }
 
   public selectComponent(component: ComponentStore, shiftKey: boolean = false) {
+    this.cachedAll = null;
+
     if (!shiftKey) {
       this.selectedComponents = [component];
       this.selectedEdges = [];
@@ -99,6 +109,8 @@ export class MoveStore extends Exome {
   }
 
   public reset() {
+    this.cachedAll = null;
+
     this.selectedEdges = [];
     this.selectedComponents = [];
   }

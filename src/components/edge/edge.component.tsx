@@ -47,8 +47,6 @@ export function EdgeComponent({ edge }: EdgeComponentProps) {
         selectEdge(edge, e.shiftKey);
       }}
       onMouseDown={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
 
         if (e.shiftKey) {
           return;

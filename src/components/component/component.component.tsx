@@ -59,8 +59,6 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
         selectComponent(component, e.shiftKey);
       }}
       onMouseDown={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
 
         if (e.shiftKey) {
           return;

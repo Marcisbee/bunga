@@ -5,8 +5,23 @@
   overflow: visible;
   flex-direction: column;
   z-index: 2;
+  will-change: transform;
 }
 
-.active > div {
-  box-shadow: 0 0 0 2px aliceblue, 0 0 0 4px var(--edge-color) !important;
+.active {
+  & > div::before {
+    display: block;
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    width: calc(100% + 6px);
+    height: calc(100% + 6px);
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    border: 2px solid var(--edge-color);
+    border-radius: 9px;
+    z-index: -1;
+    background-color: aliceblue;
+  }
 }
