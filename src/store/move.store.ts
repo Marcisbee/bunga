@@ -101,10 +101,12 @@ export class MoveStore extends Exome {
     this.selectedComponents.push(component);
   }
 
-  public moveAllBy(x: number, y: number) {
-    for (const { position } of this.selectedAll) {
-      position.moveTo(position.x + x, position.y + y);
-    }
+  public moveAllBy = (x: number, y: number) => {
+    window.requestAnimationFrame(() => {
+      for (const { position } of this.selectedAll) {
+        position.silent.moveTo(position.x + x, position.y + y);
+      }
+    });
   }
 
   public reset() {

@@ -1,6 +1,26 @@
 import { Exome } from 'exome';
 
+export class EdgePositionSilent extends Exome {
+  public x = 0;
+  public y = 0;
+
+  constructor(
+    public parent: EdgePosition,
+  ) {
+    super();
+  }
+
+  public moveTo(x: number, y: number) {
+    this.x = x;
+    this.parent.x = x;
+    this.y = y;
+    this.parent.y = y;
+  }
+}
+
 export class EdgePosition extends Exome {
+  public readonly silent = new EdgePositionSilent(this);
+
   constructor(
     public type: 'edge' | 'element' = 'edge',
     public x = 0,
