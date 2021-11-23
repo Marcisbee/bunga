@@ -1,7 +1,9 @@
+import { onAction } from 'exome';
 import { useStore } from 'exome/react';
 import { useLayoutEffect, useRef } from 'react';
 
 import { Edge } from '../../store/edges/edge';
+import { EdgePositionSilent } from '../../store/edges/position';
 import { moveStore } from '../../store/move.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
@@ -23,6 +25,18 @@ export function EdgeComponent({ edge }: EdgeComponentProps) {
   useLayoutEffect(() => {
     edge.position.setHeight(ref.current!.offsetHeight);
     store.activeSpace!.boundary.updateBoundary();
+
+    const unsubscribe = onAction(EdgePositionSilent, 'moveTo', (instance) => {
+      if (instance !== edge.position.silent) {
+        return;
+      }
+
+      ref.current!.style.transform = `translate(${instance.x}px, ${instance.y}px)`;
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return (
