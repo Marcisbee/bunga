@@ -6,8 +6,13 @@ export default defineConfig({
   plugins: [
     react(),
   ],
-  alias: {
-    // react: 'preact/compat',
-    // 'react-dom': 'preact/compat',
+  build: {
+    minify: 'esbuild',
+  },
+  resolve: {
+    alias: {
+      // react: 'preact/compat',
+      // 'react-dom': 'preact/compat',
+    },
   },
 })

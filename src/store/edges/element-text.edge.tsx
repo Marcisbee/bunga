@@ -26,8 +26,8 @@ function Render({ edge }: { edge: ElementTextEdge }) {
 }
 
 export class ElementTextEdge extends Edge {
+  public static title = 'Element Text';
   public style = 'element';
-  public name = 'Element Text';
 
   public input: { text: Connection | null } = {
     text: null,

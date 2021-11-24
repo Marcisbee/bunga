@@ -5,7 +5,7 @@ import { Connection } from './connection';
 import { EdgePosition } from './position';
 
 export abstract class Edge extends Exome {
-  public abstract name: string;
+  public static title: string;
   public style?: string;
   public abstract input: Record<string, any>;
   public abstract connectableTo: Record<string, typeof Edge[]>;

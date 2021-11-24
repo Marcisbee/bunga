@@ -37,6 +37,8 @@ function StartConnectionComponent({ edge, connection }: StartConnectionComponent
   const { from, to } = useStore(connection);
   const { x, y, width, height } = useStore(from.position);
 
+  useStore(from.position.silent);
+
   const startX = x + width / 2;
   const startY = y + height + 6;
 
@@ -69,6 +71,8 @@ interface EndConnectionComponentProps {
 
 function EndConnectionComponent({ startX, startY, index, position }: EndConnectionComponentProps) {
   const { x, y, width, height, type } = useStore(position);
+
+  useStore(position.silent);
 
   if (!width && !height) {
     return (

@@ -23,7 +23,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "types": "tsc",
-    "test": "uvu src test.ts -r tsm"
+    "test": "uvu src test.ts -r tsm",
+    "e2e": "playwright test"
   },
   "eslintConfig": {
     "extends": [
@@ -44,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.16.3",
     "@types/dlv": "^1.1.2",
     "@types/jsdom": "^16.2.13",
     "@types/react": "^17.0.34",

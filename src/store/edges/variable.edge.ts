@@ -2,7 +2,7 @@ import { Edge } from './edge';
 import { Connection } from './connection';
 
 export class VariableEdge extends Edge {
-  public name = 'Value';
+  public static title = 'Value';
   public style = 'variable';
 
   public input: { type: 'number' | 'string', value: any } = {

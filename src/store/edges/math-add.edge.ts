@@ -3,7 +3,7 @@ import { Connection } from './connection';
 import { VariableEdge } from './variable.edge';
 
 export class MathAddEdge extends Edge {
-  public name = 'Math (+)';
+  public static title = 'Math (+)';
   public style = 'operation';
 
   public input: { first: Connection | null, second: Connection | null } = {
