@@ -35,7 +35,7 @@ function RenderSource({ edge }: { edge: StyleEdge }) {
 }
 
 export class StyleEdge extends Edge {
-  public name = 'Style';
+  public static title = 'Style';
   public style = 'style';
 
   public input: { source: StyleStore | null } = {

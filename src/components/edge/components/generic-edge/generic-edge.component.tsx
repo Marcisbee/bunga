@@ -74,8 +74,13 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                     <input
                       type="text"
                       defaultValue={input[key]}
-                      onChange={(event) => setPrimitiveInput(key, parseInt(event.target.value, 10))}
+                      onChange={(event) => setPrimitiveInput(key,event.target.value)}
+                      // onChange={(event) => setPrimitiveInput(key, parseInt(event.target.value, 10))}
                       style={{ fontSize: 11, width: 80, padding: 1, border: 0, borderRadius: 2, backgroundColor: '#fff', fontWeight: 'bold' }}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onMouseMove={(e) => e.stopPropagation()}
+                      onKeyDown={(e) => e.stopPropagation()}
+                      onKeyUp={(e) => e.stopPropagation()}
                     />
                   )
                 ) : (

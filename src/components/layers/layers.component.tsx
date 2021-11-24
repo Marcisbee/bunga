@@ -1,3 +1,4 @@
+import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 
 import { ComponentStore } from '../../store/component.store';
@@ -7,6 +8,8 @@ import { moveStore } from '../../store/move.store';
 import { store } from '../../store/store';
 
 function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
+  const { name, customElements } = useStore(store.activeSpace!);
+
   return (
     <form
       onSubmit={(e) => {
@@ -18,23 +21,31 @@ function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
 
         typeInput.value = '';
 
-        if (!typeValue) {
+        if (typeValue == null || typeValue === '' || !customElements[Number(typeValue)]) {
           return;
         }
 
-        active.addElement(new ElementStore(typeValue, undefined, [
+        active.addElement(new ElementStore(customElements[Number(typeValue)], undefined, [
           new ElementTextStore('another'),
         ]));
       }}
     >
       <select name="type" defaultValue="">
         <option value="" disabled>Choose tag</option>
-        <option value="div">div</option>
+        {/* <option value="div">div</option>
         <option value="input">input</option>
         <option value="textarea">textarea</option>
         <option value="button">button</option>
         <option value="p">p</option>
-        <option value="h1">h1</option>
+        <option value="h1">h1</option> */}
+        {customElements.map((element, i) => (
+          <option
+            key={`layer-${getExomeId(element)}`}
+            value={i}
+          >
+            [{name}] {element.input.name}
+          </option>
+        ))}
       </select>
       <button type="submit">add</button>
     </form>
@@ -46,7 +57,7 @@ function ElementLayersComponent({ element }: { element: ElementStore }) {
 
   return (
     <li>
-      <i>{type}</i>
+      <i>{(!type || typeof type === 'string') ? type : type.title}</i>
       {children && (
         <ElementsLayersComponent elements={children} />
       )}

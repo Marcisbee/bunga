@@ -40,7 +40,7 @@ function StartConnectionComponent({ edge, connection }: StartConnectionComponent
   useStore(from.position.silent);
 
   const startX = x + width / 2;
-  const startY = y + height + 6;
+  const startY = y + height + 15;
 
   return (
     <g
@@ -98,7 +98,7 @@ function EndConnectionComponent({ startX, startY, index, position }: EndConnecti
   }
 
   const endX = x - 15;
-  const endY = y + 25 + (index * 16);
+  const endY = y + 26 + (index * 18);
 
   return (
     <path

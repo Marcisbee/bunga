@@ -44,7 +44,6 @@ $element-color: orangered;
   background-color: var(--edge-bg);
   border: 1px solid var(--edge-hr);
   outline: none;
-
 }
 
 .head {
@@ -54,6 +53,7 @@ $element-color: orangered;
   padding-bottom: 6px;
   font-size: 12px;
   border-bottom: 1px solid var(--edge-hr);
+  line-height: 1rem;
 
   // background-color: var(--edge-hr);
   // box-shadow: 0 0 0 2px var(--edge-hr);
@@ -61,9 +61,10 @@ $element-color: orangered;
   // border-top-right-radius: inherit;
 
   & > svg {
-    width: 14px;
-    height: 14px;
-    vertical-align: bottom;
+    display: inline-block;
+    width: 12px;
+    height: 1rem;
+    vertical-align: top;
     margin-right: 4px;
   }
 }

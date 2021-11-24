@@ -1,5 +1,8 @@
+import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import { createElement, forwardRef, useRef, useState } from 'react';
+import { ElementEdge, RenderElement } from '../../store/edges/element.edge';
+import { StyleEdge } from '../../store/edges/style.edge';
 
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
@@ -92,7 +95,12 @@ export function ElementComponent({ element }: ElementComponentProps) {
 const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>(({ element }, ref) => {
   const { type, props, children } = useStore(element);
 
-  return createElement(type, { ...props, ref }, children && <ElementChildrenComponent elements={children} />);
+  if (!type || typeof type === 'string') {
+    return createElement(type, { ...props, ref }, children && <ElementChildrenComponent elements={children} />);
+  }
+
+  return <RenderElement edge={type} children={children && <ElementChildrenComponent elements={children} />} />;
+  // return <RenderElement ref={ref} edge={type} />;
 });
 
 const ElementTextComponent = forwardRef<HTMLElement, { element: ElementTextStore }>(({ element }, ref) => {

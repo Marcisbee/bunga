@@ -15,8 +15,8 @@
     position: absolute;
     left: -5px;
     top: -5px;
-    width: calc(100% + 6px);
-    height: calc(100% + 6px);
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
     will-change: transform;
     transform: translate3d(0, 0, 0);
     border: 2px solid var(--edge-color);

@@ -66,6 +66,10 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
         // Stop bubbling to top canvas.
         e.stopPropagation();
 
+        if (e.button > 0) {
+          return;
+        }
+
         if (!e.shiftKey) {
           if (!moveStore.didMouseMove) {
             selectComponent(component, e.shiftKey);
@@ -77,6 +81,9 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
         selectComponent(component, e.shiftKey);
       }}
       onMouseDown={(e) => {
+        if (e.button > 0) {
+          return;
+        }
 
         if (e.shiftKey) {
           return;

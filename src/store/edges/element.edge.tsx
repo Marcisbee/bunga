@@ -6,17 +6,19 @@ import { store } from '../store';
 import { Edge } from './edge';
 import { Connection } from './connection';
 import { StyleEdge } from './style.edge';
+import { EdgePosition } from './position';
+import { getExomeId } from 'exome';
 
-function RenderCss({ style }: { style: StyleStore }) {
+export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
   const { css } = useStore(style);
   const { tokens } = useStore(store.activeSpace!.tokens[0]);
 
   return (
-    <style>{`:host {${tokens}}`}{`#obj { ${css}}`}</style>
+    <style>{`:host {${tokens}}`}{`#${id} { ${css}}`}</style>
   );
 }
 
-function RenderEdge({ style }: { style: StyleEdge }) {
+export function RenderCSSElement({ style }: { style: StyleEdge }) {
   const { input } = useStore(style);
 
   if (!input.source) {
@@ -24,20 +26,30 @@ function RenderEdge({ style }: { style: StyleEdge }) {
   }
 
   return (
-    <RenderCss style={input.source} />
+    <RenderCss style={input.source} id={getExomeId(style)} />
+  );
+}
+
+export function RenderElement({ edge, children }: { edge: ElementEdge, children: any }) {
+  return (
+    <>
+      {edge.input.style && edge.input.style.from && (
+        <RenderCSSElement style={edge.input.style.from as StyleEdge} />
+      )}
+      <div id={edge.input.style?.from && getExomeId(edge.input.style.from)}>
+        {children}
+      </div>
+    </>
   );
 }
 
 function Render({ edge }: { edge: ElementEdge }) {
   return (
-    <>
-      {edge.input.style && edge.input.style.from && (
-        <RenderEdge style={edge.input.style.from as StyleEdge} />
-      )}
-      <div>
-        <div id="obj">Hello</div>
-      </div>
-    </>
+    <div>
+      <RenderElement edge={edge}>
+        Sample
+      </RenderElement>
+    </div>
   );
 }
 
@@ -45,7 +57,8 @@ export class ElementEdge extends Edge {
   public static title = 'Element';
   public style = 'element';
 
-  public input: { style: Connection | null } = {
+  public input: { name: string, style: Connection | null } = {
+    name: 'unknown',
     style: null,
   };
   public connectableTo: Record<string, typeof Edge[]> = {
@@ -55,6 +68,16 @@ export class ElementEdge extends Edge {
   };
 
   public output: {} = {};
+
+  constructor(
+    public position: EdgePosition,
+  ) {
+    super(position);
+
+    if (store.activeSpace) {
+      store.activeSpace.customElements.push(this);
+    }
+  }
 
   public evaluate = async () => {
     const style = this.input.style;

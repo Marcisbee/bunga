@@ -1,6 +1,7 @@
 import dlv from 'dlv';
 import { dset } from 'dset';
 import { Exome, registerLoadable } from 'exome';
+import { ElementEdge } from './edges/element.edge';
 
 import { ElementTextStore } from './element-text.store';
 import { undoable } from './undo.store';
@@ -22,7 +23,7 @@ export class ElementStore<T extends Record<string, any> = Record<string, any>> e
   });
 
   constructor(
-    public type: string,
+    public type: string | ElementEdge,
     public props: T = {} as T,
     public children?: (ElementStore | ElementTextStore)[],
   ) {

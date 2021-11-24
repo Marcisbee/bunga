@@ -11,12 +11,14 @@ import { Edge } from './edges/edge';
 import { EdgePosition } from './edges/position';
 import { TokenStore } from './token.store';
 import { moveStore } from './move.store';
+import { ElementEdge } from './edges/element.edge';
 
 export class SpaceStore extends Exome {
   public position = new PositionStore();
   public boundary = new BoundaryStore(this);
   public activeElement = new ActiveElementStore();
   public activeStyle = new ActiveStyleStore();
+  public customElements: ElementEdge[] = [];
 
   constructor(
     public id: string,

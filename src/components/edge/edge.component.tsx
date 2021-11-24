@@ -50,6 +50,10 @@ export function EdgeComponent({ edge }: EdgeComponentProps) {
         // Stop bubbling to top canvas.
         e.stopPropagation();
 
+        if (e.button > 0) {
+          return;
+        }
+
         if (!e.shiftKey) {
           if (!moveStore.didMouseMove) {
             selectEdge(edge, e.shiftKey);
@@ -61,6 +65,9 @@ export function EdgeComponent({ edge }: EdgeComponentProps) {
         selectEdge(edge, e.shiftKey);
       }}
       onMouseDown={(e) => {
+        if (e.button > 0) {
+          return;
+        }
 
         if (e.shiftKey) {
           return;
