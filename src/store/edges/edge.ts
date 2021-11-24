@@ -17,6 +17,10 @@ export abstract class Edge extends Exome {
     super();
   }
 
+  public get title() {
+    return (this.constructor as typeof Edge).title;
+  }
+
   public abstract evaluate(): Promise<any>
 
   public setPrimitiveInput(path: string, value: any) {
