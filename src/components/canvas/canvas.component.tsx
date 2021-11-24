@@ -3,7 +3,7 @@ import { useStore } from 'exome/react';
 import { useLayoutEffect, useRef, useState } from 'react';
 // @ts-ignore
 import TinyGesture from 'tinygesture';
-import { moveStore } from '../../store/move.store';
+import { moveStore, SelectionStore } from '../../store/move.store';
 
 import { SpaceStore } from '../../store/space.store';
 import { store } from '../../store/store';
@@ -48,6 +48,76 @@ function DebugBoundary({ space }: CanvasComponentProps) {
   );
 }
 
+function CanvasSelectionComponent({ selection }: { selection: SelectionStore }) {
+  const ref = useRef<SVGSVGElement>(null);
+  const rootPosition = useRef({ x: 0, y: 0 });
+
+  const {
+    isSelecting,
+    rootX,
+    rootY,
+    firstX,
+    firstY,
+    secondX,
+    secondY,
+  } = useStore(selection);
+
+  const shouldSkip = !isSelecting || (firstX === firstY && secondX === secondY);
+
+  useLayoutEffect(() => {
+    if (!ref.current) {
+      return;
+    }
+
+    const rect = ref.current.getBoundingClientRect();
+
+    rootPosition.current.x = rect.x;
+    rootPosition.current.y = rect.y;
+  }, [shouldSkip]);
+
+  if (shouldSkip) {
+    return null;
+  }
+
+  let startX: number;
+  let endX: number;
+
+  if (firstX < secondX) {
+    startX = firstX;
+    endX = secondX;
+  } else {
+    startX = secondX;
+    endX = firstX;
+  }
+
+  let startY: number;
+  let endY: number;
+
+  if (firstY < secondY) {
+    startY = firstY;
+    endY = secondY;
+  } else {
+    startY = secondY;
+    endY = firstY;
+  }
+
+  return (
+    <svg
+      ref={ref}
+      className={styles.selection}
+    >
+      <rect
+        x={startX + 0.5 - rootPosition.current.x}
+        y={startY + 0.5 - rootPosition.current.y}
+        width={endX - startX}
+        height={endY - startY}
+        strokeWidth={0.5}
+        rx={2}
+      />
+    </svg>
+  );
+}
+
 export function CanvasComponent({ space }: CanvasComponentProps) {
   const canvas = useRef<HTMLDivElement>(null);
   const canvasRoot = useRef<HTMLDivElement>(null);
@@ -55,7 +125,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
 
   const [centerModifier, setCenterModifier] = useState<[number, number]>([0, 0]);
 
-  const { moveAllBy, reset } = useStore(moveStore);
+  const { moveAllBy, reset, selection } = useStore(moveStore);
   const { position, components, edges } = useStore(space);
   const { resetPosition } = useStore(position);
 
@@ -89,6 +159,11 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
     const handler = (e: WheelEvent) => {
       e.preventDefault()
 
+      if (selection.isSelecting) {
+        e.stopPropagation();
+        return;
+      }
+
       position.x -= e.deltaX
       position.y -= e.deltaY
 
@@ -99,6 +174,10 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
     }
 
     const handlerMove = () => {
+      if (selection.isSelecting) {
+        return;
+      }
+
       const x = `${position.x + gesture.touchMoveX}px`;
       const y = `${position.y + gesture.touchMoveY}px`;
 
@@ -128,8 +207,14 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
       style={{
         backgroundPosition: `${position.x}px ${position.y}px`,
       }}
-      onClick={() => {
-        reset();
+      onMouseDown={(e) => {
+        if (!e.shiftKey) {
+          reset();
+        }
+
+        const root = canvasRoot.current!.getBoundingClientRect();
+
+        selection.startSelection(root.x, root.y, e.pageX, e.pageY);
       }}
       onKeyDown={(e) => {
         const modifier = e.shiftKey ? 30 : 10;
@@ -159,6 +244,10 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
         store.activeSpace!.boundary.updateBoundary();
       }}
     >
+      <CanvasSelectionComponent
+        selection={selection}
+      />
+
       <div
         style={{
           display: 'block',
@@ -238,6 +327,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
               edge={edge}
             />
           ))}
+
           {/* <g className="react-flow__edge react-flow__edge-default animated">
             <path d="M630,37 C676,37 676,201.5 722,201.5" className="react-flow__edge-path" marker-end="none"></path>
           </g>

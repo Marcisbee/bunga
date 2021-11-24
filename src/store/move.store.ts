@@ -3,6 +3,71 @@ import { Exome } from 'exome';
 import { ComponentStore } from './component.store';
 import { Edge } from './edges/edge';
 
+export class SelectionStore extends Exome {
+  public rootX: number = 0;
+  public rootY: number = 0;
+  public firstX: number = 0;
+  public firstY: number = 0;
+  public secondX: number = 0;
+  public secondY: number = 0;
+
+  public isSelecting = false;
+
+  constructor(
+    public move: MoveStore,
+  ) {
+    super();
+  }
+
+  public startSelection(rootX: number, rootY: number, x: number, y: number) {
+    this.setIsSelecting(true);
+
+    this.rootX = rootX;
+    this.rootY = rootY;
+    this.firstX = x;
+    this.firstY = y;
+    this.secondX = x;
+    this.secondY = y;
+
+    const handlerMove = (e: MouseEvent) => {
+      e.stopPropagation();
+
+      if (e.pageX === this.secondX && e.pageY === this.secondY) {
+        return;
+      }
+
+      this.setPosition(e.pageX, e.pageY);
+    }
+
+    window.addEventListener('mousemove', handlerMove, { passive: true });
+
+    const handlerEnd = (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      this.setIsSelecting(false);
+
+      window.removeEventListener('mousemove', handlerMove);
+
+      window.removeEventListener('mouseup', handlerEnd);
+      window.removeEventListener('mouseleave', handlerEnd);
+      window.removeEventListener('mouseout', handlerEnd);
+    }
+
+    window.addEventListener('mouseup', handlerEnd);
+    window.addEventListener('mouseleave', handlerEnd);
+  }
+
+  public setIsSelecting(toggle: boolean) {
+    this.isSelecting = toggle;
+  }
+
+  public setPosition(x: number, y: number) {
+    this.secondX = x;
+    this.secondY = y;
+  }
+}
+
 export class MoveStore extends Exome {
   public selectedEdges: Edge[] = [];
   public selectedComponents: ComponentStore[] = [];
@@ -10,6 +75,8 @@ export class MoveStore extends Exome {
   public didMouseMove: boolean = false;
 
   private cachedAll: (Edge | ComponentStore)[] | null = null;
+
+  public selection = new SelectionStore(this);
 
   public get selectedAll(): (Edge | ComponentStore)[] {
     if (this.cachedAll !== null) {

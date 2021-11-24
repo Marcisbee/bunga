@@ -9,6 +9,8 @@
 }
 
 .active {
+  cursor: grab;
+
   & > div::before {
     display: block;
     content: '';

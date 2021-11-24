@@ -116,7 +116,6 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                 className={styles.output}
                 onClick={() => {
                   setFrom(key, edge);
-                  console.log('Listening for connection', key, edge);
                 }}
               >
                 <svg width="14" height="14" viewBox="0 0 19 13" fill={output[key].to.length > 0 ? 'currentColor' : 'none'} xmlns="http://www.w3.org/2000/svg">

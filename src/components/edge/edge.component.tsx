@@ -65,6 +65,9 @@ export function EdgeComponent({ edge }: EdgeComponentProps) {
         selectEdge(edge, e.shiftKey);
       }}
       onMouseDown={(e) => {
+        // Stop bubbling to top canvas.
+        e.stopPropagation();
+
         if (e.button > 0) {
           return;
         }

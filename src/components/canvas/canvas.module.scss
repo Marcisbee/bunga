@@ -27,6 +27,20 @@
   will-change: transform;
 }
 
+.selection {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+
+  rect {
+    fill: rgba(147, 210, 255, 0.1);
+    stroke: #2585d8;
+  }
+}
+
 /*
 @TODO:
 When starting a drag from action output and mouse enters component,
