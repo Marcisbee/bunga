@@ -2,6 +2,21 @@ import { Exome } from 'exome';
 
 import { ComponentStore } from './component.store';
 import { Edge } from './edges/edge';
+import { store } from './store';
+
+interface Rectangle {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+}
+
+function intersect(a: Rectangle, b: Rectangle) {
+  return (a.left <= b.right &&
+    b.left <= a.right &&
+    a.top <= b.bottom &&
+    b.top <= a.bottom)
+}
 
 export class SelectionStore extends Exome {
   public rootX: number = 0;
@@ -65,6 +80,62 @@ export class SelectionStore extends Exome {
   public setPosition(x: number, y: number) {
     this.secondX = x;
     this.secondY = y;
+
+    const space = store.activeSpace!;
+
+    const edgesToSelect: Edge[] = [];
+
+    let startX: number;
+    let endX: number;
+
+    if (this.firstX < this.secondX) {
+      startX = this.firstX - this.rootX;
+      endX = this.secondX - this.rootX;
+    } else {
+      startX = this.secondX - this.rootX;
+      endX = this.firstX - this.rootX;
+    }
+
+    let startY: number;
+    let endY: number;
+
+    if (this.firstY < this.secondY) {
+      startY = this.firstY - this.rootY;
+      endY = this.secondY - this.rootY;
+    } else {
+      startY = this.secondY - this.rootY;
+      endY = this.firstY - this.rootY;
+    }
+
+    for (const edge of space.edges) {
+      const position = edge.position;
+      const isTouching = intersect({
+        top: position.y,
+        left: position.x,
+        right: position.x + position.width,
+        bottom: position.y + position.height,
+      }, {
+        top: startY,
+        left: startX,
+        right: endX,
+        bottom: endY,
+      });
+
+      // Select
+      if (isTouching && this.move.selectedEdges.indexOf(edge) === -1) {
+        edgesToSelect.push(edge);
+      }
+
+      // Deselect
+      if (!isTouching && this.move.selectedEdges.indexOf(edge) > -1) {
+        edgesToSelect.push(edge);
+      }
+    }
+
+    for (const edge of edgesToSelect) {
+      this.move.selectEdge(edge, true);
+    }
+
   }
 }
 
