@@ -84,6 +84,7 @@ export class SelectionStore extends Exome {
     const space = store.activeSpace!;
 
     const edgesToSelect: Edge[] = [];
+    const componentsToSelect: ComponentStore[] = [];
 
     let startX: number;
     let endX: number;
@@ -132,10 +133,38 @@ export class SelectionStore extends Exome {
       }
     }
 
+    for (const component of space.components) {
+      const position = component.position;
+      const isTouching = intersect({
+        top: position.y,
+        left: position.x,
+        right: position.x + position.width,
+        bottom: position.y + position.height,
+      }, {
+        top: startY,
+        left: startX,
+        right: endX,
+        bottom: endY,
+      });
+
+      // Select
+      if (isTouching && this.move.selectedComponents.indexOf(component) === -1) {
+        componentsToSelect.push(component);
+      }
+
+      // Deselect
+      if (!isTouching && this.move.selectedComponents.indexOf(component) > -1) {
+        componentsToSelect.push(component);
+      }
+    }
+
     for (const edge of edgesToSelect) {
       this.move.selectEdge(edge, true);
     }
 
+    for (const component of componentsToSelect) {
+      this.move.selectComponent(component, true);
+    }
   }
 }
 
