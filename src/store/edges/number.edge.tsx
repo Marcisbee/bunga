@@ -3,7 +3,7 @@ import { useStore } from 'exome/react';
 import { Edge } from './edge';
 import { Connection } from './connection';
 
-function RenderValue({ edge }: { edge: VariableEdge }) {
+function RenderValue({ edge }: { edge: NumberEdge }) {
   const { input, setPrimitiveInput } = useStore(edge);
 
   return (
@@ -26,8 +26,8 @@ function RenderValue({ edge }: { edge: VariableEdge }) {
   );
 }
 
-export class VariableEdge extends Edge {
-  public static title = 'Value';
+export class NumberEdge extends Edge {
+  public static title = 'Number';
   public style = 'variable';
 
   public input: { value: number | undefined } = {

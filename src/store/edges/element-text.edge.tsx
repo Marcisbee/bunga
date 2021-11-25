@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Edge } from './edge';
 import { Connection } from './connection';
-import { VariableEdge } from './variable.edge';
+import { NumberEdge } from './number.edge';
 import { MathAddEdge } from './math-add.edge';
 
 function Render({ edge }: { edge: ElementTextEdge }) {
@@ -34,7 +34,7 @@ export class ElementTextEdge extends Edge {
   };
   public connectableTo: Record<string, typeof Edge[]> = {
     text: [
-      VariableEdge,
+      NumberEdge,
       MathAddEdge,
     ],
   };
