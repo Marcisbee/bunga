@@ -3,7 +3,7 @@ import * as assert from 'uvu/assert';
 
 import { Edge } from './edge';
 import { ElementTextEdge } from './element-text.edge';
-import { VariableEdge } from './variable.edge';
+import { NumberEdge } from './number.edge';
 
 const test = suite('ElementTextEdge');
 
@@ -23,8 +23,8 @@ test('can evaluate `text: null` input', async () => {
   });
 });
 
-test('can evaluate `text: VariableEdge (undefined)` input', async () => {
-  const input = new VariableEdge(null as any);
+test('can evaluate `text: NumberEdge (undefined)` input', async () => {
+  const input = new NumberEdge(null as any);
   const instance = new ElementTextEdge(null as any);
 
   input.output.default.connect('text', instance);
@@ -34,8 +34,8 @@ test('can evaluate `text: VariableEdge (undefined)` input', async () => {
   });
 });
 
-test('can evaluate `text: VariableEdge (15)` input', async () => {
-  const input = new VariableEdge(null as any);
+test('can evaluate `text: NumberEdge (15)` input', async () => {
+  const input = new NumberEdge(null as any);
   const instance = new ElementTextEdge(null as any);
 
   input.input.value = 15;

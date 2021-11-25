@@ -3,10 +3,10 @@ import { ElementTextEdge } from './element-text.edge';
 import { ElementEdge } from './element.edge';
 import { MathAddEdge } from './math-add.edge';
 import { StyleEdge } from './style.edge';
-import { VariableEdge } from './variable.edge';
+import { NumberEdge } from './number.edge';
 
 export const allEdges: typeof Edge[] = [
-  VariableEdge,
+  NumberEdge,
   MathAddEdge,
   StyleEdge,
   ElementEdge,

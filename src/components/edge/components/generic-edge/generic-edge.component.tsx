@@ -80,7 +80,6 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                       type="text"
                       defaultValue={input[key]}
                       onChange={(event) => setPrimitiveInput(key,event.target.value)}
-                      // onChange={(event) => setPrimitiveInput(key, parseInt(event.target.value, 10))}
                       style={{ fontSize: 11, width: 80, padding: 1, border: 0, borderRadius: 2, backgroundColor: '#fff', fontWeight: 'bold' }}
                     />
                   )
@@ -139,7 +138,6 @@ function EdgeOutput({ edge, id }: { edge: Edge, id: string }) {
   useEffect(() => {
     edge.evaluate()
       .then((output) => {
-        console.log('calculated', edge.title);
         const val = output && output?.[id];
 
         if (val instanceof StyleStore) {

@@ -1,6 +1,6 @@
 import { Edge } from './edge';
 import { Connection } from './connection';
-import { VariableEdge } from './variable.edge';
+import { NumberEdge } from './number.edge';
 
 export class MathAddEdge extends Edge {
   public static title = 'Math (+)';
@@ -12,11 +12,11 @@ export class MathAddEdge extends Edge {
   };
   public connectableTo: Record<string, typeof Edge[]> = {
     first: [
-      VariableEdge,
+      NumberEdge,
       MathAddEdge,
     ],
     second: [
-      VariableEdge,
+      NumberEdge,
       MathAddEdge,
     ],
   };

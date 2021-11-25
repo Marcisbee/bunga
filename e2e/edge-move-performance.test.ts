@@ -34,25 +34,25 @@ test('1 edge', async ({ page }) => {
 
   const addStartTime = performance.now();
   await addEdge(page.locator('text=add Value'), size);
-  const addedVariableEdge = performance.now() - addStartTime;
+  const addedNumberEdge = performance.now() - addStartTime;
 
-  console.log(`Adding ${size} variable edge took ${Math.round(addedVariableEdge)} ms`);
+  console.log(`Adding ${size} variable edge took ${Math.round(addedNumberEdge)} ms`);
 
   const selectStartTime = performance.now();
   await selectAllEdges(page.locator('#canvasRoot > div > div > div > div:first-child'));
-  const selectVariableEdge = performance.now() - selectStartTime;
+  const selectNumberEdge = performance.now() - selectStartTime;
 
-  console.log(`Selecting ${size} variable edge took ${Math.round(selectVariableEdge)} ms`);
+  console.log(`Selecting ${size} variable edge took ${Math.round(selectNumberEdge)} ms`);
 
   const moveStartTime = performance.now();
   await moveMouseBy(page, 100);
-  const moveVariableEdge = performance.now() - moveStartTime;
+  const moveNumberEdge = performance.now() - moveStartTime;
 
-  console.log(`Moving ${size} variable edge took ${Math.round(moveVariableEdge)} ms`);
+  console.log(`Moving ${size} variable edge took ${Math.round(moveNumberEdge)} ms`);
 
-  expect(addedVariableEdge).toBeLessThanOrEqual(60);
-  expect(selectVariableEdge).toBeLessThanOrEqual(45);
-  expect(moveVariableEdge).toBeLessThanOrEqual(1670);
+  expect(addedNumberEdge).toBeLessThanOrEqual(60);
+  expect(selectNumberEdge).toBeLessThanOrEqual(45);
+  expect(moveNumberEdge).toBeLessThanOrEqual(1670);
 });
 
 test('10 edges', async ({ page }) => {
@@ -63,25 +63,25 @@ test('10 edges', async ({ page }) => {
 
   const addStartTime = performance.now();
   await addEdge(page.locator('text=add Value'), size);
-  const addedVariableEdge = performance.now() - addStartTime;
+  const addedNumberEdge = performance.now() - addStartTime;
 
-  console.log(`Adding ${size} variable edges took ${Math.round(addedVariableEdge)} ms`);
+  console.log(`Adding ${size} variable edges took ${Math.round(addedNumberEdge)} ms`);
 
   const selectStartTime = performance.now();
   await selectAllEdges(page.locator('#canvasRoot > div > div > div > div:first-child'));
-  const selectVariableEdge = performance.now() - selectStartTime;
+  const selectNumberEdge = performance.now() - selectStartTime;
 
-  console.log(`Selecting ${size} variable edges took ${Math.round(selectVariableEdge)} ms`);
+  console.log(`Selecting ${size} variable edges took ${Math.round(selectNumberEdge)} ms`);
 
   const startTime = performance.now();
   await moveMouseBy(page, 100);
-  const moveVariableEdge = performance.now() - startTime;
+  const moveNumberEdge = performance.now() - startTime;
 
-  console.log(`Moving ${size} variable edges took ${Math.round(moveVariableEdge)} ms`);
+  console.log(`Moving ${size} variable edges took ${Math.round(moveNumberEdge)} ms`);
 
-  expect(addedVariableEdge).toBeLessThanOrEqual(350);
-  expect(selectVariableEdge).toBeLessThanOrEqual(370);
-  expect(moveVariableEdge).toBeLessThanOrEqual(1670);
+  expect(addedNumberEdge).toBeLessThanOrEqual(350);
+  expect(selectNumberEdge).toBeLessThanOrEqual(370);
+  expect(moveNumberEdge).toBeLessThanOrEqual(1670);
 });
 
 test('50 edges', async ({ page }) => {
@@ -92,25 +92,25 @@ test('50 edges', async ({ page }) => {
 
   const addStartTime = performance.now();
   await addEdge(page.locator('text=add Value'), size);
-  const addedVariableEdge = performance.now() - addStartTime;
+  const addedNumberEdge = performance.now() - addStartTime;
 
-  console.log(`Adding ${size} variable edges took ${Math.round(addedVariableEdge)} ms`);
+  console.log(`Adding ${size} variable edges took ${Math.round(addedNumberEdge)} ms`);
 
   const selectStartTime = performance.now();
   await selectAllEdges(page.locator('#canvasRoot > div > div > div > div:first-child'));
-  const selectVariableEdge = performance.now() - selectStartTime;
+  const selectNumberEdge = performance.now() - selectStartTime;
 
-  console.log(`Selecting ${size} variable edges took ${Math.round(selectVariableEdge)} ms`);
+  console.log(`Selecting ${size} variable edges took ${Math.round(selectNumberEdge)} ms`);
 
   const startTime = performance.now();
   await moveMouseBy(page, 100);
-  const moveVariableEdge = performance.now() - startTime;
+  const moveNumberEdge = performance.now() - startTime;
 
-  console.log(`Moving ${size} variable edges took ${Math.round(moveVariableEdge)} ms`);
+  console.log(`Moving ${size} variable edges took ${Math.round(moveNumberEdge)} ms`);
 
-  expect(addedVariableEdge).toBeLessThanOrEqual(1700);
-  expect(selectVariableEdge).toBeLessThanOrEqual(1700);
-  expect(moveVariableEdge).toBeLessThanOrEqual(1680);
+  expect(addedNumberEdge).toBeLessThanOrEqual(1700);
+  expect(selectNumberEdge).toBeLessThanOrEqual(1700);
+  expect(moveNumberEdge).toBeLessThanOrEqual(1680);
 });
 
 test('100 edges', async ({ page }) => {
@@ -121,23 +121,23 @@ test('100 edges', async ({ page }) => {
 
   const addStartTime = performance.now();
   await addEdge(page.locator('text=add Value'), size);
-  const addedVariableEdge = performance.now() - addStartTime;
+  const addedNumberEdge = performance.now() - addStartTime;
 
-  console.log(`Adding ${size} variable edges took ${Math.round(addedVariableEdge)} ms`);
+  console.log(`Adding ${size} variable edges took ${Math.round(addedNumberEdge)} ms`);
 
   const selectStartTime = performance.now();
   await selectAllEdges(page.locator('#canvasRoot > div > div > div > div:first-child'));
-  const selectVariableEdge = performance.now() - selectStartTime;
+  const selectNumberEdge = performance.now() - selectStartTime;
 
-  console.log(`Selecting ${size} variable edges took ${Math.round(selectVariableEdge)} ms`);
+  console.log(`Selecting ${size} variable edges took ${Math.round(selectNumberEdge)} ms`);
 
   const startTime = performance.now();
   await moveMouseBy(page, 100);
-  const moveVariableEdge = performance.now() - startTime;
+  const moveNumberEdge = performance.now() - startTime;
 
-  console.log(`Moving ${size} variable edges took ${Math.round(moveVariableEdge)} ms`);
+  console.log(`Moving ${size} variable edges took ${Math.round(moveNumberEdge)} ms`);
 
-  expect(addedVariableEdge).toBeLessThanOrEqual(3360);
-  expect(selectVariableEdge).toBeLessThanOrEqual(3370);
-  expect(moveVariableEdge).toBeLessThanOrEqual(1680);
+  expect(addedNumberEdge).toBeLessThanOrEqual(3360);
+  expect(selectNumberEdge).toBeLessThanOrEqual(3370);
+  expect(moveNumberEdge).toBeLessThanOrEqual(1680);
 });
