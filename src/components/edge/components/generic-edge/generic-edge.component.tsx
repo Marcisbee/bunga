@@ -66,7 +66,12 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                 )}
                 {key}
               </span>
-              <span>
+              <div
+                onMouseDown={(e) => e.stopPropagation()}
+                onMouseMove={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.stopPropagation()}
+                onKeyUp={(e) => e.stopPropagation()}
+              >
                 {!connectableTo[key] ? (
                   customControls?.[key] ? (
                     createElement(customControls[key])
@@ -77,10 +82,6 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                       onChange={(event) => setPrimitiveInput(key,event.target.value)}
                       // onChange={(event) => setPrimitiveInput(key, parseInt(event.target.value, 10))}
                       style={{ fontSize: 11, width: 80, padding: 1, border: 0, borderRadius: 2, backgroundColor: '#fff', fontWeight: 'bold' }}
-                      onMouseDown={(e) => e.stopPropagation()}
-                      onMouseMove={(e) => e.stopPropagation()}
-                      onKeyDown={(e) => e.stopPropagation()}
-                      onKeyUp={(e) => e.stopPropagation()}
                     />
                   )
                 ) : (
@@ -91,7 +92,7 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                     )}
                   </span>
                 )}
-              </span>
+              </div>
             </li>
           ))}
         </ul>
@@ -138,6 +139,7 @@ function EdgeOutput({ edge, id }: { edge: Edge, id: string }) {
   useEffect(() => {
     edge.evaluate()
       .then((output) => {
+        console.log('calculated', edge.title);
         const val = output && output?.[id];
 
         if (val instanceof StyleStore) {

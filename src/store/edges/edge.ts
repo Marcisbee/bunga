@@ -25,6 +25,14 @@ export abstract class Edge extends Exome {
 
   public setPrimitiveInput(path: string, value: any) {
     this.input[path] = value;
+
+    for (const key in this.output) {
+      if (Object.prototype.hasOwnProperty.call(this.output, key)) {
+        const connection = this.output[key];
+
+        connection.recalculate();
+      }
+    }
   }
 
   public canConnect(to: string, value: any): boolean {
@@ -40,4 +48,6 @@ export abstract class Edge extends Exome {
   public customControls?: Record<string, React.FunctionComponent>;
 
   public render?: React.FunctionComponent;
+
+  public recalculate() {}
 }
