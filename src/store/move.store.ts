@@ -51,7 +51,7 @@ export class SelectionStore extends Exome {
         return;
       }
 
-      this.setPosition(e.pageX, e.pageY, e.shiftKey);
+      this.setPosition(e.pageX, e.pageY);
     }
 
     window.addEventListener('mousemove', handlerMove, { passive: true });
@@ -77,7 +77,7 @@ export class SelectionStore extends Exome {
     this.isSelecting = toggle;
   }
 
-  public setPosition(x: number, y: number, shift: boolean = false) {
+  public setPosition(x: number, y: number) {
     this.secondX = x;
     this.secondY = y;
 
