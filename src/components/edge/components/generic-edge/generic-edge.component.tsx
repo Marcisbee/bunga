@@ -24,7 +24,6 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
         styles.container,
         styles[edge.style!],
       ])}
-      tabIndex={0}
     >
       <div className={styles.head}>
         {edge.style === 'variable' && (

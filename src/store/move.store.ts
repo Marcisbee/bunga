@@ -230,23 +230,24 @@ export class MoveStore extends Exome {
     this.mouseMove = null;
   }
 
-  public selectEdge(edge: Edge, shiftKey: boolean = false) {
+  public selectEdge(edge: Edge, shiftKey: boolean = false): boolean {
     this.cachedAll = null;
 
     if (!shiftKey) {
       this.selectedEdges = [edge];
       this.selectedComponents = [];
-      return;
+      return true;
     }
 
     const index = this.selectedEdges.indexOf(edge);
 
     if (index > -1) {
       this.selectedEdges.splice(index, 1);
-      return;
+      return false;
     }
 
     this.selectedEdges.push(edge);
+    return true;
   }
 
   public selectComponent(component: ComponentStore, shiftKey: boolean = false) {
