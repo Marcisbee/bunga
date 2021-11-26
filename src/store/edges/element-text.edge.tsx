@@ -9,6 +9,8 @@ import { StyleEdge } from './style.edge';
 import { RenderElement } from './element.edge';
 import { BooleanEdge } from './boolean.edge';
 import { MathEdge } from './math.edge';
+import { EdgePosition } from './position';
+import { store } from '../store';
 
 function Render({ edge }: { edge: ElementTextEdge }) {
   const [value, setValue] = React.useState('');
@@ -52,6 +54,16 @@ export class ElementTextEdge extends Edge {
   };
 
   public output: {} = {};
+
+  constructor(
+    public position: EdgePosition,
+  ) {
+    super(position);
+
+    if (store.activeSpace) {
+      store.activeSpace.customTextElements.push(this);
+    }
+  }
 
   public evaluate = async () => {
     const text = this.input.text;

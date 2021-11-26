@@ -8,7 +8,7 @@ import { moveStore } from '../../store/move.store';
 import { store } from '../../store/store';
 
 function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
-  const { name, customElements } = useStore(store.activeSpace!);
+  const { name, customBlockElements } = useStore(store.activeSpace!);
 
   return (
     <form
@@ -21,11 +21,11 @@ function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
 
         typeInput.value = '';
 
-        if (typeValue == null || typeValue === '' || !customElements[Number(typeValue)]) {
+        if (typeValue == null || typeValue === '' || !customBlockElements[Number(typeValue)]) {
           return;
         }
 
-        active.addElement(new ElementStore(customElements[Number(typeValue)], undefined, [
+        active.addElement(new ElementStore(customBlockElements[Number(typeValue)], undefined, [
           new ElementTextStore('another'),
         ]));
       }}
@@ -38,7 +38,7 @@ function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
         <option value="button">button</option>
         <option value="p">p</option>
         <option value="h1">h1</option> */}
-        {customElements.map((element, i) => (
+        {customBlockElements.map((element, i) => (
           <option
             key={`layer-${getExomeId(element)}`}
             value={i}

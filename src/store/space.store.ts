@@ -12,13 +12,15 @@ import { EdgePosition } from './edges/position';
 import { TokenStore } from './token.store';
 import { moveStore } from './move.store';
 import { ElementEdge } from './edges/element.edge';
+import { ElementTextEdge } from './edges/element-text.edge';
 
 export class SpaceStore extends Exome {
   public position = new PositionStore();
   public boundary = new BoundaryStore(this);
   public activeElement = new ActiveElementStore();
   public activeStyle = new ActiveStyleStore();
-  public customElements: ElementEdge[] = [];
+  public customBlockElements: ElementEdge[] = [];
+  public customTextElements: ElementTextEdge[] = [];
 
   constructor(
     public id: string,

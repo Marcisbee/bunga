@@ -15,7 +15,7 @@ export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
   const { tokens } = useStore(store.activeSpace!.tokens[0]);
 
   return (
-    <style>{`:host {${tokens}}`}{`#${id} { ${css}}`}</style>
+    <style>{`:host {${tokens}}`}{`#${id} {${css}}`}</style>
   );
 }
 
@@ -37,8 +37,10 @@ export function RenderElement({ edge, children }: { edge: ElementEdge | ElementT
       {edge.input.style && edge.input.style.from && (
         <RenderCSSElement style={edge.input.style.from as StyleEdge} />
       )}
-      <div id={edge.input.style?.from && getExomeId(edge.input.style.from)}>
-        {children}
+      <div
+        id={edge.input.style?.from && getExomeId(edge.input.style.from)}
+      >
+        {edge.input.style?.from ? children : null}
       </div>
     </>
   );
@@ -76,7 +78,7 @@ export class ElementEdge extends Edge {
     super(position);
 
     if (store.activeSpace) {
-      store.activeSpace.customElements.push(this);
+      store.activeSpace.customBlockElements.push(this);
     }
   }
 
