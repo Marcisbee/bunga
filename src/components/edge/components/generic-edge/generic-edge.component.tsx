@@ -144,7 +144,7 @@ function EdgeOutput({ edge, id }: { edge: Edge, id: string }) {
           return;
         }
 
-        setValue(val || '');
+        setValue(String(val == null ? '' : val));
       });
   });
 

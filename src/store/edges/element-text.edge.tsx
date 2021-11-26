@@ -8,6 +8,7 @@ import { MathAddEdge } from './math-add.edge';
 import { TextEdge } from './text.edge';
 import { StyleEdge } from './style.edge';
 import { RenderElement } from './element.edge';
+import { BooleanEdge } from './boolean.edge';
 
 function Render({ edge }: { edge: ElementTextEdge }) {
   const [value, setValue] = React.useState('');
@@ -17,7 +18,7 @@ function Render({ edge }: { edge: ElementTextEdge }) {
   React.useLayoutEffect(() => {
     edge.evaluate()
       .then((output) => {
-        setValue(output?.default || '');
+        setValue(output?.default == null ? '' : output.default);
       });
   });
 
@@ -41,6 +42,7 @@ export class ElementTextEdge extends Edge {
   public connectableTo: Record<string, typeof Edge[]> = {
     text: [
       TextEdge,
+      BooleanEdge,
       NumberEdge,
       MathAddEdge,
     ],
@@ -54,14 +56,16 @@ export class ElementTextEdge extends Edge {
   public evaluate = async () => {
     const text = this.input.text;
 
-    if (!text) {
+    if (text == null) {
       return {
         default: '',
       };
     }
 
+    const value = (await text.from.evaluate())?.[text.path]
+
     return {
-      default: String((await text.from.evaluate())?.[text.path] || ''),
+      default: String(value == null ? '' : value),
     };
   }
 
