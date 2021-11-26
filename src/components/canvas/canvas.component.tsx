@@ -125,7 +125,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
 
   const [centerModifier, setCenterModifier] = useState<[number, number]>([0, 0]);
 
-  const { moveAllBy, reset, selection } = useStore(moveStore);
+  const { moveAllBy, reset, save, selection } = useStore(moveStore);
   const { position, components, edges } = useStore(space);
   const { resetPosition } = useStore(position);
 
@@ -210,6 +210,8 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
       onMouseDown={(e) => {
         if (!e.shiftKey) {
           reset();
+        } else {
+          save();
         }
 
         const root = canvasRoot.current!.getBoundingClientRect();
