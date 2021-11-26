@@ -4,11 +4,11 @@ import React from 'react';
 import { Edge } from './edge';
 import { Connection } from './connection';
 import { NumberEdge } from './number.edge';
-import { MathAddEdge } from './math-add.edge';
 import { TextEdge } from './text.edge';
 import { StyleEdge } from './style.edge';
 import { RenderElement } from './element.edge';
 import { BooleanEdge } from './boolean.edge';
+import { MathEdge } from './math.edge';
 
 function Render({ edge }: { edge: ElementTextEdge }) {
   const [value, setValue] = React.useState('');
@@ -44,7 +44,7 @@ export class ElementTextEdge extends Edge {
       TextEdge,
       BooleanEdge,
       NumberEdge,
-      MathAddEdge,
+      MathEdge,
     ],
     style: [
       StyleEdge,

@@ -6,12 +6,14 @@ import { StyleEdge } from './style.edge';
 import { NumberEdge } from './number.edge';
 import { TextEdge } from './text.edge';
 import { BooleanEdge } from './boolean.edge';
+import { MathSubtractEdge } from './math-subtract.edge';
 
 export const allEdges: typeof Edge[] = [
   TextEdge,
   NumberEdge,
   BooleanEdge,
   MathAddEdge,
+  MathSubtractEdge,
   StyleEdge,
   ElementEdge,
   ElementTextEdge,

@@ -3,8 +3,8 @@ import { Connection } from './connection';
 import { NumberEdge } from './number.edge';
 import { MathEdge } from './math.edge';
 
-export class MathAddEdge extends MathEdge {
-  public static title = 'Math (+)';
+export class MathSubtractEdge extends MathEdge {
+  public static title = 'Math (-)';
 
   public input: { first: Connection | null, second: Connection | null } = {
     first: null,
@@ -39,7 +39,7 @@ export class MathAddEdge extends MathEdge {
     const secondValue = await second.from.evaluate();
 
     return {
-      default: firstValue?.[first.path] + secondValue?.[second.path],
+      default: firstValue?.[first.path] - secondValue?.[second.path],
     };
   }
 }
