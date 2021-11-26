@@ -4,8 +4,11 @@ import React from 'react';
 import { Edge } from './edge';
 import { Connection } from './connection';
 import { NumberEdge } from './number.edge';
-import { MathAddEdge } from './math-add.edge';
+import { TextEdge } from './text.edge';
+import { StyleEdge } from './style.edge';
+import { RenderElement } from './element.edge';
 import { BooleanEdge } from './boolean.edge';
+import { MathEdge } from './math.edge';
 
 function Render({ edge }: { edge: ElementTextEdge }) {
   const [value, setValue] = React.useState('');
@@ -21,23 +24,30 @@ function Render({ edge }: { edge: ElementTextEdge }) {
 
   return (
     <div>
-      {value}
+      <RenderElement edge={edge}>
+        {value}
+      </RenderElement>
     </div>
   );
 }
 
 export class ElementTextEdge extends Edge {
-  public static title = 'Element Text';
+  public static title = 'Text Element';
   public style = 'element';
 
-  public input: { text: Connection | null } = {
+  public input: { text: Connection | null, style: Connection | null } = {
     text: null,
+    style: null,
   };
   public connectableTo: Record<string, typeof Edge[]> = {
     text: [
+      TextEdge,
       BooleanEdge,
       NumberEdge,
-      MathAddEdge,
+      MathEdge,
+    ],
+    style: [
+      StyleEdge,
     ],
   };
 

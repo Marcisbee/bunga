@@ -8,6 +8,7 @@ import { Connection } from './connection';
 import { StyleEdge } from './style.edge';
 import { EdgePosition } from './position';
 import { getExomeId } from 'exome';
+import { ElementTextEdge } from './element-text.edge';
 
 export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
   const { css } = useStore(style);
@@ -30,7 +31,7 @@ export function RenderCSSElement({ style }: { style: StyleEdge }) {
   );
 }
 
-export function RenderElement({ edge, children }: { edge: ElementEdge, children: any }) {
+export function RenderElement({ edge, children }: { edge: ElementEdge | ElementTextEdge, children: any }) {
   return (
     <>
       {edge.input.style && edge.input.style.from && (
@@ -54,7 +55,7 @@ function Render({ edge }: { edge: ElementEdge }) {
 }
 
 export class ElementEdge extends Edge {
-  public static title = 'Element';
+  public static title = 'Block Element';
   public style = 'element';
 
   public input: { name: string, style: Connection | null } = {

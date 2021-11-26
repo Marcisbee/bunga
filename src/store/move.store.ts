@@ -122,13 +122,15 @@ export class SelectionStore extends Exome {
         bottom: endY,
       });
 
+      const index = this.move.selectedEdges.indexOf(edge);
+
       // Select
-      if (isTouching && this.move.selectedEdges.indexOf(edge) === -1) {
+      if (isTouching && index === -1) {
         edgesToSelect.push(edge);
       }
 
       // Deselect
-      if (!isTouching && this.move.selectedEdges.indexOf(edge) > -1) {
+      if (!isTouching && index > -1) {
         edgesToSelect.push(edge);
       }
     }
@@ -147,14 +149,36 @@ export class SelectionStore extends Exome {
         bottom: endY,
       });
 
+      const index = this.move.selectedComponents.indexOf(component);
+
       // Select
-      if (isTouching && this.move.selectedComponents.indexOf(component) === -1) {
+      if (isTouching && index === -1) {
         componentsToSelect.push(component);
       }
 
       // Deselect
-      if (!isTouching && this.move.selectedComponents.indexOf(component) > -1) {
+      if (!isTouching && index > -1) {
         componentsToSelect.push(component);
+      }
+    }
+
+    for (const edge of this.move.previouslySelectedEdges) {
+      const index = edgesToSelect.indexOf(edge);
+
+      if (index === -1) {
+        edgesToSelect.push(edge);
+      } else {
+        edgesToSelect.splice(index, 1);
+      }
+    }
+
+    for (const component of this.move.previouslySelectedComponents) {
+      const index = componentsToSelect.indexOf(component);
+
+      if (index === -1) {
+        componentsToSelect.push(component);
+      } else {
+        componentsToSelect.splice(index, 1);
       }
     }
 
@@ -169,6 +193,9 @@ export class SelectionStore extends Exome {
 }
 
 export class MoveStore extends Exome {
+  public previouslySelectedEdges: Edge[] = [];
+  public previouslySelectedComponents: ComponentStore[] = [];
+
   public selectedEdges: Edge[] = [];
   public selectedComponents: ComponentStore[] = [];
   public mouseMove: [number, number] | null = null;
@@ -230,23 +257,24 @@ export class MoveStore extends Exome {
     this.mouseMove = null;
   }
 
-  public selectEdge(edge: Edge, shiftKey: boolean = false) {
+  public selectEdge(edge: Edge, shiftKey: boolean = false): boolean {
     this.cachedAll = null;
 
     if (!shiftKey) {
       this.selectedEdges = [edge];
       this.selectedComponents = [];
-      return;
+      return true;
     }
 
     const index = this.selectedEdges.indexOf(edge);
 
     if (index > -1) {
       this.selectedEdges.splice(index, 1);
-      return;
+      return false;
     }
 
     this.selectedEdges.push(edge);
+    return true;
   }
 
   public selectComponent(component: ComponentStore, shiftKey: boolean = false) {
@@ -281,6 +309,13 @@ export class MoveStore extends Exome {
 
     this.selectedEdges = [];
     this.selectedComponents = [];
+    this.previouslySelectedEdges = [];
+    this.previouslySelectedComponents = [];
+  }
+
+  public save() {
+    this.previouslySelectedEdges = this.selectedEdges.slice();
+    this.previouslySelectedComponents = this.selectedComponents.slice();
   }
 }
 
