@@ -1,5 +1,6 @@
 import { Exome } from 'exome';
 import React from 'react';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { Connection } from './connection';
 import { EdgePosition } from './position';
@@ -9,7 +10,8 @@ export abstract class Edge extends Exome {
 
   public style?: string;
 
-  public abstract input: Record<string, any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public abstract input: Record<string, null | Connection | BehaviorSubject<any>>;
 
   public abstract connectableTo: Record<string, typeof Edge[]>;
 
@@ -25,21 +27,23 @@ export abstract class Edge extends Exome {
     return (this.constructor as typeof Edge).title;
   }
 
-  public abstract evaluate(): Promise<any>
+  public abstract selectOutput<T = unknown>(path: string): Observable<T>;
 
-  public setPrimitiveInput(path: string, value: any) {
-    this.input[path] = value;
+  public selectInput = <T = unknown>(path: string): Observable<T> | undefined => {
+    const inputValue = this.input[path];
 
-    for (const key in this.output) {
-      if (Object.prototype.hasOwnProperty.call(this.output, key)) {
-        const connection = this.output[key];
-
-        connection.recalculate();
-      }
+    if (inputValue instanceof Connection) {
+      return inputValue.from?.selectOutput(inputValue.path);
     }
-  }
 
-  public canConnect(to: string, value: any): boolean {
+    if (inputValue instanceof BehaviorSubject) {
+      return inputValue;
+    }
+
+    return undefined;
+  };
+
+  public canConnect = (to: string, value: unknown): boolean => {
     const instances = this.connectableTo?.[to];
 
     if (!instances || !Array.isArray(instances)) {
@@ -47,11 +51,9 @@ export abstract class Edge extends Exome {
     }
 
     return instances.some((instance) => value instanceof instance);
-  }
+  };
 
   public customControls?: Record<string, React.FunctionComponent>;
 
   public render?: React.FunctionComponent;
-
-  public recalculate() {}
 }

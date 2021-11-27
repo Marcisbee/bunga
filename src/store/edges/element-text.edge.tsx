@@ -1,6 +1,6 @@
 import { useStore } from 'exome/react';
-import React from 'react';
 
+import { useObservable } from '../../hooks/use-observable';
 import { store } from '../store';
 
 import { BooleanEdge } from './boolean.edge';
@@ -14,24 +14,22 @@ import { StyleEdge } from './style.edge';
 import { TextEdge } from './text.edge';
 
 function Render({ edge }: { edge: ElementTextEdge }) {
-  const [value, setValue] = React.useState('');
+  const { selectInput } = useStore(edge);
 
-  useStore(edge);
-
-  React.useLayoutEffect(() => {
-    edge.evaluate()
-      .then((output) => {
-        setValue(output?.default == null ? '' : output.default);
-      });
-  });
+  const elementText = useObservable<string>(selectInput('text')!);
 
   return (
     <div>
       <RenderElement edge={edge}>
-        {value}
+        {elementText}
       </RenderElement>
     </div>
   );
+}
+
+type ElementTextEdgeInput = {
+  text: Connection | null;
+  style: Connection | null;
 }
 
 export class ElementTextEdge extends Edge {
@@ -39,7 +37,7 @@ export class ElementTextEdge extends Edge {
 
   public style = 'element';
 
-  public input: { text: Connection | null, style: Connection | null } = {
+  public input: ElementTextEdgeInput = {
     text: null,
     style: null,
   };
@@ -68,21 +66,7 @@ export class ElementTextEdge extends Edge {
     }
   }
 
-  public evaluate = async () => {
-    const { text } = this.input;
-
-    if (text == null) {
-      return {
-        default: '',
-      };
-    }
-
-    const value = (await text.from.evaluate())?.[text.path];
-
-    return {
-      default: String(value == null ? '' : value),
-    };
-  };
+  public selectOutput = (path: 'default') => undefined as any;
 
   public render = () => <Render edge={this} />;
 }

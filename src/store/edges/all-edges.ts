@@ -8,6 +8,7 @@ import { MathMultiplyEdge } from './math-multiply.edge';
 import { MathSubtractEdge } from './math-subtract.edge';
 import { NumberEdge } from './number.edge';
 import { StyleEdge } from './style.edge';
+import { SwitchEdge } from './switch.edge';
 import { TextEdge } from './text.edge';
 
 export const allEdges: typeof Edge[] = [
@@ -21,4 +22,5 @@ export const allEdges: typeof Edge[] = [
   StyleEdge,
   ElementEdge,
   ElementTextEdge,
+  SwitchEdge,
 ];

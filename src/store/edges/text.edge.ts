@@ -1,13 +1,19 @@
+import { BehaviorSubject } from 'rxjs';
+
 import { Connection } from './connection';
 import { Edge } from './edge';
+
+type TextEdgeInput = {
+  value: BehaviorSubject<string>;
+}
 
 export class TextEdge extends Edge {
   public static title = 'Text';
 
   public style = 'variable';
 
-  public input: { value: string | undefined } = {
-    value: undefined,
+  public input: TextEdgeInput = {
+    value: new BehaviorSubject<string>(''),
   };
 
   public connectableTo: Record<string, typeof Edge[]> = {};
@@ -16,7 +22,5 @@ export class TextEdge extends Edge {
     default: new Connection(this, 'default'),
   };
 
-  public evaluate = async () => ({
-    default: this.input.value,
-  });
+  public selectOutput = (path: string) => this.input.value as any;
 }

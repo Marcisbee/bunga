@@ -1,12 +1,19 @@
+import { combineLatest, map } from 'rxjs';
+
 import { Connection } from './connection';
 import { Edge } from './edge';
 import { MathEdge } from './math.edge';
 import { NumberEdge } from './number.edge';
 
+type MathMultiplyEdgeInput = {
+  first: Connection | null;
+  second: Connection | null;
+}
+
 export class MathMultiplyEdge extends MathEdge {
   public static title = 'Math (×)';
 
-  public input: { first: Connection | null, second: Connection | null } = {
+  public input: MathMultiplyEdgeInput = {
     first: null,
     second: null,
   };
@@ -26,22 +33,18 @@ export class MathMultiplyEdge extends MathEdge {
     default: new Connection(this, 'default'),
   };
 
-  public evaluate = async () => {
-    const { first } = this.input;
-    const { second } = this.input;
+  public selectOutput = (path: string) => {
+    const { first, second } = this.input;
 
     if (!first || !second) {
-      return {
-        default: undefined,
-      };
+      return undefined as any;
     }
 
-    const firstValue = await first.from.evaluate();
-    const secondValue = await second.from.evaluate();
-
-    return {
-      // eslint-disable-next-line no-unsafe-optional-chaining
-      default: firstValue?.[first.path] * secondValue?.[second.path],
-    };
+    return combineLatest([
+      first.from.selectOutput<number>(first.path),
+      second.from.selectOutput<number>(second.path),
+    ]).pipe(
+      map(([a, b]) => a * b),
+    );
   };
 }

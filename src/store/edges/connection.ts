@@ -31,10 +31,4 @@ export class Connection extends Exome {
 
     return true;
   }
-
-  public recalculate = () => {
-    for (const edgePath of this.to) {
-      edgePath[1].recalculate();
-    }
-  };
 }

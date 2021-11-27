@@ -3,10 +3,12 @@ import { useStore } from 'exome/react';
 import {
   createElement,
   memo,
-  useEffect,
-  useState,
+  useMemo,
 } from 'react';
+import { BehaviorSubject } from 'rxjs';
 
+import { useObservable } from '../../../../hooks/use-observable';
+import { Connection } from '../../../../store/edges/connection';
 import { Edge } from '../../../../store/edges/edge';
 import { pendingEdge } from '../../../../store/edges/pending';
 import { StyleStore } from '../../../../store/style.store';
@@ -24,7 +26,6 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
     input,
     connectableTo,
     output,
-    setPrimitiveInput,
     customControls,
   } = useStore(edge);
   const { setFrom, connectTo } = useStore(pendingEdge);
@@ -63,7 +64,7 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                     className={styles.input}
                     onClick={() => {
                       if (input[key]) {
-                        input[key].disconnect(key, edge);
+                        (input[key] as Connection).disconnect(key, edge);
                         return;
                       }
 
@@ -79,6 +80,7 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
               </span>
               <div
                 role="button"
+                // @TODO: fix this
                 onMouseDown={(e) => e.stopPropagation()}
                 onMouseMove={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.stopPropagation()}
@@ -90,8 +92,10 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                   ) : (
                     <input
                       type="text"
-                      defaultValue={input[key]}
-                      onChange={(event) => setPrimitiveInput(key, event.target.value)}
+                      defaultValue={(input[key] as BehaviorSubject<any>)!.value}
+                      onChange={(event) => {
+                        (input[key] as BehaviorSubject<any>)!.next(event.target.value);
+                      }}
                       style={{
                         fontSize: 11,
                         width: 80,
@@ -104,10 +108,12 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                     />
                   )
                 ) : (
-                  // @TODO: Stylized input types + values.
                   <span>
                     {input[key] && (
-                      <EdgeOutput edge={input[key].from} id={input[key].path} />
+                      <EdgeOutput
+                        edge={(input[key] as Connection).from}
+                        id={(input[key] as Connection).path}
+                      />
                     )}
                   </span>
                 )}
@@ -152,24 +158,14 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
   );
 }, () => true);
 
-function EdgeOutput({ edge, id }: { edge: Edge, id: string }) {
-  const [value, setValue] = useState('');
+function EdgeOutput({ edge, id }: { edge: Edge, id: string }): React.ReactElement {
+  const { selectOutput } = useStore(edge);
 
-  useStore(edge);
+  const value = useObservable(useMemo(() => selectOutput(id), [selectOutput, id]));
 
-  useEffect(() => {
-    edge.evaluate()
-      .then((output) => {
-        const val = output && output?.[id];
+  if (value instanceof StyleStore) {
+    return value.name as unknown as React.ReactElement;
+  }
 
-        if (val instanceof StyleStore) {
-          setValue((val as any)?.name);
-          return;
-        }
-
-        setValue(String(val == null ? '' : val));
-      });
-  });
-
-  return value as unknown as React.ReactElement;
+  return (String(value == null ? '' : value)) as unknown as React.ReactElement;
 }

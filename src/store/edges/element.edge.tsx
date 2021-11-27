@@ -1,6 +1,9 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
+import { Suspense, useMemo } from 'react';
+import { BehaviorSubject } from 'rxjs';
 
+import { useObservable } from '../../hooks/use-observable';
 import { store } from '../store';
 import { StyleStore } from '../style.store';
 
@@ -9,6 +12,7 @@ import { Edge } from './edge';
 import { ElementTextEdge } from './element-text.edge';
 import { EdgePosition } from './position';
 import { StyleEdge } from './style.edge';
+import { SwitchEdge } from './switch.edge';
 
 export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
   const { css } = useStore(style);
@@ -22,44 +26,43 @@ export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
   );
 }
 
-export function RenderCSSElement({ style }: { style: StyleEdge }) {
-  const { input } = useStore(style);
-
-  if (!input.source) {
-    return null;
-  }
-
-  return (
-    <RenderCss style={input.source} id={getExomeId(style)} />
-  );
-}
-
 export function RenderElement({
   edge,
   children,
 }: { edge: ElementEdge | ElementTextEdge, children: any }) {
+  const { selectInput } = useStore(edge);
+
+  const elementStyle = useObservable<StyleStore>(selectInput('style')!);
+
+  const id = getExomeId(edge);
+
   return (
     <>
-      {edge.input.style && edge.input.style.from && (
-        <RenderCSSElement style={edge.input.style.from as StyleEdge} />
-      )}
-      <div
-        id={edge.input.style?.from && getExomeId(edge.input.style.from)}
-      >
-        {edge.input.style?.from ? children : null}
+      {!!elementStyle && <RenderCss id={id} style={elementStyle} />}
+      <div id={id}>
+        {children}
       </div>
     </>
   );
 }
 
 function Render({ edge }: { edge: ElementEdge }) {
+  useStore(edge);
+
   return (
     <div>
-      <RenderElement edge={edge}>
-        Sample
-      </RenderElement>
+      <Suspense fallback="...">
+        <RenderElement edge={edge}>
+          Sample
+        </RenderElement>
+      </Suspense>
     </div>
   );
+}
+
+type ElementEdgeInput = {
+  name: BehaviorSubject<string>;
+  style: Connection | null;
 }
 
 export class ElementEdge extends Edge {
@@ -67,13 +70,14 @@ export class ElementEdge extends Edge {
 
   public style = 'element';
 
-  public input: { name: string, style: Connection | null } = {
-    name: 'unknown',
+  public input: ElementEdgeInput = {
+    name: new BehaviorSubject('Unknown'),
     style: null,
   };
 
   public connectableTo: Record<string, typeof Edge[]> = {
     style: [
+      SwitchEdge,
       StyleEdge,
     ],
   };
@@ -90,21 +94,7 @@ export class ElementEdge extends Edge {
     }
   }
 
-  public evaluate = async () => {
-    const { style } = this.input;
-
-    if (!style) {
-      return {
-        style: [],
-      };
-    }
-
-    return {
-      style: [
-        (await style.from.evaluate())?.[style.path],
-      ],
-    };
-  };
+  public selectOutput = (path: 'default') => undefined as any;
 
   public render = () => <Render edge={this} />;
 }

@@ -1,6 +1,8 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 
+import { observableToPromise } from '../../utils/observable-to-promise';
+
 import { Edge } from './edge';
 import { ElementTextEdge } from './element-text.edge';
 import { NumberEdge } from './number.edge';
@@ -18,9 +20,7 @@ test('ElementTextEdge is instance of Edge', () => {
 test('can evaluate `text: null` input', async () => {
   const instance = new ElementTextEdge(null as any);
 
-  assert.equal(await instance.evaluate(), {
-    default: '',
-  });
+  assert.equal(instance.selectInput('text')!, undefined);
 });
 
 test('can evaluate `text: NumberEdge (undefined)` input', async () => {
@@ -29,22 +29,18 @@ test('can evaluate `text: NumberEdge (undefined)` input', async () => {
 
   input.output.default.connect('text', instance);
 
-  assert.equal(await instance.evaluate(), {
-    default: '',
-  });
+  assert.equal(await observableToPromise(instance.selectInput('text')!), undefined);
 });
 
 test('can evaluate `text: NumberEdge (15)` input', async () => {
   const input = new NumberEdge(null as any);
   const instance = new ElementTextEdge(null as any);
 
-  input.input.value = 15;
+  input.input.value.next(15);
 
   input.output.default.connect('text', instance);
 
-  assert.equal(await instance.evaluate(), {
-    default: '15',
-  });
+  assert.equal(await observableToPromise(instance.selectInput('text')!), 15);
 });
 
 test.run();

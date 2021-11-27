@@ -1,6 +1,8 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
+import { BehaviorSubject } from 'rxjs';
 
+import { useObservable } from '../../hooks/use-observable';
 import { store } from '../store';
 import { StyleStore } from '../style.store';
 
@@ -16,16 +18,18 @@ function RenderSourceOption({ style }: { style: StyleStore }) {
 }
 
 function RenderSource({ edge }: { edge: StyleEdge }) {
-  const { input, setPrimitiveInput } = useStore(edge);
+  const { input } = useStore(edge);
   const { styles: stylesList } = useStore(store.activeProject!);
+
+  const value = useObservable(input.source);
 
   return (
     <select
-      value={input.source ? getExomeId(input.source) : ''}
+      value={value ? getExomeId(value) : ''}
       onChange={(e) => {
         const selectedStyle = stylesList.find((s) => getExomeId(s) === e.target.value)!;
 
-        setPrimitiveInput('source', selectedStyle);
+        input.source.next(selectedStyle);
       }}
       style={{
         border: 0,
@@ -44,13 +48,17 @@ function RenderSource({ edge }: { edge: StyleEdge }) {
   );
 }
 
+type StyleEdgeInput = {
+  source: BehaviorSubject<StyleStore | null>;
+}
+
 export class StyleEdge extends Edge {
   public static title = 'Style';
 
   public style = 'style';
 
-  public input: { source: StyleStore | null } = {
-    source: null,
+  public input: StyleEdgeInput = {
+    source: new BehaviorSubject<StyleStore | null>(null),
   };
 
   public connectableTo: Record<string, typeof Edge[]> = {};
@@ -59,9 +67,7 @@ export class StyleEdge extends Edge {
     default: new Connection(this, 'default'),
   };
 
-  public evaluate = async () => ({
-    default: this.input.source,
-  });
+  public selectOutput = (path: string) => this.input.source as any;
 
   public customControls = {
     source: () => <RenderSource edge={this} />,

@@ -5,12 +5,13 @@ import { ProjectStore } from './project.store';
 
 // Enable devtools in dev mode
 if (process.env.NODE_ENV !== 'production') {
-  addMiddleware(
-    exomeDevtools({
-      name: 'Codename: Facade app',
-      maxAge: 30,
-    }),
-  );
+  // @TODO: Fix exome + devtools + BehaviorSubject
+  // addMiddleware(
+  //   exomeDevtools({
+  //     name: 'Codename: Facade app',
+  //     maxAge: 30,
+  //   }),
+  // );
 }
 
 export class Store extends Exome {

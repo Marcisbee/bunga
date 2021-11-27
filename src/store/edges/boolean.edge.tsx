@@ -1,17 +1,18 @@
 import { useStore } from 'exome/react';
+import { BehaviorSubject } from 'rxjs';
 
 import { Connection } from './connection';
 import { Edge } from './edge';
 
 function RenderValue({ edge }: { edge: BooleanEdge }) {
-  const { input, setPrimitiveInput } = useStore(edge);
+  const { input } = useStore(edge);
 
   return (
     <input
       type="checkbox"
-      checked={!input.value}
+      defaultChecked={!input.value}
       onChange={(event) => {
-        setPrimitiveInput('value', !event.target.checked);
+        input.value.next(!event.target.checked);
       }}
       style={{
         fontSize: 11,
@@ -29,13 +30,17 @@ function RenderValue({ edge }: { edge: BooleanEdge }) {
   );
 }
 
+type BooleanEdgeInput = {
+  value: BehaviorSubject<boolean>;
+}
+
 export class BooleanEdge extends Edge {
   public static title = 'Boolean';
 
   public style = 'variable';
 
-  public input: { value: boolean | undefined } = {
-    value: undefined,
+  public input: BooleanEdgeInput = {
+    value: new BehaviorSubject<boolean>(false),
   };
 
   public connectableTo: Record<string, typeof Edge[]> = {};
@@ -44,9 +49,7 @@ export class BooleanEdge extends Edge {
     default: new Connection(this, 'default'),
   };
 
-  public evaluate = async () => ({
-    default: !!this.input.value,
-  });
+  public selectOutput = (path: string) => this.input.value as any;
 
   public customControls = {
     value: () => <RenderValue edge={this} />,
