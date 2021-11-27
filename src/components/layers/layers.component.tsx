@@ -96,9 +96,9 @@ function ActiveLayersComponent({ active }: { active: ComponentStore }) {
     <div>
       <ElementsLayersComponent elements={elements} />
 
-      <hr />
+      {/* <hr />
 
-      <ElementAddLayersComponent active={active} />
+      <ElementAddLayersComponent active={active} /> */}
     </div>
   );
 }
@@ -166,24 +166,20 @@ export function LayersComponent() {
         </button>
         <div style={{ minHeight: 200 }}>
           {components.map((component) => (
-            <div
-              key={`layer-component-${getExomeId(component)}`}
-              role="button"
-              onClick={(e) => selectComponent(component, e.shiftKey)}
-            >
-              {selectedComponents.indexOf(component) > -1 && '!'}
-              {' '}
-              {component.name}
+            <div key={`layer-component-${getExomeId(component)}`}>
+              <div
+                role="button"
+                onClick={(e) => selectComponent(component, e.shiftKey)}
+              >
+                {selectedComponents.indexOf(component) > -1 && '!'}
+                {' '}
+                {component.name}
+              </div>
+              <hr />
+              <ActiveLayersComponent active={component} />
             </div>
           ))}
         </div>
-      </div>
-
-      <div>
-        <hr />
-        {!!selectedComponents[0] && (
-          <ActiveLayersComponent active={selectedComponents[0]} />
-        )}
       </div>
     </div>
   );
