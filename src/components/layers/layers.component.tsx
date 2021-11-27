@@ -105,7 +105,11 @@ function ActiveLayersComponent({ active }: { active: ComponentStore }) {
 
 export function LayersComponent() {
   const {
-    spaces, activeSpace, addSpace, setActiveSpace,
+    spaces,
+    activeSpace,
+    addSpace,
+    setActiveSpace,
+    removeSpace,
   } = useStore(store.activeProject!);
   const { components, addComponent, move } = useStore(activeSpace);
   const { selectedComponents, selectComponent } = useStore(move);
@@ -121,7 +125,7 @@ export function LayersComponent() {
         >
           +
         </button>
-        <div style={{ minHeight: 200 }}>
+        <div style={{ minHeight: 200, position: 'relative' }}>
           {spaces.map((space) => (
             <div
               key={`layer-space-${getExomeId(space)}`}
@@ -131,6 +135,20 @@ export function LayersComponent() {
               {activeSpace === space && '!'}
               {' '}
               {space.name}
+
+              {spaces.length > 1 && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    removeSpace(space);
+                  }}
+                  style={{ right: 0, position: 'absolute' }}
+                >
+                  x
+                </button>
+              )}
             </div>
           ))}
         </div>

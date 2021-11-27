@@ -221,6 +221,10 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
         backgroundPosition: `${position.x}px ${position.y}px`,
       }}
       onMouseDown={(e) => {
+        if (e.button > 0) {
+          return;
+        }
+
         if (!e.shiftKey) {
           reset();
         } else {

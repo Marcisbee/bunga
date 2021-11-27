@@ -1,4 +1,4 @@
-import { Exome, registerLoadable } from 'exome';
+import { Exome, getExomeId, registerLoadable } from 'exome';
 
 import { permalink } from '../utils/permalink';
 
@@ -9,7 +9,7 @@ import { ActiveStyleStore, StyleStore } from './style.store';
 import { TokenStore } from './token.store';
 
 export class ProjectStore extends Exome {
-  public activeSpace!: SpaceStore;
+  public activeSpace: SpaceStore;
 
   public activeStyle = new ActiveStyleStore();
 
@@ -44,6 +44,20 @@ export class ProjectStore extends Exome {
 
     this.spaces.push(space);
     this.activeSpace = space;
+  }
+
+  public removeSpace(space: SpaceStore) {
+    if (this.spaces.length <= 1) {
+      return;
+    }
+
+    const index = this.spaces.indexOf(space);
+
+    this.spaces.splice(index, 1);
+
+    if (space === this.activeSpace) {
+      this.activeSpace = this.spaces[Math.max(0, index - 1)];
+    }
   }
 
   public addStyle() {
