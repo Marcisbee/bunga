@@ -10,7 +10,7 @@ function RenderValue({ edge }: { edge: BooleanEdge }) {
   return (
     <input
       type="checkbox"
-      defaultChecked={!input.value}
+      defaultChecked={!!input.value}
       onChange={(event) => {
         input.value.next(!event.target.checked);
       }}
