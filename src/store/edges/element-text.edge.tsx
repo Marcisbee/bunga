@@ -11,6 +11,7 @@ import { MathEdge } from './math.edge';
 import { NumberEdge } from './number.edge';
 import { EdgePosition } from './position';
 import { StyleEdge } from './style.edge';
+import { SwitchEdge } from './switch.edge';
 import { TextEdge } from './text.edge';
 
 function Render({ edge }: { edge: ElementTextEdge }) {
@@ -50,6 +51,7 @@ export class ElementTextEdge extends Edge {
       MathEdge,
     ],
     style: [
+      SwitchEdge,
       StyleEdge,
     ],
   };
