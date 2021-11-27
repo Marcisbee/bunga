@@ -51,20 +51,28 @@ function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
   );
 }
 
-function ElementLayersComponent({ element }: { element: ElementStore }) {
-  const { type, children } = useStore(element);
+function ElementLayersComponent({ element }: { element: ElementStore | ElementTextStore }) {
+  const el = useStore(element);
+
+  if (!(el instanceof ElementStore)) {
+    return (
+      <li>
+        <i>{(el as ElementTextStore).text}</i>
+      </li>
+    );
+  }
 
   return (
     <li>
-      <i>{(!type || typeof type === 'string') ? type : type.title}</i>
-      {children && (
-        <ElementsLayersComponent elements={children} />
+      <i>{(!el.type || typeof el.type === 'string') ? el.type : el.type.title}</i>
+      {el.children && (
+        <ElementsLayersComponent elements={el.children} />
       )}
     </li>
   );
 }
 
-function ElementsLayersComponent({ elements }: { elements: ElementStore[] }) {
+function ElementsLayersComponent({ elements }: { elements: (ElementStore | ElementTextStore)[] }) {
   return (
     <ul>
       {elements.map((element) => (
