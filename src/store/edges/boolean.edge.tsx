@@ -1,18 +1,22 @@
 import { useStore } from 'exome/react';
 import { BehaviorSubject } from 'rxjs';
 
+import { useObservable } from '../../hooks/use-observable';
+
 import { Connection } from './connection';
 import { Edge } from './edge';
 
 function RenderValue({ edge }: { edge: BooleanEdge }) {
-  const { input } = useStore(edge);
+  const { input, selectInput } = useStore(edge);
+
+  const value = !!useObservable(selectInput('value')!);
 
   return (
     <input
       type="checkbox"
-      defaultChecked={!!input.value.value}
+      checked={value}
       onChange={(event) => {
-        input.value.next(!event.target.checked);
+        input.value.next(event.target.checked);
       }}
       style={{
         fontSize: 11,
