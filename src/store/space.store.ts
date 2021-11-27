@@ -2,18 +2,21 @@ import { Exome, registerLoadable } from 'exome';
 
 import { permalink } from '../utils/permalink';
 
-import { ComponentPositionStore, ComponentStore } from './component.store';
 import { BoundaryStore } from './boundary.store';
-import { PositionStore } from './position.store';
-import { ActiveElementStore } from './element.store';
+import { ComponentPositionStore, ComponentStore } from './component.store';
 import { Edge } from './edges/edge';
 import { EdgePosition } from './edges/position';
+import { ActiveElementStore } from './element.store';
 import { MoveStore } from './move.store';
+import { PositionStore } from './position.store';
 
 export class SpaceStore extends Exome {
   public move = new MoveStore();
+
   public position = new PositionStore();
+
   public boundary = new BoundaryStore(this);
+
   public activeElement = new ActiveElementStore();
 
   constructor(
@@ -28,7 +31,12 @@ export class SpaceStore extends Exome {
   public addComponent() {
     this.boundary.updateBoundary();
 
-    let { x, y, width, height } = this.boundary;
+    let {
+      x,
+      y,
+      width,
+      height,
+    } = this.boundary;
 
     const active = this.move.selectedAll[0];
     if (active) {
@@ -67,7 +75,12 @@ export class SpaceStore extends Exome {
   public addEdge(Apply: typeof Edge) {
     this.boundary.updateBoundary();
 
-    let { x, y, width, height } = this.boundary;
+    let {
+      x,
+      y,
+      width,
+      height,
+    } = this.boundary;
 
     const active = this.move.selectedAll[0];
     if (active) {
@@ -91,6 +104,7 @@ export class SpaceStore extends Exome {
       position.y = -(position.height / 2);
     }
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const edge: Edge = new Apply(position);
     this.edges.push(edge);

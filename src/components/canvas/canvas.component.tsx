@@ -1,12 +1,12 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import { useLayoutEffect, useRef, useState } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import TinyGesture from 'tinygesture';
-import { SelectionStore } from '../../store/move.store';
 
+import { SelectionStore } from '../../store/move.store';
 import { SpaceStore } from '../../store/space.store';
-import { store } from '../../store/store';
 import { ComponentComponent } from '../component/component.component';
 import { ConnectionComponent } from '../connection/connection.component';
 import { EdgeComponent } from '../edge/edge.component';
@@ -19,7 +19,9 @@ interface CanvasComponentProps {
 
 // @DEBUG: This is a debug component that renders the canvas boundaries.
 function DebugBoundary({ space }: CanvasComponentProps) {
-  const { x, y, width, height } = useStore(space.boundary);
+  const {
+    x, y, width, height,
+  } = useStore(space.boundary);
 
   return (
     <div
@@ -42,7 +44,9 @@ function DebugBoundary({ space }: CanvasComponentProps) {
           whiteSpace: 'nowrap',
         }}
       >
-        {JSON.stringify({ x, y, w: width, h: height })}
+        {JSON.stringify({
+          x, y, w: width, h: height,
+        })}
       </span>
     </div>
   );
@@ -54,8 +58,6 @@ function CanvasSelectionComponent({ selection }: { selection: SelectionStore }) 
 
   const {
     isSelecting,
-    rootX,
-    rootY,
     firstX,
     firstY,
     secondX,
@@ -125,8 +127,18 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
 
   const [centerModifier, setCenterModifier] = useState<[number, number]>([0, 0]);
 
-  const { position, components, edges, move } = useStore(space);
-  const { moveAllBy, reset, save, selection } = useStore(move);
+  const {
+    position,
+    components,
+    edges,
+    move,
+  } = useStore(space);
+  const {
+    moveAllBy,
+    reset,
+    save,
+    selection,
+  } = useStore(move);
   const { resetPosition } = useStore(position);
 
   useLayoutEffect(() => {
@@ -157,21 +169,21 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
     }
 
     const handler = (e: WheelEvent) => {
-      e.preventDefault()
+      e.preventDefault();
 
       if (selection.isSelecting) {
         e.stopPropagation();
         return;
       }
 
-      position.x -= e.deltaX
-      position.y -= e.deltaY
+      position.x -= e.deltaX;
+      position.y -= e.deltaY;
 
       const x = `${position.x}px`;
       const y = `${position.y}px`;
 
       setCanvasStylePosition(x, y);
-    }
+    };
 
     const handlerMove = () => {
       if (selection.isSelecting) {
@@ -182,12 +194,12 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
       const y = `${position.y + gesture.touchMoveY}px`;
 
       setCanvasStylePosition(x, y);
-    }
+    };
 
     const handlerMoveEnd = () => {
       position.x += gesture.touchMoveX;
       position.y += gesture.touchMoveY;
-    }
+    };
 
     canvas.current!.addEventListener('wheel', handler);
 
@@ -203,6 +215,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
   return (
     <div
       ref={canvas}
+      role="button"
       className={styles.canvas}
       style={{
         backgroundPosition: `${position.x}px ${position.y}px`,
@@ -259,6 +272,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
         }}
       >
         <button
+          type="button"
           onClick={resetPosition}
         >
           Reset position
@@ -291,32 +305,6 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
       </div>
 
       <svg className={styles.connections}>
-        {/* <defs>
-          <marker
-            className="react-flow__arrowhead"
-            id="react-flow__arrowclosed"
-            markerWidth="12.5"
-            markerHeight="12.5"
-            viewBox="-10 -10 20 20"
-            orient="auto"
-            refX="0"
-            refY="0"
-          >
-            <polyline stroke="#b1b1b7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" fill="#b1b1b7" points="-5,-4 0,0 -5,4 -5,-4"></polyline>
-          </marker>
-          <marker
-            className="react-flow__arrowhead"
-            id="react-flow__arrow"
-            markerWidth="12.5"
-            markerHeight="12.5"
-            viewBox="-10 -10 20 20"
-            orient="auto"
-            refX="0"
-            refY="0"
-          >
-            <polyline stroke="#b1b1b7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" fill="none" points="-5,-4 0,0 -5,4"></polyline>
-          </marker>
-        </defs> */}
         <g
           ref={svgRoot}
           style={{
@@ -329,16 +317,6 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
               edge={edge}
             />
           ))}
-
-          {/* <g className="react-flow__edge react-flow__edge-default animated">
-            <path d="M630,37 C676,37 676,201.5 722,201.5" className="react-flow__edge-path" marker-end="none"></path>
-          </g>
-          <g className="react-flow__edge react-flow__edge-default animated">
-            <path d="M580,182 C651,182 651,201.5 722,201.5" className="react-flow__edge-path" marker-end="none"></path>
-          </g> */}
-          {/* <g className="react-flow__edge react-flow__edge-default animated">
-            <path d="M0,0 C100,0 100,200 200,200" className="react-flow__edge-path" markerEnd="none"></path>
-          </g> */}
         </g>
       </svg>
     </div>

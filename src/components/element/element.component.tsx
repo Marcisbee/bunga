@@ -1,9 +1,13 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
-import { createElement, forwardRef, useRef, useState } from 'react';
-import { ElementEdge, RenderElement } from '../../store/edges/element.edge';
-import { StyleEdge } from '../../store/edges/style.edge';
+import {
+  createElement,
+  forwardRef,
+  useRef,
+  useState,
+} from 'react';
 
+import { RenderElement } from '../../store/edges/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 
@@ -93,37 +97,49 @@ export function ElementComponent({ element }: ElementComponentProps) {
   );
 }
 
-const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>(({ element }, ref) => {
-  const { type, props, children } = useStore(element);
+const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>(
+  ({ element }, ref) => {
+    const { type, props, children } = useStore(element);
 
-  if (!type || typeof type === 'string') {
-    return createElement(type, { ...props, ref }, children && <ElementChildrenComponent elements={children} />);
-  }
+    if (!type || typeof type === 'string') {
+      return createElement(
+        type,
+        { ...props, ref },
+        children && <ElementChildrenComponent elements={children} />,
+      );
+    }
 
-  return <RenderElement edge={type} children={children && <ElementChildrenComponent elements={children} />} />;
-  // return <RenderElement ref={ref} edge={type} />;
-});
+    return (
+      <RenderElement edge={type}>
+        {children && <ElementChildrenComponent elements={children} />}
+      </RenderElement>
+    );
+    // return <RenderElement ref={ref} edge={type} />;
+  },
+);
 
-const ElementTextComponent = forwardRef<HTMLElement, { element: ElementTextStore }>(({ element }, ref) => {
-  const { text } = useStore(element);
-  const [value, setValue] = useState(text);
+const ElementTextComponent = forwardRef<HTMLElement, { element: ElementTextStore }>(
+  ({ element }, ref) => {
+    const { text } = useStore(element);
+    const [value, setValue] = useState(text);
 
-  // @TODO: Listen all edge changes.
-  // useStore(edge);
+    // @TODO: Listen all edge changes.
+    // useStore(edge);
 
-  // useLayoutEffect(() => {
-  //   if (!edge.input.text) {
-  //     return;
-  //   }
+    // useLayoutEffect(() => {
+    //   if (!edge.input.text) {
+    //     return;
+    //   }
 
-  //   console.log('update');
+    //   console.log('update');
 
-  //   edge.evaluate()
-  //     .then((output) => {
-  //       setValue(output && output?.[edge.input.text?.path] || '');
-  //       // e.innerHTML = JSON.stringify(output);
-  //     });
-  // });
+    //   edge.evaluate()
+    //     .then((output) => {
+    //       setValue(output && output?.[edge.input.text?.path] || '');
+    //       // e.innerHTML = JSON.stringify(output);
+    //     });
+    // });
 
-  return createElement('span', { ref }, value);
-});
+    return createElement('span', { ref }, value);
+  },
+);

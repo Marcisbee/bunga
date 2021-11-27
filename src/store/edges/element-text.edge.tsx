@@ -1,16 +1,17 @@
 import { useStore } from 'exome/react';
 import React from 'react';
 
-import { Edge } from './edge';
-import { Connection } from './connection';
-import { NumberEdge } from './number.edge';
-import { TextEdge } from './text.edge';
-import { StyleEdge } from './style.edge';
-import { RenderElement } from './element.edge';
-import { BooleanEdge } from './boolean.edge';
-import { MathEdge } from './math.edge';
-import { EdgePosition } from './position';
 import { store } from '../store';
+
+import { BooleanEdge } from './boolean.edge';
+import { Connection } from './connection';
+import { Edge } from './edge';
+import { RenderElement } from './element.edge';
+import { MathEdge } from './math.edge';
+import { NumberEdge } from './number.edge';
+import { EdgePosition } from './position';
+import { StyleEdge } from './style.edge';
+import { TextEdge } from './text.edge';
 
 function Render({ edge }: { edge: ElementTextEdge }) {
   const [value, setValue] = React.useState('');
@@ -35,12 +36,14 @@ function Render({ edge }: { edge: ElementTextEdge }) {
 
 export class ElementTextEdge extends Edge {
   public static title = 'Text Element';
+
   public style = 'element';
 
   public input: { text: Connection | null, style: Connection | null } = {
     text: null,
     style: null,
   };
+
   public connectableTo: Record<string, typeof Edge[]> = {
     text: [
       TextEdge,
@@ -53,7 +56,7 @@ export class ElementTextEdge extends Edge {
     ],
   };
 
-  public output: {} = {};
+  public output: Record<string, any> = {};
 
   constructor(
     public position: EdgePosition,
@@ -66,7 +69,7 @@ export class ElementTextEdge extends Edge {
   }
 
   public evaluate = async () => {
-    const text = this.input.text;
+    const { text } = this.input;
 
     if (text == null) {
       return {
@@ -74,12 +77,12 @@ export class ElementTextEdge extends Edge {
       };
     }
 
-    const value = (await text.from.evaluate())?.[text.path]
+    const value = (await text.from.evaluate())?.[text.path];
 
     return {
       default: String(value == null ? '' : value),
     };
-  }
+  };
 
   public render = () => <Render edge={this} />;
 }

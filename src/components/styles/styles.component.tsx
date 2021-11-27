@@ -6,7 +6,12 @@ import { store } from '../../store/store';
 import { ActiveStyleStore, StyleStore } from '../../store/style.store';
 
 function ActiveStylesComponent({ active }: { active: StyleStore }) {
-  const { name, css, setName, setCss } = useStore(active);
+  const {
+    name,
+    css,
+    setName,
+    setCss,
+  } = useStore(active);
 
   return (
     <div>
@@ -29,13 +34,17 @@ function ActiveStylesComponent({ active }: { active: StyleStore }) {
   );
 }
 
-function ListStylesComponent({ activeStyle, style }: { activeStyle: ActiveStyleStore, style: StyleStore }) {
+function ListStylesComponent({
+  activeStyle,
+  style,
+}: { activeStyle: ActiveStyleStore, style: StyleStore }) {
   const { active, setActive } = useStore(activeStyle);
   const { name } = useStore(style);
 
   return (
-    <div onClick={() => setActive(style)}>
-      {active === style && '!'} {name}
+    <div role="button" tabIndex={0} onClick={() => setActive(style)}>
+      {active === style && '! '}
+      {name}
     </div>
   );
 }
@@ -49,6 +58,7 @@ function StylesManagerComponent() {
       <div>
         <strong>Styles manager</strong>
         <button
+          type="button"
           onClick={addStyle}
           style={{ float: 'right' }}
         >
@@ -78,7 +88,12 @@ function StylesManagerComponent() {
 function TokensManagerComponent() {
   const project = useStore(store.activeProject!);
   // @TODO: Add more tokens?? (figure out how this would work UX wise)
-  const { name, tokens, setName, setTokens } = useStore(project.tokens[0]);
+  const {
+    name,
+    tokens,
+    setName,
+    setTokens,
+  } = useStore(project.tokens[0]);
 
   return (
     <div>
@@ -113,11 +128,13 @@ export function StylesComponent() {
   return (
     <div>
       <div>
-        <button onClick={() => setTab('styles')}>
-          {tab === 'styles' && '!'}Styles
+        <button type="button" onClick={() => setTab('styles')}>
+          {tab === 'styles' && '! '}
+          Styles
         </button>
-        <button onClick={() => setTab('tokens')}>
-          {tab === 'tokens' && '!'}Tokens
+        <button type="button" onClick={() => setTab('tokens')}>
+          {tab === 'tokens' && '! '}
+          Tokens
         </button>
       </div>
       <div>

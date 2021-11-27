@@ -1,7 +1,7 @@
 import { useStore } from 'exome/react';
 
-import { Edge } from './edge';
 import { Connection } from './connection';
+import { Edge } from './edge';
 
 function RenderValue({ edge }: { edge: NumberEdge }) {
   const { input, setPrimitiveInput } = useStore(edge);
@@ -28,24 +28,24 @@ function RenderValue({ edge }: { edge: NumberEdge }) {
 
 export class NumberEdge extends Edge {
   public static title = 'Number';
+
   public style = 'variable';
 
   public input: { value: number | undefined } = {
     value: undefined,
   };
+
   public connectableTo: Record<string, typeof Edge[]> = {};
 
   public output: { default: Connection } = {
     default: new Connection(this, 'default'),
   };
 
-  public evaluate = async () => {
-    return {
-      default: this.input.value,
-    };
-  }
+  public evaluate = async () => ({
+    default: this.input.value,
+  });
 
   public customControls = {
-    value: () => <RenderValue edge={ this } />,
+    value: () => <RenderValue edge={this} />,
   };
 }

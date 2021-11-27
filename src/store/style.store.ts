@@ -9,7 +9,7 @@ export class ActiveStyleStore extends Exome {
 }
 
 export class StyleStore extends Exome {
-  public css: string = 'color: white;\nbackground-color: purple;\nborder: 0;';
+  public css = 'color: white;\nbackground-color: purple;\nborder: 0;';
 
   public constructor(public name: string) {
     super();

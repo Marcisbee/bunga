@@ -15,7 +15,7 @@ function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
         e.stopPropagation();
         e.preventDefault();
 
-        const typeInput = ((e.target as HTMLFormElement)[0] as HTMLInputElement)
+        const typeInput = ((e.target as HTMLFormElement)[0] as HTMLInputElement);
         const typeValue = typeInput.value;
 
         typeInput.value = '';
@@ -42,7 +42,11 @@ function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
             key={`layer-custom-element-${getExomeId(element)}`}
             value={i}
           >
-            [{name}] {element.input.name}
+            [
+            {name}
+            ]
+            {' '}
+            {element.input.name}
           </option>
         ))}
       </select>
@@ -100,7 +104,9 @@ function ActiveLayersComponent({ active }: { active: ComponentStore }) {
 }
 
 export function LayersComponent() {
-  const { spaces, activeSpace, addSpace, setActiveSpace } = useStore(store.activeProject!);
+  const {
+    spaces, activeSpace, addSpace, setActiveSpace,
+  } = useStore(store.activeProject!);
   const { components, addComponent, move } = useStore(activeSpace);
   const { selectedComponents, selectComponent } = useStore(move);
 
@@ -109,6 +115,7 @@ export function LayersComponent() {
       <div>
         <strong>Spaces</strong>
         <button
+          type="button"
           onClick={() => addSpace()}
           style={{ float: 'right' }}
         >
@@ -118,9 +125,12 @@ export function LayersComponent() {
           {spaces.map((space) => (
             <div
               key={`layer-space-${getExomeId(space)}`}
+              role="button"
               onClick={() => setActiveSpace(space)}
             >
-              {activeSpace === space && '!'} {space.name}
+              {activeSpace === space && '!'}
+              {' '}
+              {space.name}
             </div>
           ))}
         </div>
@@ -130,6 +140,7 @@ export function LayersComponent() {
         <hr />
         <strong>Components</strong>
         <button
+          type="button"
           onClick={addComponent}
           style={{ float: 'right' }}
         >
@@ -139,9 +150,12 @@ export function LayersComponent() {
           {components.map((component) => (
             <div
               key={`layer-component-${getExomeId(component)}`}
+              role="button"
               onClick={(e) => selectComponent(component, e.shiftKey)}
             >
-              {selectedComponents.indexOf(component) > -1 && '!'} {component.name}
+              {selectedComponents.indexOf(component) > -1 && '!'}
+              {' '}
+              {component.name}
             </div>
           ))}
         </div>

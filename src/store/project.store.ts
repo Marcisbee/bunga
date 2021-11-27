@@ -10,8 +10,11 @@ import { TokenStore } from './token.store';
 
 export class ProjectStore extends Exome {
   public activeSpace!: SpaceStore;
+
   public activeStyle = new ActiveStyleStore();
+
   public customBlockElements: ElementEdge[] = [];
+
   public customTextElements: ElementTextEdge[] = [];
 
   constructor(
@@ -28,14 +31,15 @@ export class ProjectStore extends Exome {
   ) {
     super();
 
-    this.activeSpace = this.spaces[0];
+    [this.activeSpace] = this.spaces;
   }
 
   public setActiveSpace(space: SpaceStore): SpaceStore {
-    return this.activeSpace = space;
+    this.activeSpace = space;
+    return space;
   }
 
-  public addSpace(name: string = 'Space ' + (this.spaces.length + 1)) {
+  public addSpace(name = `Space ${this.spaces.length + 1}`) {
     const space = new SpaceStore(name);
 
     this.spaces.push(space);
@@ -43,7 +47,7 @@ export class ProjectStore extends Exome {
   }
 
   public addStyle() {
-    const style = new StyleStore('Style ' + (this.styles.length + 1));
+    const style = new StyleStore(`Style ${this.styles.length + 1}`);
 
     this.styles.push(style);
     this.activeStyle.setActive(style);

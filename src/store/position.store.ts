@@ -2,6 +2,7 @@ import { Exome } from 'exome';
 
 export class PositionStore extends Exome {
   public x = 0;
+
   public y = 0;
 
   public before = {

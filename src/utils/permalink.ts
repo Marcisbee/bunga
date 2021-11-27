@@ -68,9 +68,7 @@ const fromRegex = new RegExp(Object.keys(charMap).join('|'), 'g');
 
 export function permalink(name: string): string {
   return name.toLowerCase()
-    .replace(fromRegex, (char) =>
-      charMap[char],
-    )
+    .replace(fromRegex, (char) => charMap[char])
     .replace(/[^\u0100-\uFFFF\w-]|[_–-]+/g, '-')
     .replace(/-{2,}/g, '-')
     .replace(/^-+|-+$/g, '');

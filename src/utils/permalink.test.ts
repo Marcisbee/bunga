@@ -23,7 +23,7 @@ const tests = [
   ['foo-and-bar', 'Foo&Bar'],
   ['foo-and-bar', 'Foo _&-     bar'],
   ['foo-bar-baz', '  _ foo---BAR- _  baZ---_'],
-  ['foo-bar', ' ~!@#$%^*foo()+/-+?>·,<:";\'{}[]\|`bar'],
+  ['foo-bar', ' ~!@#$%^*foo()+/-+?>·,<:";\'{}[]\\|`bar'],
   ['screen0', 'Screen0'],
   ['screen-1', 'Screen 1'],
   ['hello-world', 'HELLO_WORLD'],

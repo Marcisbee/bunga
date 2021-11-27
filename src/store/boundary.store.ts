@@ -6,8 +6,11 @@ import { SpaceStore } from './space.store';
 
 export class BoundaryStore extends Exome {
   public x = 0;
+
   public y = 0;
+
   public width = 0;
+
   public height = 0;
 
   constructor(private space: SpaceStore) {

@@ -36,9 +36,19 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
 
 export function ComponentComponent({ component }: ComponentComponentProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { x, y, width, height } = useStore(component.position);
-  const move = store.activeProject!.activeSpace.move;
-  const { selectedAll, selectedComponents, selectComponent, startMouseMove } = useStore(move);
+  const {
+    x,
+    y,
+    width,
+    height,
+  } = useStore(component.position);
+  const { move } = store.activeProject!.activeSpace;
+  const {
+    selectedAll,
+    selectedComponents,
+    selectComponent,
+    startMouseMove,
+  } = useStore(move);
 
   const isActive = selectedComponents.indexOf(component) > -1;
 
@@ -59,6 +69,7 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
   return (
     <div
       ref={ref}
+      role="button"
       className={cc([
         style.object,
         isActive && style.active,

@@ -16,15 +16,19 @@ if (process.env.NODE_ENV !== 'production') {
 export class Store extends Exome {
   // @TODO: Create user store.
   public user: any;
+
   public projects: Record<string, ProjectStore> = {};
+
   public activeProject?: ProjectStore;
 
   public setActiveProject(id: string): ProjectStore {
-    return this.activeProject = (
+    this.activeProject = (
       this.projects[id] || (
         this.projects[id] = new ProjectStore(id, 'Unknown')
       )
     );
+
+    return this.activeProject;
   }
 }
 

@@ -1,15 +1,15 @@
-import { useMemo } from 'react';
+import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { store } from '../../store/store';
 import { CanvasComponent } from '../../components/canvas/canvas.component';
 import { LayersComponent } from '../../components/layers/layers.component';
 import { StylesComponent } from '../../components/styles/styles.component';
 import { allEdges } from '../../store/edges/all-edges';
+import { store } from '../../store/store';
 
 import style from './project.module.scss';
-import { getExomeId } from 'exome';
 
 export function ProjectPage() {
   const params = useParams();
@@ -24,7 +24,9 @@ export function ProjectPage() {
   return (
     <div className={style.app}>
       <div style={{ width: 240 }}>
-        Project: {params.id}
+        Project:
+        {' '}
+        {params.id}
         <hr />
         <LayersComponent />
       </div>
@@ -33,15 +35,20 @@ export function ProjectPage() {
         <div className={style.top}>
           <span style={{ float: 'right' }}>current people</span>
           {allEdges.map((edge) => (
-            <button key={edge.title} onClick={() => project.activeSpace.addEdge(edge)}>add {edge.title}</button>
+            <button type="button" key={edge.title} onClick={() => project.activeSpace.addEdge(edge)}>
+              add
+              {' '}
+              {edge.title}
+            </button>
           ))}
           <button
+            type="button"
             key={allEdges[0].name}
             onClick={() => {
               const edgesToSelect: any[] = [];
 
-              new Array(10).fill(0).forEach((_, i) => {
-                edgesToSelect.push(project.activeSpace.addEdge(allEdges[0]))
+              new Array(10).fill(0).forEach(() => {
+                edgesToSelect.push(project.activeSpace.addEdge(allEdges[0]));
               });
 
               new Array(10).fill(0).forEach((_, i) => {
@@ -49,7 +56,7 @@ export function ProjectPage() {
                 if (i === 0) {
                   edge.position.moveTo(-85, 60);
                 }
-                edgesToSelect.push(edge)
+                edgesToSelect.push(edge);
               });
 
               new Array(10).fill(0).forEach((_, i) => {
@@ -57,7 +64,7 @@ export function ProjectPage() {
                 if (i === 0) {
                   edge.position.moveTo(-85, 60 + 100 * 1);
                 }
-                edgesToSelect.push(edge)
+                edgesToSelect.push(edge);
               });
 
               new Array(10).fill(0).forEach((_, i) => {
@@ -65,7 +72,7 @@ export function ProjectPage() {
                 if (i === 0) {
                   edge.position.moveTo(-85, 60 + 100 * 2);
                 }
-                edgesToSelect.push(edge)
+                edgesToSelect.push(edge);
               });
 
               new Array(10).fill(0).forEach((_, i) => {
@@ -73,17 +80,19 @@ export function ProjectPage() {
                 if (i === 0) {
                   edge.position.moveTo(-85, 60 + 100 * 3);
                 }
-                edgesToSelect.push(edge)
+                edgesToSelect.push(edge);
               });
 
               setTimeout(() => {
-                edgesToSelect.forEach((edge, i) => {
+                edgesToSelect.forEach((edge) => {
                   project.activeSpace.move.selectEdge(edge, true);
                 });
               }, 0);
             }}
           >
-            add 50x {allEdges[0].name}
+            add 50x
+            {' '}
+            {allEdges[0].name}
           </button>
         </div>
 

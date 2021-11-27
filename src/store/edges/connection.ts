@@ -36,5 +36,5 @@ export class Connection extends Exome {
     for (const edgePath of this.to) {
       edgePath[1].recalculate();
     }
-  }
+  };
 }

@@ -1,6 +1,11 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
-import { createElement, memo, useEffect, useState } from 'react';
+import {
+  createElement,
+  memo,
+  useEffect,
+  useState,
+} from 'react';
 
 import { Edge } from '../../../../store/edges/edge';
 import { pendingEdge } from '../../../../store/edges/pending';
@@ -15,7 +20,13 @@ interface GenericEdgeComponentProps {
 }
 
 export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) => {
-  const { input, connectableTo, output, setPrimitiveInput, customControls } = useStore(edge);
+  const {
+    input,
+    connectableTo,
+    output,
+    setPrimitiveInput,
+    customControls,
+  } = useStore(edge);
   const { setFrom, connectTo } = useStore(pendingEdge);
 
   return (
@@ -36,7 +47,7 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M18.58 0c-1.234 0-2.377.616-3.056 1.649-.897 1.37-.854 3.261-1.368 4.444-.741 1.708-3.873.343-5.532-.524-2.909 5.647-5.025 8.211-6.845 10.448 6.579 4.318 1.823 1.193 12.19 7.983 2.075-3.991 4.334-7.367 6.825-10.46-1.539-1.241-4.019-3.546-2.614-4.945 1-1 2.545-1.578 3.442-2.95 1.589-2.426-.174-5.645-3.042-5.645zm-5.348 21.138l-1.201-.763c0-.656.157-1.298.422-1.874-.609.202-1.074.482-1.618 1.043l-3.355-2.231c.531-.703.934-1.55.859-2.688-.482.824-1.521 1.621-2.331 1.745l-1.302-.815c1.136-1.467 2.241-3.086 3.257-4.728l8.299 5.462c-1.099 1.614-2.197 3.363-3.03 4.849zm6.724-16.584c-.457.7-2.445 1.894-3.184 2.632-.681.68-1.014 1.561-.961 2.548.071 1.354.852 2.781 2.218 4.085-.201.265-.408.543-.618.833l-8.428-5.548.504-.883c1.065.445 2.1.678 3.032.678 1.646 0 2.908-.733 3.464-2.012.459-1.058.751-3.448 1.206-4.145 1.206-1.833 3.964-.017 2.767 1.812zm-.644-.424c-.265.41-.813.523-1.22.257-.409-.267-.522-.814-.255-1.223.267-.409.813-.524 1.222-.257.408.266.521.817.253 1.223z" /></svg>
         )}
         {edge.style === 'element' && (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9.916 8.195h-.013v.961c-.034 1.598 4.213 1.601 4.161 0v-.96c-.123-1.511-4.042-1.52-4.148-.001zm2.08.71c-.723 0-1.311-.253-1.311-.564 0-.312.588-.564 1.311-.564.724 0 1.311.253 1.311.564 0 .311-.587.564-1.311.564zm6.421-2.155v-.96c-.124-1.511-4.042-1.52-4.148-.001h-.013v.961c-.034 1.599 4.214 1.602 4.161 0zm-2.067-1.379c.723 0 1.311.253 1.311.564s-.589.565-1.311.565c-.724 0-1.311-.253-1.311-.564s.587-.565 1.311-.565zm-10.797.418h-.013v.961c-.034 1.598 4.213 1.601 4.161 0v-.96c-.123-1.511-4.042-1.519-4.148-.001zm2.08.711c-.723 0-1.311-.253-1.311-.564s.588-.565 1.311-.565c.724 0 1.311.253 1.311.564s-.588.565-1.311.565zm2.283-2.988l-.013.201v.759c-.034 1.598 4.214 1.602 4.161 0v-.959c-.124-1.512-4.042-1.52-4.148-.001zm3.392.145c0 .311-.588.564-1.311.564-.724 0-1.311-.253-1.311-.564s.587-.564 1.311-.564c.723 0 1.311.253 1.311.564zm-1.308-3.657l-11 6 .009.019-.009-.005v12.118l11 5.868 11-5.869v-12.055l-11-6.076zm-1 21l-8-4.268v-7.133l8 4.401v7zm-8.885-14.464l9.882-5.396 9.917 5.458-9.896 5.385-9.903-5.447zm10.885 7.464l8-4.353v7.085l-8 4.268v-7z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9.916 8.195h-.013v.961c-.034 1.598 4.213 1.601 4.161 0v-.96c-.123-1.511-4.042-1.52-4.148-.001zm2.08.71c-.723 0-1.311-.253-1.311-.564 0-.312.588-.564 1.311-.564.724 0 1.311.253 1.311.564 0 .311-.587.564-1.311.564zm6.421-2.155v-.96c-.124-1.511-4.042-1.52-4.148-.001h-.013v.961c-.034 1.599 4.214 1.602 4.161 0zm-2.067-1.379c.723 0 1.311.253 1.311.564s-.589.565-1.311.565c-.724 0-1.311-.253-1.311-.564s.587-.565 1.311-.565zm-10.797.418h-.013v.961c-.034 1.598 4.213 1.601 4.161 0v-.96c-.123-1.511-4.042-1.519-4.148-.001zm2.08.711c-.723 0-1.311-.253-1.311-.564s.588-.565 1.311-.565c.724 0 1.311.253 1.311.564s-.588.565-1.311.565zm2.283-2.988l-.013.201v.759c-.034 1.598 4.214 1.602 4.161 0v-.959c-.124-1.512-4.042-1.52-4.148-.001zm3.392.145c0 .311-.588.564-1.311.564-.724 0-1.311-.253-1.311-.564s.587-.564 1.311-.564c.723 0 1.311.253 1.311.564zm-1.308-3.657l-11 6 .009.019-.009-.005v12.118l11 5.868 11-5.869v-12.055l-11-6.076zm-1 21l-8-4.268v-7.133l8 4.401v7zm-8.885-14.464l9.882-5.396 9.917 5.458-9.896 5.385-9.903-5.447zm10.885 7.464l8-4.353v7.085l-8 4.268v-7z" /></svg>
         )}
         {edge.title}
       </div>
@@ -48,6 +59,7 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
               <span>
                 {!!connectableTo[key] && (
                   <span
+                    role="button"
                     className={styles.input}
                     onClick={() => {
                       if (input[key]) {
@@ -66,6 +78,7 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                 {key}
               </span>
               <div
+                role="button"
                 onMouseDown={(e) => e.stopPropagation()}
                 onMouseMove={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.stopPropagation()}
@@ -78,8 +91,16 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                     <input
                       type="text"
                       defaultValue={input[key]}
-                      onChange={(event) => setPrimitiveInput(key,event.target.value)}
-                      style={{ fontSize: 11, width: 80, padding: 1, border: 0, borderRadius: 2, backgroundColor: '#fff', fontWeight: 'bold' }}
+                      onChange={(event) => setPrimitiveInput(key, event.target.value)}
+                      style={{
+                        fontSize: 11,
+                        width: 80,
+                        padding: 1,
+                        border: 0,
+                        borderRadius: 2,
+                        backgroundColor: '#fff',
+                        fontWeight: 'bold',
+                      }}
                     />
                   )
                 ) : (
@@ -112,6 +133,8 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
 
               {/* <span><EdgeOutput edge={edge} id={key} /></span> */}
               <span
+                role="button"
+                tabIndex={0}
                 className={styles.output}
                 onClick={() => {
                   setFrom(key, edge);

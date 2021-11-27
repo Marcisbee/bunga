@@ -1,7 +1,7 @@
-import { Edge } from './edge';
 import { Connection } from './connection';
-import { NumberEdge } from './number.edge';
+import { Edge } from './edge';
 import { MathEdge } from './math.edge';
+import { NumberEdge } from './number.edge';
 
 export class MathDivideEdge extends MathEdge {
   public static title = 'Math (÷)';
@@ -10,6 +10,7 @@ export class MathDivideEdge extends MathEdge {
     first: null,
     second: null,
   };
+
   public connectableTo: Record<string, typeof Edge[]> = {
     first: [
       NumberEdge,
@@ -26,8 +27,8 @@ export class MathDivideEdge extends MathEdge {
   };
 
   public evaluate = async () => {
-    const first = this.input.first;
-    const second = this.input.second;
+    const { first } = this.input;
+    const { second } = this.input;
 
     if (!first || !second) {
       return {
@@ -39,7 +40,8 @@ export class MathDivideEdge extends MathEdge {
     const secondValue = await second.from.evaluate();
 
     return {
+      // eslint-disable-next-line no-unsafe-optional-chaining
       default: firstValue?.[first.path] / secondValue?.[second.path],
     };
-  }
+  };
 }

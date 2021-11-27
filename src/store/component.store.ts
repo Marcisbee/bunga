@@ -7,6 +7,7 @@ import { ElementStore } from './element.store';
 
 export class ComponentPositionSilentStore extends Exome {
   public x = 0;
+
   public y = 0;
 
   constructor(
@@ -42,7 +43,8 @@ export class ComponentPositionStore extends Exome {
 }
 
 export class ComponentStore extends Exome {
-  // private getAllElementConnections = (elements: (ElementStore | ElementTextStore)[] = this.elements) => {
+  // private getAllElementConnections
+  //   = (elements: (ElementStore | ElementTextStore)[] = this.elements) => {
   //   const connections: ElementTextStore[] = [];
 
   //   elements.forEach((element) => {

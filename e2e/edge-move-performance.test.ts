@@ -1,9 +1,10 @@
+/* eslint-disable no-console */
 import type { Page, Locator } from '@playwright/test';
 import { test, expect } from '@playwright/test';
 import { performance } from 'perf_hooks';
 
 async function addEdge(selector: Locator, times: number) {
-  for (let i = 0; i < times; i++) {
+  for (let i = 0; i < times; i += 1) {
     await selector.click();
   }
 }
@@ -20,7 +21,7 @@ async function selectAllEdges(selector: Locator) {
 
 async function moveMouseBy(page: Page, by: number) {
   await page.mouse.down();
-  for (let i = 0; i < by; i++) {
+  for (let i = 0; i < by; i += 1) {
     await page.mouse.move(500 + i, 500 + i);
   }
   await page.mouse.up();

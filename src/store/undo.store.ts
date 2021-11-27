@@ -9,6 +9,7 @@ interface Trace {
 
 class Undo extends Exome {
   private undoStack: Trace[] = [];
+
   private redoStack: Trace[] = [];
 
   public get canUndo() {
@@ -60,9 +61,11 @@ class Undo extends Exome {
     propertyKey: string,
     descriptor: TypedPropertyDescriptor<any>,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const fn = descriptor.value!;
 
+    // eslint-disable-next-line no-param-reassign
     descriptor.value = function value(...args: any[]) {
       if (!(this instanceof Exome)) {
         return;
@@ -75,6 +78,7 @@ class Undo extends Exome {
         state: saveState(this),
       };
 
+      // eslint-disable-next-line consistent-return
       return self.pushToUndoStack(trace, fn.call(this, ...args));
     };
 
@@ -102,4 +106,4 @@ class Undo extends Exome {
 }
 
 export const undoStore = new Undo(40);
-export const undoable = undoStore.undoable;
+export const { undoable } = undoStore;

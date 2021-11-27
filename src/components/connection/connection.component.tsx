@@ -35,7 +35,9 @@ interface StartConnectionComponentProps {
 
 function StartConnectionComponent({ edge, connection }: StartConnectionComponentProps) {
   const { from, to } = useStore(connection);
-  const { x, y, width, height } = useStore(from.position);
+  const {
+    x, y, width, height,
+  } = useStore(from.position);
 
   useStore(from.position.silent);
 
@@ -69,8 +71,12 @@ interface EndConnectionComponentProps {
   startY: number;
 }
 
-function EndConnectionComponent({ startX, startY, index, position }: EndConnectionComponentProps) {
-  const { x, y, width, height, type } = useStore(position);
+function EndConnectionComponent({
+  startX, startY, index, position,
+}: EndConnectionComponentProps) {
+  const {
+    x, y, width, height, type,
+  } = useStore(position);
 
   useStore(position.silent);
 

@@ -1,8 +1,8 @@
 import dlv from 'dlv';
 import { dset } from 'dset';
 import { Exome, registerLoadable } from 'exome';
-import { ElementEdge } from './edges/element.edge';
 
+import { ElementEdge } from './edges/element.edge';
 import { ElementTextStore } from './element-text.store';
 import { undoable } from './undo.store';
 

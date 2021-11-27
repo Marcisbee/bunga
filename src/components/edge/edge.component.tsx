@@ -17,7 +17,11 @@ interface EdgeComponentProps {
 export function EdgeComponent({ edge }: EdgeComponentProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { x, y, width } = useStore(edge.position);
-  const { selectedEdges, selectEdge, startMouseMove } = useStore(store.activeProject!.activeSpace.move);
+  const {
+    selectedEdges,
+    selectEdge,
+    startMouseMove,
+  } = useStore(store.activeProject!.activeSpace.move);
 
   const isActive = selectedEdges.indexOf(edge) > -1;
 
@@ -41,6 +45,7 @@ export function EdgeComponent({ edge }: EdgeComponentProps) {
   return (
     <div
       ref={ref}
+      role="button"
       className={cc([
         style.edge,
         isActive && style.active,

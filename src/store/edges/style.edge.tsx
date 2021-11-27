@@ -1,11 +1,11 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 
-import { StyleStore } from '../style.store';
 import { store } from '../store';
+import { StyleStore } from '../style.store';
 
-import { Edge } from './edge';
 import { Connection } from './connection';
+import { Edge } from './edge';
 
 function RenderSourceOption({ style }: { style: StyleStore }) {
   const { name } = useStore(style);
@@ -46,22 +46,22 @@ function RenderSource({ edge }: { edge: StyleEdge }) {
 
 export class StyleEdge extends Edge {
   public static title = 'Style';
+
   public style = 'style';
 
   public input: { source: StyleStore | null } = {
     source: null,
   };
+
   public connectableTo: Record<string, typeof Edge[]> = {};
 
   public output: { default: Connection } = {
     default: new Connection(this, 'default'),
   };
 
-  public evaluate = async () => {
-    return {
-      default: this.input.source,
-    };
-  }
+  public evaluate = async () => ({
+    default: this.input.source,
+  });
 
   public customControls = {
     source: () => <RenderSource edge={this} />,

@@ -1,21 +1,24 @@
+import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 
-import { StyleStore } from '../style.store';
 import { store } from '../store';
+import { StyleStore } from '../style.store';
 
-import { Edge } from './edge';
 import { Connection } from './connection';
-import { StyleEdge } from './style.edge';
-import { EdgePosition } from './position';
-import { getExomeId } from 'exome';
+import { Edge } from './edge';
 import { ElementTextEdge } from './element-text.edge';
+import { EdgePosition } from './position';
+import { StyleEdge } from './style.edge';
 
 export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
   const { css } = useStore(style);
   const { tokens } = useStore(store.activeProject!.tokens[0]);
 
   return (
-    <style>{`:host {${tokens}}`}{`#${id} {${css}}`}</style>
+    <style>
+      {`:host {${tokens}}`}
+      {`#${id} {${css}}`}
+    </style>
   );
 }
 
@@ -31,7 +34,10 @@ export function RenderCSSElement({ style }: { style: StyleEdge }) {
   );
 }
 
-export function RenderElement({ edge, children }: { edge: ElementEdge | ElementTextEdge, children: any }) {
+export function RenderElement({
+  edge,
+  children,
+}: { edge: ElementEdge | ElementTextEdge, children: any }) {
   return (
     <>
       {edge.input.style && edge.input.style.from && (
@@ -58,19 +64,21 @@ function Render({ edge }: { edge: ElementEdge }) {
 
 export class ElementEdge extends Edge {
   public static title = 'Block Element';
+
   public style = 'element';
 
   public input: { name: string, style: Connection | null } = {
     name: 'unknown',
     style: null,
   };
+
   public connectableTo: Record<string, typeof Edge[]> = {
     style: [
       StyleEdge,
     ],
   };
 
-  public output: {} = {};
+  public output: Record<string, any> = {};
 
   constructor(
     public position: EdgePosition,
@@ -83,7 +91,7 @@ export class ElementEdge extends Edge {
   }
 
   public evaluate = async () => {
-    const style = this.input.style;
+    const { style } = this.input;
 
     if (!style) {
       return {
@@ -96,7 +104,7 @@ export class ElementEdge extends Edge {
         (await style.from.evaluate())?.[style.path],
       ],
     };
-  }
+  };
 
   public render = () => <Render edge={this} />;
 }
