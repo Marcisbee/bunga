@@ -12,7 +12,7 @@ import { ElementTextEdge } from './element-text.edge';
 
 export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
   const { css } = useStore(style);
-  const { tokens } = useStore(store.activeSpace!.tokens[0]);
+  const { tokens } = useStore(store.activeProject!.tokens[0]);
 
   return (
     <style>{`:host {${tokens}}`}{`#${id} {${css}}`}</style>
@@ -77,8 +77,8 @@ export class ElementEdge extends Edge {
   ) {
     super(position);
 
-    if (store.activeSpace) {
-      store.activeSpace.customBlockElements.push(this);
+    if (store.activeProject) {
+      store.activeProject.customBlockElements.push(this);
     }
   }
 

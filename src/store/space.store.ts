@@ -6,32 +6,21 @@ import { ComponentPositionStore, ComponentStore } from './component.store';
 import { BoundaryStore } from './boundary.store';
 import { PositionStore } from './position.store';
 import { ActiveElementStore } from './element.store';
-import { ActiveStyleStore, StyleStore } from './style.store';
 import { Edge } from './edges/edge';
 import { EdgePosition } from './edges/position';
-import { TokenStore } from './token.store';
-import { moveStore } from './move.store';
-import { ElementEdge } from './edges/element.edge';
-import { ElementTextEdge } from './edges/element-text.edge';
+import { MoveStore } from './move.store';
 
 export class SpaceStore extends Exome {
+  public move = new MoveStore();
   public position = new PositionStore();
   public boundary = new BoundaryStore(this);
   public activeElement = new ActiveElementStore();
-  public activeStyle = new ActiveStyleStore();
-  public customBlockElements: ElementEdge[] = [];
-  public customTextElements: ElementTextEdge[] = [];
 
   constructor(
-    public id: string,
     public name: string,
     public path: string = permalink(name),
     public components: ComponentStore[] = [],
-    public styles: StyleStore[] = [],
     public edges: Edge[] = [],
-    public tokens: TokenStore[] = [
-      new TokenStore(name),
-    ],
   ) {
     super();
   }
@@ -41,7 +30,7 @@ export class SpaceStore extends Exome {
 
     let { x, y, width, height } = this.boundary;
 
-    const active = moveStore.selectedAll[0];
+    const active = this.move.selectedAll[0];
     if (active) {
       x = active.position.x;
       y = active.position.y;
@@ -68,7 +57,7 @@ export class SpaceStore extends Exome {
       'Unnamed component',
     );
     this.components.push(component);
-    moveStore.selectComponent(component);
+    this.move.selectComponent(component);
 
     this.boundary.updateBoundary();
 
@@ -80,7 +69,7 @@ export class SpaceStore extends Exome {
 
     let { x, y, width, height } = this.boundary;
 
-    const active = moveStore.selectedAll[0];
+    const active = this.move.selectedAll[0];
     if (active) {
       x = active.position.x;
       y = active.position.y;
@@ -105,18 +94,11 @@ export class SpaceStore extends Exome {
     // @ts-ignore
     const edge: Edge = new Apply(position);
     this.edges.push(edge);
-    moveStore.selectEdge(edge);
+    this.move.selectEdge(edge);
 
     this.boundary.updateBoundary();
 
     return edge;
-  }
-
-  public addStyle() {
-    const style = new StyleStore('unnamed');
-
-    this.styles.push(style);
-    this.activeStyle.setActive(style);
   }
 
   public rename(name: string, path: string = permalink(name)) {

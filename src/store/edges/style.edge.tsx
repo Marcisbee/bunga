@@ -7,9 +7,17 @@ import { store } from '../store';
 import { Edge } from './edge';
 import { Connection } from './connection';
 
+function RenderSourceOption({ style }: { style: StyleStore }) {
+  const { name } = useStore(style);
+
+  return (
+    <option value={getExomeId(style)}>{name}</option>
+  );
+}
+
 function RenderSource({ edge }: { edge: StyleEdge }) {
   const { input, setPrimitiveInput } = useStore(edge);
-  const { styles: stylesList } = useStore(store.activeSpace!);
+  const { styles: stylesList } = useStore(store.activeProject!);
 
   return (
     <select
@@ -26,9 +34,11 @@ function RenderSource({ edge }: { edge: StyleEdge }) {
       }}
     >
       <option value="" disabled>Choose style</option>
-      {/* @TODO: Separate all options into separate components that listen each style changes. */}
       {stylesList.map((style) => (
-        <option value={getExomeId(style)}>{style.name}</option>
+        <RenderSourceOption
+          key={`style-e-option-${getExomeId(style)}`}
+          style={style}
+        />
       ))}
     </select>
   );

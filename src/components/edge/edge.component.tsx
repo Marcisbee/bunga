@@ -4,7 +4,6 @@ import { useLayoutEffect, useRef } from 'react';
 
 import { Edge } from '../../store/edges/edge';
 import { EdgePositionSilent } from '../../store/edges/position';
-import { moveStore } from '../../store/move.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 
@@ -18,13 +17,13 @@ interface EdgeComponentProps {
 export function EdgeComponent({ edge }: EdgeComponentProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { x, y, width } = useStore(edge.position);
-  const { selectedEdges, selectEdge, startMouseMove } = useStore(moveStore);
+  const { selectedEdges, selectEdge, startMouseMove } = useStore(store.activeProject!.activeSpace.move);
 
   const isActive = selectedEdges.indexOf(edge) > -1;
 
   useLayoutEffect(() => {
     edge.position.setHeight(ref.current!.offsetHeight);
-    store.activeSpace!.boundary.updateBoundary();
+    store.activeProject!.activeSpace.boundary.updateBoundary();
 
     const unsubscribe = onAction(EdgePositionSilent, 'moveTo', (instance) => {
       if (instance !== edge.position.silent) {

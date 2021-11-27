@@ -60,8 +60,8 @@ export class ElementTextEdge extends Edge {
   ) {
     super(position);
 
-    if (store.activeSpace) {
-      store.activeSpace.customTextElements.push(this);
+    if (store.activeProject) {
+      store.activeProject.customTextElements.push(this);
     }
   }
 

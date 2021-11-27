@@ -3,7 +3,7 @@ import { useStore } from 'exome/react';
 import { useLayoutEffect, useRef, useState } from 'react';
 // @ts-ignore
 import TinyGesture from 'tinygesture';
-import { moveStore, SelectionStore } from '../../store/move.store';
+import { SelectionStore } from '../../store/move.store';
 
 import { SpaceStore } from '../../store/space.store';
 import { store } from '../../store/store';
@@ -125,8 +125,8 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
 
   const [centerModifier, setCenterModifier] = useState<[number, number]>([0, 0]);
 
-  const { moveAllBy, reset, save, selection } = useStore(moveStore);
-  const { position, components, edges } = useStore(space);
+  const { position, components, edges, move } = useStore(space);
+  const { moveAllBy, reset, save, selection } = useStore(move);
   const { resetPosition } = useStore(position);
 
   useLayoutEffect(() => {
@@ -143,7 +143,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
     return () => {
       window.removeEventListener('resize', handler);
     };
-  }, []);
+  }, [getExomeId(space)]);
 
   useLayoutEffect(() => {
     const gesture = new TinyGesture(canvas.current, {
@@ -198,7 +198,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
       canvas.current!.removeEventListener('wheel', handler);
       gesture.destroy();
     };
-  }, [centerModifier[0], centerModifier[1]]);
+  }, [centerModifier[0], centerModifier[1], getExomeId(space)]);
 
   return (
     <div
@@ -243,7 +243,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
 
         e.preventDefault();
         e.stopPropagation();
-        store.activeSpace!.boundary.updateBoundary();
+        space.boundary.updateBoundary();
       }}
     >
       <CanvasSelectionComponent

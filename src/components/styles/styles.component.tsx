@@ -1,3 +1,4 @@
+import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import { useState } from 'react';
 
@@ -40,7 +41,7 @@ function ListStylesComponent({ activeStyle, style }: { activeStyle: ActiveStyleS
 }
 
 function StylesManagerComponent() {
-  const { activeStyle, addStyle } = useStore(store.activeSpace!);
+  const { activeStyle, addStyle, styles } = useStore(store.activeProject!);
   const { active } = useStore(activeStyle);
 
   return (
@@ -54,8 +55,9 @@ function StylesManagerComponent() {
           +
         </button>
         <div style={{ minHeight: 200 }}>
-          {store.activeSpace!.styles.map((style) => (
+          {styles.map((style) => (
             <ListStylesComponent
+              key={`style-list-${getExomeId(style)}`}
               activeStyle={activeStyle}
               style={style}
             />
@@ -74,9 +76,9 @@ function StylesManagerComponent() {
 }
 
 function TokensManagerComponent() {
-  const space = useStore(store.activeSpace!);
+  const project = useStore(store.activeProject!);
   // @TODO: Add more tokens?? (figure out how this would work UX wise)
-  const { name, tokens, setName, setTokens } = useStore(space.tokens[0]);
+  const { name, tokens, setName, setTokens } = useStore(project.tokens[0]);
 
   return (
     <div>

@@ -16,6 +16,7 @@ export function ElementChildrenComponent({ elements }: ElementChildrenComponentP
     <>
       {elements.map((element) => (
         <ElementComponent
+          key={`element-c-${getExomeId(element)}`}
           element={element}
         />
       ))}

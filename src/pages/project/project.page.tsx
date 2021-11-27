@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useStore } from 'exome/react';
 import { useParams } from 'react-router-dom';
 
@@ -7,18 +8,23 @@ import { LayersComponent } from '../../components/layers/layers.component';
 import { StylesComponent } from '../../components/styles/styles.component';
 import { allEdges } from '../../store/edges/all-edges';
 
-import style from './space.module.scss';
-import { moveStore } from '../../store/move.store';
+import style from './project.module.scss';
+import { getExomeId } from 'exome';
 
-export function SpacePage() {
+export function ProjectPage() {
   const params = useParams();
-  const { setActiveSpace } = useStore(store);
-  const space = setActiveSpace(params.id!);
+  const { setActiveProject } = useStore(store);
+
+  useMemo(() => {
+    setActiveProject(params.id!);
+  }, []);
+
+  const project = useStore(store.activeProject!);
 
   return (
     <div className={style.app}>
       <div style={{ width: 240 }}>
-        Space: {params.id}
+        Project: {params.id}
         <hr />
         <LayersComponent />
       </div>
@@ -27,7 +33,7 @@ export function SpacePage() {
         <div className={style.top}>
           <span style={{ float: 'right' }}>current people</span>
           {allEdges.map((edge) => (
-            <button key={edge.title} onClick={() => space.addEdge(edge)}>add {edge.title}</button>
+            <button key={edge.title} onClick={() => project.activeSpace.addEdge(edge)}>add {edge.title}</button>
           ))}
           <button
             key={allEdges[0].name}
@@ -35,11 +41,11 @@ export function SpacePage() {
               const edgesToSelect: any[] = [];
 
               new Array(10).fill(0).forEach((_, i) => {
-                edgesToSelect.push(space.addEdge(allEdges[0]))
+                edgesToSelect.push(project.activeSpace.addEdge(allEdges[0]))
               });
 
               new Array(10).fill(0).forEach((_, i) => {
-                const edge = space.addEdge(allEdges[0]);
+                const edge = project.activeSpace.addEdge(allEdges[0]);
                 if (i === 0) {
                   edge.position.moveTo(-85, 60);
                 }
@@ -47,7 +53,7 @@ export function SpacePage() {
               });
 
               new Array(10).fill(0).forEach((_, i) => {
-                const edge = space.addEdge(allEdges[0]);
+                const edge = project.activeSpace.addEdge(allEdges[0]);
                 if (i === 0) {
                   edge.position.moveTo(-85, 60 + 100 * 1);
                 }
@@ -55,7 +61,7 @@ export function SpacePage() {
               });
 
               new Array(10).fill(0).forEach((_, i) => {
-                const edge = space.addEdge(allEdges[0]);
+                const edge = project.activeSpace.addEdge(allEdges[0]);
                 if (i === 0) {
                   edge.position.moveTo(-85, 60 + 100 * 2);
                 }
@@ -63,7 +69,7 @@ export function SpacePage() {
               });
 
               new Array(10).fill(0).forEach((_, i) => {
-                const edge = space.addEdge(allEdges[0]);
+                const edge = project.activeSpace.addEdge(allEdges[0]);
                 if (i === 0) {
                   edge.position.moveTo(-85, 60 + 100 * 3);
                 }
@@ -72,7 +78,7 @@ export function SpacePage() {
 
               setTimeout(() => {
                 edgesToSelect.forEach((edge, i) => {
-                  moveStore.selectEdge(edge, true);
+                  project.activeSpace.move.selectEdge(edge, true);
                 });
               }, 0);
             }}
@@ -82,7 +88,8 @@ export function SpacePage() {
         </div>
 
         <CanvasComponent
-          space={space}
+          key={`canvas-${getExomeId(project.activeSpace)}`}
+          space={project.activeSpace}
         />
       </div>
 

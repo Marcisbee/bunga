@@ -1,16 +1,16 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { SpacePage } from './pages/space/space.page';
+import { ProjectPage } from './pages/project/project.page';
 import { HomePage } from './pages/home/home.page';
-import { SpacesPage } from './pages/spaces/spaces.page';
+import { ProjectsPage } from './pages/projects/projects.page';
 
 export function Router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/spaces" element={<SpacesPage />} />
-        <Route path="/space/:id" element={<SpacePage />} />
+        <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/project/:id" element={<ProjectPage />} />
       </Routes>
     </BrowserRouter>
   );

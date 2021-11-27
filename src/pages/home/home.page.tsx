@@ -5,9 +5,8 @@ export function HomePage() {
     <div>
       <nav>
         <Link to="/">Home</Link>
-        <Link to="/spaces">Spaces</Link>
+        <Link to="/projects">Projects</Link>
       </nav>
-      <div>Hello world</div>
     </div>
   );
 }

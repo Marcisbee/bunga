@@ -27,13 +27,13 @@ async function moveMouseBy(page: Page, by: number) {
 }
 
 test('1 edge', async ({ page }) => {
-  // Go to http://localhost:5000/space/123
-  await page.goto('http://localhost:5000/space/123');
+  // Go to http://localhost:5000/project/123
+  await page.goto('http://localhost:5000/project/123');
 
   const size = 1;
 
   const addStartTime = performance.now();
-  await addEdge(page.locator('text=add Value'), size);
+  await addEdge(page.locator('text=add Number'), size);
   const addedNumberEdge = performance.now() - addStartTime;
 
   console.log(`Adding ${size} variable edge took ${Math.round(addedNumberEdge)} ms`);
@@ -56,13 +56,13 @@ test('1 edge', async ({ page }) => {
 });
 
 test('10 edges', async ({ page }) => {
-  // Go to http://localhost:5000/space/123
-  await page.goto('http://localhost:5000/space/123');
+  // Go to http://localhost:5000/project/123
+  await page.goto('http://localhost:5000/project/123');
 
   const size = 10;
 
   const addStartTime = performance.now();
-  await addEdge(page.locator('text=add Value'), size);
+  await addEdge(page.locator('text=add Number'), size);
   const addedNumberEdge = performance.now() - addStartTime;
 
   console.log(`Adding ${size} variable edges took ${Math.round(addedNumberEdge)} ms`);
@@ -85,13 +85,13 @@ test('10 edges', async ({ page }) => {
 });
 
 test('50 edges', async ({ page }) => {
-  // Go to http://localhost:5000/space/123
-  await page.goto('http://localhost:5000/space/123');
+  // Go to http://localhost:5000/project/123
+  await page.goto('http://localhost:5000/project/123');
 
   const size = 50;
 
   const addStartTime = performance.now();
-  await addEdge(page.locator('text=add Value'), size);
+  await addEdge(page.locator('text=add Number'), size);
   const addedNumberEdge = performance.now() - addStartTime;
 
   console.log(`Adding ${size} variable edges took ${Math.round(addedNumberEdge)} ms`);
@@ -114,13 +114,13 @@ test('50 edges', async ({ page }) => {
 });
 
 test('100 edges', async ({ page }) => {
-  // Go to http://localhost:5000/space/123
-  await page.goto('http://localhost:5000/space/123');
+  // Go to http://localhost:5000/project/123
+  await page.goto('http://localhost:5000/project/123');
 
   const size = 100;
 
   const addStartTime = performance.now();
-  await addEdge(page.locator('text=add Value'), size);
+  await addEdge(page.locator('text=add Number'), size);
   const addedNumberEdge = performance.now() - addStartTime;
 
   console.log(`Adding ${size} variable edges took ${Math.round(addedNumberEdge)} ms`);

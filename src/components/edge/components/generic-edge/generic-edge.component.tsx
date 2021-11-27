@@ -44,7 +44,7 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
       <div className={styles.content}>
         <ul className={styles.controls}>
           {Object.keys(input).map((key) => (
-            <li>
+            <li key={`edge-i-${getExomeId(edge)}-${key}`}>
               <span>
                 {!!connectableTo[key] && (
                   <span

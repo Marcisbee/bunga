@@ -4,11 +4,10 @@ import { useStore } from 'exome/react';
 import { ComponentStore } from '../../store/component.store';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
-import { moveStore } from '../../store/move.store';
 import { store } from '../../store/store';
 
 function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
-  const { name, customBlockElements } = useStore(store.activeSpace!);
+  const { name, customBlockElements } = useStore(store.activeProject!);
 
   return (
     <form
@@ -40,7 +39,7 @@ function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
         <option value="h1">h1</option> */}
         {customBlockElements.map((element, i) => (
           <option
-            key={`layer-${getExomeId(element)}`}
+            key={`layer-custom-element-${getExomeId(element)}`}
             value={i}
           >
             [{name}] {element.input.name}
@@ -69,7 +68,10 @@ function ElementsLayersComponent({ elements }: { elements: ElementStore[] }) {
   return (
     <ul>
       {elements.map((element) => (
-        <ElementLayersComponent element={element} />
+        <ElementLayersComponent
+          key={`layer-element-${getExomeId(element)}`}
+          element={element}
+        />
       ))}
     </ul>
   );
@@ -90,12 +92,34 @@ function ActiveLayersComponent({ active }: { active: ComponentStore }) {
 }
 
 export function LayersComponent() {
-  const { selectedComponents, selectComponent } = useStore(moveStore);
-  const { addComponent } = useStore(store.activeSpace!);
+  const { spaces, activeSpace, addSpace, setActiveSpace } = useStore(store.activeProject!);
+  const { components, addComponent, move } = useStore(activeSpace);
+  const { selectedComponents, selectComponent } = useStore(move);
 
   return (
-    <div>
+    <div style={{ userSelect: 'none' }}>
       <div>
+        <strong>Spaces</strong>
+        <button
+          onClick={() => addSpace()}
+          style={{ float: 'right' }}
+        >
+          +
+        </button>
+        <div style={{ minHeight: 200 }}>
+          {spaces.map((space) => (
+            <div
+              key={`layer-space-${getExomeId(space)}`}
+              onClick={() => setActiveSpace(space)}
+            >
+              {activeSpace === space && '!'} {space.name}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <hr />
         <strong>Components</strong>
         <button
           onClick={addComponent}
@@ -104,8 +128,9 @@ export function LayersComponent() {
           +
         </button>
         <div style={{ minHeight: 200 }}>
-          {store.activeSpace!.components.map((component) => (
+          {components.map((component) => (
             <div
+              key={`layer-component-${getExomeId(component)}`}
               onClick={(e) => selectComponent(component, e.shiftKey)}
             >
               {selectedComponents.indexOf(component) > -1 && '!'} {component.name}

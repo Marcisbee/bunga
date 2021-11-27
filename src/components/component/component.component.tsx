@@ -3,7 +3,7 @@ import { useStore } from 'exome/react';
 import { useLayoutEffect, useRef } from 'react';
 
 import { ComponentPositionSilentStore, ComponentStore } from '../../store/component.store';
-import { moveStore } from '../../store/move.store';
+import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 import { ElementChildrenComponent } from '../element/element.component';
 import { ShadowView } from '../shadow/shadow.component';
@@ -37,7 +37,8 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
 export function ComponentComponent({ component }: ComponentComponentProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { x, y, width, height } = useStore(component.position);
-  const { selectedAll, selectedComponents, selectComponent, startMouseMove } = useStore(moveStore);
+  const move = store.activeProject!.activeSpace.move;
+  const { selectedAll, selectedComponents, selectComponent, startMouseMove } = useStore(move);
 
   const isActive = selectedComponents.indexOf(component) > -1;
 
@@ -71,7 +72,7 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
         }
 
         if (!e.shiftKey) {
-          if (!moveStore.didMouseMove) {
+          if (!move.didMouseMove) {
             selectComponent(component, e.shiftKey);
           }
 

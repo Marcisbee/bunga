@@ -81,7 +81,7 @@ export class SelectionStore extends Exome {
     this.secondX = x;
     this.secondY = y;
 
-    const space = store.activeSpace!;
+    const space = store.activeProject!.activeSpace;
 
     const edgesToSelect: Edge[] = [];
     const componentsToSelect: ComponentStore[] = [];
@@ -318,5 +318,3 @@ export class MoveStore extends Exome {
     this.previouslySelectedComponents = this.selectedComponents.slice();
   }
 }
-
-export const moveStore = new MoveStore();

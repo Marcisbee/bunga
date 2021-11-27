@@ -1,7 +1,7 @@
 import { Exome, addMiddleware, registerLoadable } from 'exome';
 import { exomeDevtools } from 'exome/devtools';
 
-import { SpaceStore } from './space.store';
+import { ProjectStore } from './project.store';
 
 // Enable devtools in dev mode
 if (process.env.NODE_ENV !== 'production') {
@@ -16,13 +16,13 @@ if (process.env.NODE_ENV !== 'production') {
 export class Store extends Exome {
   // @TODO: Create user store.
   public user: any;
-  public spaces: Record<string, SpaceStore> = {};
-  public activeSpace?: SpaceStore;
+  public projects: Record<string, ProjectStore> = {};
+  public activeProject?: ProjectStore;
 
-  public setActiveSpace(id: string): SpaceStore {
-    return this.activeSpace = (
-      this.spaces[id] || (
-        this.spaces[id] = new SpaceStore(id, 'Unknown')
+  public setActiveProject(id: string): ProjectStore {
+    return this.activeProject = (
+      this.projects[id] || (
+        this.projects[id] = new ProjectStore(id, 'Unknown')
       )
     );
   }
