@@ -24,16 +24,22 @@
     "e2e": "playwright test"
   },
   "devDependencies": {
-    "@playwright/test": "^1.16.3",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/dlv": "^1.1.2",
     "@types/jsdom": "^16.2.13",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
+    "@vitejs/plugin-react": "^1.1.0",
+    "jsdom": "^18.1.1",
+    "sass": "^1.43.5",
+    "typescript": "^4.5.2",
+    "vite": "^2.6.14"
+  },
+  "optionalDependencies": {
+    "@playwright/test": "^1.16.3",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
-    "@vitejs/plugin-react": "^1.1.0",
     "eslint": "^8.3.0",
     "eslint-config-airbnb": "^19.0.1",
     "eslint-import-resolver-typescript": "^2.5.0",
@@ -41,13 +47,8 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "jsdom": "^18.1.1",
     "rollup-plugin-visualizer": "^5.5.2",
-    "sass": "^1.43.5",
     "tsm": "^2.1.4",
-    "typescript": "^4.5.2",
-    "uvu": "^0.5.2",
-    "uvu-watch": "^1.0.11",
-    "vite": "^2.6.14"
+    "uvu": "^0.5.2"
   }
 }
