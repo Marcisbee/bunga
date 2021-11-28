@@ -19,6 +19,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "explore": "EXPLORE=true vite build",
     "types": "tsc",
     "lint": "eslint .",
     "test": "uvu src test.ts -r tsm",

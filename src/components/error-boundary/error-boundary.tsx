@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { cc } from '../../utils/class-names';
 
-import styles from './error-boundary.module.scss';
+import style from './error-boundary.module.scss';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -33,7 +33,7 @@ export class ErrorBoundary extends React.Component<{
       return (
         <div
           className={cc([
-            styles.error,
+            style.error,
             className,
           ])}
         >

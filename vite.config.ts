@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-// import { visualizer } from 'rollup-plugin-visualizer';
+import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
@@ -15,7 +15,7 @@ export default defineConfig(({ command }) => {
   return {
     plugins: [
       react(),
-      // visualizer(),
+      process.env.EXPLORE && visualizer(),
     ],
     build: {
       minify: 'esbuild',

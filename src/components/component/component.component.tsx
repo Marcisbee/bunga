@@ -5,6 +5,7 @@ import { useLayoutEffect, useRef } from 'react';
 import { ComponentPositionSilentStore, ComponentStore } from '../../store/component.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
+import { Droppable } from '../droppable/droppable';
 import { ElementChildrenComponent } from '../element/element.component';
 import { ShadowView } from '../shadow/shadow.component';
 
@@ -23,13 +24,16 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
         {name}
       </span>
 
-      <div className={style.container}>
+      <Droppable
+        container={component}
+        className={style.container}
+      >
         <ShadowView>
           <ElementChildrenComponent
             elements={elements}
           />
         </ShadowView>
-      </div>
+      </Droppable>
     </>
   );
 }
