@@ -6,6 +6,8 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useObservable } from '../../hooks/use-observable';
+import { ElementTextEdge } from '../../store/edges/element-text.edge';
 
 import { RenderElement } from '../../store/edges/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
@@ -121,24 +123,25 @@ const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>
 const ElementTextComponent = forwardRef<HTMLElement, { element: ElementTextStore }>(
   ({ element }, ref) => {
     const { text } = useStore(element);
-    const [value, setValue] = useState(text);
 
-    // @TODO: Listen all edge changes.
-    // useStore(edge);
+    if (typeof text === 'string') {
+      return createElement('span', { ref }, text);
+    }
 
-    // useLayoutEffect(() => {
-    //   if (!edge.input.text) {
-    //     return;
-    //   }
+    return (
+      <ElementDynamicTextComponent
+        ref={ref}
+        edge={text}
+      />
+    );
+  },
+);
 
-    //   console.log('update');
+const ElementDynamicTextComponent = forwardRef<HTMLElement, { edge: ElementTextEdge }>(
+  ({ edge }, ref) => {
+    const { selectInput } = useStore(edge);
 
-    //   edge.evaluate()
-    //     .then((output) => {
-    //       setValue(output && output?.[edge.input.text?.path] || '');
-    //       // e.innerHTML = JSON.stringify(output);
-    //     });
-    // });
+    const value = useObservable<string>(selectInput('text')!);
 
     return createElement('span', { ref }, value);
   },

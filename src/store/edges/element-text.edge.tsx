@@ -3,7 +3,6 @@ import { useStore } from 'exome/react';
 import { DraggablePreview } from '../../components/draggable-preview/draggable-preview';
 import { useObservable } from '../../hooks/use-observable';
 import { store } from '../store';
-import { StyleStore } from '../style.store';
 
 import { BooleanEdge } from './boolean.edge';
 import { Connection } from './connection';
@@ -12,8 +11,6 @@ import { RenderElement } from './element.edge';
 import { MathEdge } from './math.edge';
 import { NumberEdge } from './number.edge';
 import { EdgePosition } from './position';
-import { StyleEdge } from './style.edge';
-import { SwitchEdge } from './switch.edge';
 import { TextEdge } from './text.edge';
 
 function Render({ edge }: { edge: ElementTextEdge }) {
@@ -23,47 +20,15 @@ function Render({ edge }: { edge: ElementTextEdge }) {
 
   return (
     <DraggablePreview preview={edge}>
-      <div
-        onDoubleClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-
-          const connectedStyle = edge.input.style;
-          const project = store.activeProject!;
-          const space = project.activeSpace;
-
-          if (connectedStyle) {
-            // Select connected style.
-            connectedStyle.from
-              .selectOutput('default')
-              .subscribe((value) => {
-                if (value instanceof StyleStore) {
-                  project.activeStyle.setActive(value);
-                }
-              })
-              .unsubscribe();
-            return;
-          }
-
-          // Create new style and connect to element.
-          const style = project.addStyle();
-          const styleEdge = space.addEdge(StyleEdge);
-
-          styleEdge.input.source.next(style);
-          styleEdge.output.default.connect('style', edge);
-        }}
-      >
-        <RenderElement edge={edge}>
-          {elementText}
-        </RenderElement>
-      </div>
+      <RenderElement edge={edge}>
+        {elementText}
+      </RenderElement>
     </DraggablePreview>
   );
 }
 
 type ElementTextEdgeInput = {
   text: Connection | null;
-  style: Connection | null;
 }
 
 export class ElementTextEdge extends Edge {
@@ -73,7 +38,6 @@ export class ElementTextEdge extends Edge {
 
   public input: ElementTextEdgeInput = {
     text: null,
-    style: null,
   };
 
   public connectableTo: Record<string, typeof Edge[]> = {
@@ -82,10 +46,6 @@ export class ElementTextEdge extends Edge {
       BooleanEdge,
       NumberEdge,
       MathEdge,
-    ],
-    style: [
-      SwitchEdge,
-      StyleEdge,
     ],
   };
 

@@ -53,10 +53,9 @@ export function DraggablePreview({ preview, children }: DraggablePreviewProps) {
           }
 
           if (itemPreview instanceof ElementTextEdge) {
-            // @TODO: Implement this!
-            // const element = new ElementTextStore(itemPreview);
+            const element = new ElementTextStore(itemPreview);
 
-            // container.addElement(element);
+            container.addElement(element);
           }
         }
       }

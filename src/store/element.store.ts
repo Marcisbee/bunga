@@ -15,12 +15,12 @@ export class ActiveElementStore extends Exome {
 }
 
 export class ElementStore<T extends Record<string, any> = Record<string, any>> extends Exome {
-  public getPosition = () => ({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  });
+  // public getPosition = () => ({
+  //   x: 0,
+  //   y: 0,
+  //   width: 0,
+  //   height: 0,
+  // });
 
   constructor(
     public type: string | ElementEdge,

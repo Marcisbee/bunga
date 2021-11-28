@@ -1,4 +1,4 @@
-import { Exome, onAction, registerLoadable } from 'exome';
+import { Exome, registerLoadable } from 'exome';
 
 import { permalink } from '../utils/permalink';
 
@@ -43,53 +43,14 @@ export class ComponentPositionStore extends Exome {
 }
 
 export class ComponentStore extends Exome {
-  // private getAllElementConnections
-  //   = (elements: (ElementStore | ElementTextStore)[] = this.elements) => {
-  //   const connections: ElementTextStore[] = [];
-
-  //   elements.forEach((element) => {
-  //     // if ((element as ElementStore).connections) {
-  //     //   connections.push(...(element as ElementStore).connections);
-  //     // }
-
-  //     if ((element as ElementTextStore).edge && (element as ElementTextStore).edge.input.text) {
-  //       connections.push(element as ElementTextStore);
-  //     }
-
-  //     if ((element as ElementStore)?.children?.length) {
-  //       connections.push(...this.getAllElementConnections((element as ElementStore).children));
-  //     }
-  //   });
-
-  //   return connections;
-  // }
-
   constructor(
     public id: string,
     public position: ComponentPositionStore,
     public name: string,
     public path: string = permalink(name),
-    public elements: ElementStore[] = [],
+    public elements: (ElementStore | ElementTextStore)[] = [],
   ) {
     super();
-
-
-    // onAction(ComponentPositionStore, 'moveTo', (instance) => {
-    //   if (instance !== this.position) {
-    //     return;
-    //   }
-
-    //   this.getAllElementConnections()
-    //     .forEach((connection) => {
-    //       Promise.resolve().then(() => {
-    //         const { x, y, width, height } = connection.getPosition();
-
-    //         connection.edge.position.width = width;
-    //         connection.edge.position.height = height;
-    //         connection.edge.position.moveTo(x, y);
-    //       });
-    //     });
-    // });
   }
 
   public rename(name: string, path: string = permalink(name)) {
@@ -97,7 +58,7 @@ export class ComponentStore extends Exome {
     this.path = path;
   }
 
-  public addElement(element: ElementStore) {
+  public addElement(element: ElementStore | ElementTextStore) {
     this.elements.push(element);
   }
 }

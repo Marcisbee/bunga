@@ -59,9 +59,19 @@ function ElementLayersComponent({ element }: { element: ElementStore | ElementTe
   const el = useStore(element);
 
   if (!(el instanceof ElementStore)) {
+    const { text } = el as ElementTextStore;
+
+    if (typeof text === 'string') {
+      return (
+        <li>
+          <i>{text}</i>
+        </li>
+      );
+    }
+
     return (
       <li>
-        <i>{(el as ElementTextStore).text}</i>
+        <i>{getExomeId(text)}</i>
       </li>
     );
   }
