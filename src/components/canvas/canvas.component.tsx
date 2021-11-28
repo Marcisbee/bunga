@@ -215,6 +215,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
   return (
     <div
       ref={canvas}
+      tabIndex={0}
       role="button"
       className={styles.canvas}
       style={{
@@ -262,6 +263,19 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
         e.stopPropagation();
         space.boundary.updateBoundary();
       }}
+      onKeyUp={(e) => {
+        if (e.key === 'Backspace' || e.key === 'Delete') {
+          e.preventDefault();
+          e.stopPropagation();
+
+          move.selectedEdges.forEach((edge) => {
+            space.removeEdge(edge);
+          });
+          move.selectedEdges = [];
+
+          space.boundary.updateBoundary();
+        }
+      }}
     >
       <CanvasSelectionComponent
         selection={selection}
@@ -291,7 +305,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
           transform: `translate(${position.x}px, ${position.y}px)`,
         }}
       >
-        {/* <DebugBoundary space={space} /> */}
+        <DebugBoundary space={space} />
         <div className={styles.container}>
           {components.map((component) => (
             <ComponentComponent

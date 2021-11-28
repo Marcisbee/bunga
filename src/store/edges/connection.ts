@@ -13,7 +13,7 @@ export class Connection extends Exome {
 
   public disconnect(to: string, edge: Edge) {
     // Disconnect edge to connection
-    edge.input[to] = null;
+    edge.disconnectInput(to);
     const index = this.to.findIndex((a) => a[0] === to && a[1] === edge);
     this.to.splice(index, 1);
 
@@ -30,5 +30,12 @@ export class Connection extends Exome {
     this.to.push([to, edge]);
 
     return true;
+  }
+
+  public disconnectAll() {
+    this.to.forEach((to) => {
+      to[1].disconnectInput(to[0]);
+    });
+    this.to = [];
   }
 }

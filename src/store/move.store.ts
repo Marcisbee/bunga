@@ -267,6 +267,8 @@ export class MoveStore extends Exome {
 
   public endMouseMove() {
     this.mouseMove = null;
+
+    store.activeProject!.activeSpace.boundary.updateBoundary();
   }
 
   public selectEdge(edge: Edge, shiftKey = false): boolean {

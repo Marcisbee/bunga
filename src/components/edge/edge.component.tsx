@@ -46,6 +46,7 @@ export function EdgeComponent({ edge }: EdgeComponentProps) {
     <div
       ref={ref}
       role="button"
+      tabIndex={0}
       className={cc([
         style.edge,
         isActive && style.active,

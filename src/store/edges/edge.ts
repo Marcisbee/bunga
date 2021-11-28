@@ -56,4 +56,12 @@ export abstract class Edge extends Exome {
   public customControls?: Record<string, React.FunctionComponent>;
 
   public render?: React.FunctionComponent;
+
+  public disconnectInput(path: string) {
+    this.input[path] = null;
+  }
+
+  public disconnectOutput(path: string) {
+    this.output[path].disconnect(path, this);
+  }
 }

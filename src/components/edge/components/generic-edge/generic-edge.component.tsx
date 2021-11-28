@@ -28,7 +28,7 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
     output,
     customControls,
   } = useStore(edge);
-  const { setFrom, connectTo } = useStore(pendingEdge);
+  const { from, setFrom, connectTo } = useStore(pendingEdge);
 
   return (
     <div
@@ -65,10 +65,11 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                     onClick={() => {
                       if (input[key]) {
                         (input[key] as Connection).disconnect(key, edge);
-                        return;
                       }
 
-                      connectTo(key, edge);
+                      if (from) {
+                        connectTo(key, edge);
+                      }
                     }}
                   >
                     <svg width="10" height="10" viewBox="0 0 18 18" fill={input[key] ? 'currentColor' : 'none'} xmlns="http://www.w3.org/2000/svg">

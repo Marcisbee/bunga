@@ -4,6 +4,7 @@ import { permalink } from '../utils/permalink';
 
 import { BoundaryStore } from './boundary.store';
 import { ComponentPositionStore, ComponentStore } from './component.store';
+import { Connection } from './edges/connection';
 import { Edge } from './edges/edge';
 import { EdgePosition } from './edges/position';
 import { ActiveElementStore } from './element.store';
@@ -113,6 +114,30 @@ export class SpaceStore extends Exome {
     this.boundary.updateBoundary();
 
     return edge;
+  }
+
+  public removeEdge(edge: Edge) {
+    this.edges.splice(this.edges.indexOf(edge), 1);
+
+    for (const key in edge.output) {
+      if (Object.prototype.hasOwnProperty.call(edge.output, key)) {
+        const connection = edge.output[key];
+
+        if (connection instanceof Connection) {
+          connection.disconnectAll();
+        }
+      }
+    }
+
+    for (const key in edge.input) {
+      if (Object.prototype.hasOwnProperty.call(edge.input, key)) {
+        const connection = edge.input[key];
+
+        if (connection instanceof Connection) {
+          connection.disconnect(key, edge);
+        }
+      }
+    }
   }
 
   public rename(name: string, path: string = permalink(name)) {
