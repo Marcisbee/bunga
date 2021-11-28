@@ -11,7 +11,7 @@ import { StyleEdge } from './style.edge';
 import { SwitchEdge } from './switch.edge';
 import { TextEdge } from './text.edge';
 
-export const allEdges: typeof Edge[] = [
+export const allEdges: (new (...args: any[]) => Edge)[] = [
   TextEdge,
   NumberEdge,
   BooleanEdge,

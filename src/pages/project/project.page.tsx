@@ -4,9 +4,11 @@ import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { CanvasComponent } from '../../components/canvas/canvas.component';
+import { ErrorBoundary } from '../../components/error-boundary/error-boundary';
 import { LayersComponent } from '../../components/layers/layers.component';
 import { StylesComponent } from '../../components/styles/styles.component';
 import { allEdges } from '../../store/edges/all-edges';
+import { Edge } from '../../store/edges/edge';
 import { store } from '../../store/store';
 
 import style from './project.module.scss';
@@ -28,17 +30,20 @@ export function ProjectPage() {
         {' '}
         {params.id}
         <hr />
-        <LayersComponent />
+
+        <ErrorBoundary>
+          <LayersComponent />
+        </ErrorBoundary>
       </div>
 
       <div className={style.middle}>
         <div className={style.top}>
           <span style={{ float: 'right' }}>current people</span>
           {allEdges.map((edge) => (
-            <button type="button" key={edge.title} onClick={() => project.activeSpace.addEdge(edge)}>
+            <button type="button" key={(edge as unknown as Edge).title} onClick={() => project.activeSpace.addEdge(edge)}>
               add
               {' '}
-              {edge.title}
+              {(edge as unknown as Edge).title}
             </button>
           ))}
           <button
@@ -96,14 +101,18 @@ export function ProjectPage() {
           </button>
         </div>
 
-        <CanvasComponent
-          key={`canvas-${getExomeId(project.activeSpace)}`}
-          space={project.activeSpace}
-        />
+        <ErrorBoundary>
+          <CanvasComponent
+            key={`canvas-${getExomeId(project.activeSpace)}`}
+            space={project.activeSpace}
+          />
+        </ErrorBoundary>
       </div>
 
       <div style={{ width: 240 }}>
-        <StylesComponent />
+        <ErrorBoundary>
+          <StylesComponent />
+        </ErrorBoundary>
       </div>
     </div>
   );

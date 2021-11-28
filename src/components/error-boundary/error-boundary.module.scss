@@ -1,0 +1,33 @@
+.error {
+  display: block;
+  padding: 30px 20px;
+  text-align: center;
+  color: red;
+
+  h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+
+  svg {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    color: inherit;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  * {
+    text-align: inherit !important;
+  }
+
+  pre {
+    user-select: text !important;
+    pointer-events: all !important;
+    cursor: text !important;
+    white-space: normal;
+    background-color: #fff9fa;
+    padding: 10px;
+  }
+}

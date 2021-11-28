@@ -87,6 +87,7 @@
     "class-methods-use-this": "off",
     "consistent-return": "off",
     "no-return-assign": "off",
+    "react/state-in-constructor": "off",
     "no-restricted-syntax": [
       "error",
       "WithStatement",
