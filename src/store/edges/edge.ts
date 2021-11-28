@@ -57,6 +57,10 @@ export abstract class Edge extends Exome {
 
   public render?: React.FunctionComponent;
 
+  public connectInput(to: string, connection: Connection) {
+    this.input[to] = connection;
+  }
+
   public disconnectInput(path: string) {
     this.input[path] = null;
   }

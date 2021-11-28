@@ -73,7 +73,7 @@ export class SpaceStore extends Exome {
     return component;
   }
 
-  public addEdge(Apply: typeof Edge) {
+  public addEdge<T extends Edge>(Apply: new (...args: any[]) => T): T {
     this.boundary.updateBoundary();
 
     let {
@@ -113,7 +113,7 @@ export class SpaceStore extends Exome {
 
     this.boundary.updateBoundary();
 
-    return edge;
+    return edge as unknown as T;
   }
 
   public removeComponent(component: ComponentStore) {

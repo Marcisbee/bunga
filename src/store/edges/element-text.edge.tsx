@@ -2,6 +2,7 @@ import { useStore } from 'exome/react';
 
 import { useObservable } from '../../hooks/use-observable';
 import { store } from '../store';
+import { StyleStore } from '../style.store';
 
 import { BooleanEdge } from './boolean.edge';
 import { Connection } from './connection';
@@ -20,7 +21,36 @@ function Render({ edge }: { edge: ElementTextEdge }) {
   const elementText = useObservable<string>(selectInput('text')!);
 
   return (
-    <div>
+    <div
+      onDoubleClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const connectedStyle = edge.input.style;
+        const project = store.activeProject!;
+        const space = project.activeSpace;
+
+        if (connectedStyle) {
+          // Select connected style.
+          connectedStyle.from
+            .selectOutput('default')
+            .subscribe((value) => {
+              if (value instanceof StyleStore) {
+                project.activeStyle.setActive(value);
+              }
+            })
+            .unsubscribe();
+          return;
+        }
+
+        // Create new style and connect to element.
+        const style = project.addStyle();
+        const styleEdge = space.addEdge(StyleEdge);
+
+        styleEdge.input.source.next(style);
+        styleEdge.output.default.connect('style', edge);
+      }}
+    >
       <RenderElement edge={edge}>
         {elementText}
       </RenderElement>

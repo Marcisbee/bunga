@@ -1,6 +1,6 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
-import { Suspense, useMemo } from 'react';
+import { Suspense } from 'react';
 import { BehaviorSubject } from 'rxjs';
 
 import { useObservable } from '../../hooks/use-observable';
@@ -50,12 +50,39 @@ function Render({ edge }: { edge: ElementEdge }) {
   useStore(edge);
 
   return (
-    <div>
-      <Suspense fallback="...">
-        <RenderElement edge={edge}>
-          Sample
-        </RenderElement>
-      </Suspense>
+    <div
+      onDoubleClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const connectedStyle = edge.input.style;
+        const project = store.activeProject!;
+        const space = project.activeSpace;
+
+        if (connectedStyle) {
+          // Select connected style.
+          connectedStyle.from
+            .selectOutput('default')
+            .subscribe((value) => {
+              if (value instanceof StyleStore) {
+                project.activeStyle.setActive(value);
+              }
+            })
+            .unsubscribe();
+          return;
+        }
+
+        // Create new style and connect to element.
+        const style = project.addStyle();
+        const styleEdge = space.addEdge(StyleEdge);
+
+        styleEdge.input.source.next(style);
+        styleEdge.output.default.connect('style', edge);
+      }}
+    >
+      <RenderElement edge={edge}>
+        Sample
+      </RenderElement>
     </div>
   );
 }

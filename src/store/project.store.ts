@@ -65,6 +65,8 @@ export class ProjectStore extends Exome {
 
     this.styles.push(style);
     this.activeStyle.setActive(style);
+
+    return style;
   }
 
   public rename(name: string, path: string = permalink(name)) {

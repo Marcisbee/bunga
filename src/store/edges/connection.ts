@@ -26,7 +26,7 @@ export class Connection extends Exome {
     }
 
     // Connect edge to connection
-    edge.input[to] = this;
+    edge.connectInput(to, this);
     this.to.push([to, edge]);
 
     return true;
