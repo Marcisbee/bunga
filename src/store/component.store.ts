@@ -73,19 +73,6 @@ export class ComponentStore extends Exome {
   ) {
     super();
 
-    this.elements.push(...[
-      new ElementStore('button', {
-        type: 'button',
-        style: {
-          margin: 10,
-        },
-      }, [
-        new ElementTextStore('Hello '),
-        new ElementStore('strong', undefined, [
-          new ElementTextStore('world2'),
-        ]),
-      ]),
-    ]);
 
     // onAction(ComponentPositionStore, 'moveTo', (instance) => {
     //   if (instance !== this.position) {

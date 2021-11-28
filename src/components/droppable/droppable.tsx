@@ -18,8 +18,6 @@ interface DroppableProps extends React.PropsWithChildren<unknown> {
 export function Droppable({ className, container, children }: DroppableProps & DroppableResult) {
   const [{ isOver, canDrop }, drop] = useDrop(() => ({
     accept: [
-      ItemTypes.ELEMENT,
-      ItemTypes.COMPONENT,
       ItemTypes.PREVIEW,
     ],
 
