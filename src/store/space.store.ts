@@ -116,6 +116,10 @@ export class SpaceStore extends Exome {
     return edge;
   }
 
+  public removeComponent(component: ComponentStore) {
+    this.components.splice(this.components.indexOf(component), 1);
+  }
+
   public removeEdge(edge: Edge) {
     this.edges.splice(this.edges.indexOf(edge), 1);
 

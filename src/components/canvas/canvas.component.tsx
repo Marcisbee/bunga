@@ -268,10 +268,15 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
           e.preventDefault();
           e.stopPropagation();
 
+          move.selectedComponents.forEach((component) => {
+            space.removeComponent(component);
+          });
+
           move.selectedEdges.forEach((edge) => {
             space.removeEdge(edge);
           });
-          move.selectedEdges = [];
+
+          move.reset();
 
           space.boundary.updateBoundary();
         }
