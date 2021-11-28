@@ -5,18 +5,17 @@ import { ProjectStore } from './project.store';
 
 // Enable devtools in dev mode
 if (process.env.NODE_ENV !== 'production') {
-  // @TODO: Fix exome + devtools + BehaviorSubject
-  // addMiddleware(
-  //   exomeDevtools({
-  //     name: 'Codename: Facade app',
-  //     maxAge: 30,
-  //   }),
-  // );
+  addMiddleware(
+    exomeDevtools({
+      name: 'Codename: Facade app',
+      maxAge: 30,
+    }),
+  );
 }
 
 export class Store extends Exome {
   // @TODO: Create user store.
-  public user: any;
+  public user: unknown;
 
   public projects: Record<string, ProjectStore> = {};
 
