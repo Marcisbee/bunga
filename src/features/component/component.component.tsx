@@ -1,6 +1,11 @@
 import { onAction } from 'exome';
 import { useStore } from 'exome/react';
-import { useLayoutEffect, useRef } from 'react';
+import {
+  useLayoutEffect,
+  useRef,
+  MouseEventHandler,
+  useMemo,
+} from 'react';
 
 import { Droppable } from '../../components/droppable/droppable';
 import { ShadowView } from '../../components/shadow/shadow.component';
@@ -15,8 +20,78 @@ interface ComponentComponentProps {
   component: ComponentStore;
 }
 
+function onMouseMoveDiff(
+  moving: (diffX: number, diffY: number) => void,
+): MouseEventHandler<HTMLElement> {
+  return (mouseDownEvent) => {
+    mouseDownEvent.stopPropagation();
+    mouseDownEvent.preventDefault();
+
+    let x = mouseDownEvent.pageX;
+    let y = mouseDownEvent.pageY;
+
+    const handlerMove = (e: MouseEvent) => {
+      e.stopPropagation();
+
+      if (e.pageX === x && e.pageY === y) {
+        return;
+      }
+
+      const diffX = e.pageX - x;
+      const diffY = e.pageY - y;
+
+      x = e.pageX;
+      y = e.pageY;
+
+      moving(diffX, diffY);
+    };
+
+    window.addEventListener('mousemove', handlerMove, { passive: true });
+
+    const handlerEnd = (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      window.removeEventListener('mousemove', handlerMove);
+
+      window.removeEventListener('mouseup', handlerEnd);
+      window.removeEventListener('mouseleave', handlerEnd);
+    };
+
+    window.addEventListener('mouseup', handlerEnd);
+    window.addEventListener('mouseleave', handlerEnd);
+  };
+}
+
 export function ComponentRenderComponent({ component }: ComponentComponentProps) {
-  const { name, elements } = useStore(component);
+  const { name, elements, position } = useStore(component);
+
+  const onMouseDownTopLeft = useMemo(() => (
+    onMouseMoveDiff((diffX, diffY) => {
+      position.silent.moveTo(position.x + diffX, position.y + diffY);
+      position.resize(position.width - diffX, position.height - diffY);
+    })
+  ), [position]);
+
+  const onMouseDownTopRight = useMemo(() => (
+    onMouseMoveDiff((diffX, diffY) => {
+      position.silent.moveTo(position.x, position.y + diffY);
+      position.resize(position.width + diffX, position.height - diffY);
+    })
+  ), [position]);
+
+  const onMouseDownBottomLeft = useMemo(() => (
+    onMouseMoveDiff((diffX, diffY) => {
+      position.silent.moveTo(position.x + diffX, position.y);
+      position.resize(position.width - diffX, position.height + diffY);
+    })
+  ), [position]);
+
+  const onMouseDownBottomRight = useMemo(() => (
+    onMouseMoveDiff((diffX, diffY) => {
+      position.resize(position.width + diffX, position.height + diffY);
+    })
+  ), [position]);
 
   return (
     <>
@@ -28,6 +103,47 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
         container={component}
         className={style.container}
       >
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        <i
+          className={style.resize}
+          onMouseDown={onMouseDownTopLeft}
+          style={{
+            top: -4,
+            left: -4,
+            cursor: 'nwse-resize',
+          }}
+        />
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        <i
+          className={style.resize}
+          onMouseDown={onMouseDownTopRight}
+          style={{
+            top: -4,
+            right: -4,
+            cursor: 'nesw-resize',
+          }}
+        />
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        <i
+          className={style.resize}
+          style={{
+            bottom: -4,
+            left: -4,
+            cursor: 'nesw-resize',
+          }}
+          onMouseDown={onMouseDownBottomLeft}
+        />
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        <i
+          className={style.resize}
+          style={{
+            bottom: -4,
+            right: -4,
+            cursor: 'nwse-resize',
+          }}
+          onMouseDown={onMouseDownBottomRight}
+        />
+
         <ShadowView>
           <ElementChildrenComponent
             elements={elements}
@@ -78,19 +194,11 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
         style.object,
         isActive && style.active,
       ])}
-      onClick={(e) => {
+      onDoubleClick={(e) => {
         // Stop bubbling to top canvas.
         e.stopPropagation();
 
         if (e.button > 0) {
-          return;
-        }
-
-        if (!e.shiftKey) {
-          if (!move.didMouseMove) {
-            selectComponent(component, e.shiftKey);
-          }
-
           return;
         }
 
@@ -108,9 +216,13 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
           return;
         }
 
-        if (selectedAll.length <= 1) {
-          selectComponent(component, e.shiftKey);
+        if (!isActive) {
+          return;
         }
+
+        // if (selectedAll.length <= 1) {
+        //   selectComponent(component, e.shiftKey);
+        // }
 
         startMouseMove(e.pageX, e.pageY);
       }}
@@ -122,6 +234,13 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
       tabIndex={0}
     >
       <ComponentRenderComponent component={component} />
+      {isActive && (
+        <div className={style.dimensions}>
+          {width}
+          {' × '}
+          {height}
+        </div>
+      )}
     </div>
   );
 }

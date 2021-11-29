@@ -71,7 +71,6 @@ export class SelectionStore extends Exome {
 
       window.removeEventListener('mouseup', handlerEnd);
       window.removeEventListener('mouseleave', handlerEnd);
-      window.removeEventListener('mouseout', handlerEnd);
     };
 
     window.addEventListener('mouseup', handlerEnd);

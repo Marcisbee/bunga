@@ -37,26 +37,28 @@ export function DraggablePreview({ preview, children }: DraggablePreviewProps) {
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<DroppableResult>();
 
-      if (item && dropResult) {
-        const { container } = dropResult;
+      if (!item || !dropResult) {
+        return;
+      }
 
-        if (container instanceof ComponentStore) {
-          const itemPreview = item.preview;
+      const { container } = dropResult;
 
-          if (itemPreview instanceof ElementEdge) {
-            const element = new ElementStore(itemPreview, undefined, [
-              new ElementTextStore('another'),
-            ]);
+      if (container instanceof ComponentStore) {
+        const itemPreview = item.preview;
 
-            container.addElement(element);
-            return;
-          }
+        if (itemPreview instanceof ElementEdge) {
+          const element = new ElementStore(itemPreview, undefined, [
+            new ElementTextStore('another'),
+          ]);
 
-          if (itemPreview instanceof ElementTextEdge) {
-            const element = new ElementTextStore(itemPreview);
+          container.addElement(element);
+          return;
+        }
 
-            container.addElement(element);
-          }
+        if (itemPreview instanceof ElementTextEdge) {
+          const element = new ElementTextStore(itemPreview);
+
+          container.addElement(element);
         }
       }
     },

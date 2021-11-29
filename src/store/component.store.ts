@@ -40,6 +40,11 @@ export class ComponentPositionStore extends Exome {
     this.x = x;
     this.y = y;
   }
+
+  public resize(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+  }
 }
 
 export class ComponentStore extends Exome {
