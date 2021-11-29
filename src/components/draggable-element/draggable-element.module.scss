@@ -1,0 +1,21 @@
+.draggable {
+  pointer-events: all !important;
+
+  * {
+    pointer-events: none;
+  }
+}
+
+.isDragging {
+  background-color: #f5f5f5;
+  color: transparent;
+  box-shadow: none;
+  pointer-events: none;
+  border-radius: 4px;
+
+  * {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none !important;
+  }
+}

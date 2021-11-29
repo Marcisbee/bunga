@@ -1,21 +1,16 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
 
+import { ItemTypes } from '../../constants/draggable-item-types';
 import { ComponentStore } from '../../store/component.store';
 import { ElementTextEdge } from '../../store/edges/element-text.edge';
 import { ElementEdge } from '../../store/edges/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { cc } from '../../utils/class-names';
-import { DroppableResult } from '../droppable/droppable';
+import { DroppableComponentResult } from '../droppable-component/droppable-component';
 
 import style from './draggable-preview.module.scss';
-
-export const ItemTypes = {
-  PREVIEW: 'PREVIEW',
-  ELEMENT: 'ELEMENT',
-  COMPONENT: 'COMPONENT',
-} as const;
 
 interface DraggablePreviewProps extends React.PropsWithChildren<unknown> {
   preview: ElementEdge | ElementTextEdge;
@@ -35,7 +30,7 @@ export function DraggablePreview({ preview, children }: DraggablePreviewProps) {
     }),
 
     end: (item, monitor) => {
-      const dropResult = monitor.getDropResult<DroppableResult>();
+      const dropResult = monitor.getDropResult<DroppableComponentResult>();
 
       if (!item || !dropResult) {
         return;

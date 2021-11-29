@@ -6,6 +6,8 @@ import {
   useRef,
 } from 'react';
 
+import { DraggableElement } from '../../components/draggable-element/draggable-element';
+import { DroppableElement } from '../../components/droppable-element/droppable-element';
 import { useObservable } from '../../hooks/use-observable';
 import { ElementTextEdge } from '../../store/edges/element-text.edge';
 import { RenderElement } from '../../store/edges/element.edge';
@@ -13,17 +15,26 @@ import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 
 interface ElementChildrenComponentProps {
+  parent: ElementStore;
   elements: (ElementStore | ElementTextStore)[];
 }
 
-export function ElementChildrenComponent({ elements }: ElementChildrenComponentProps) {
+export function ElementChildrenComponent({ parent, elements }: ElementChildrenComponentProps) {
   return (
     <>
       {elements.map((element) => (
-        <ElementComponent
+        <DroppableElement
           key={`element-c-${getExomeId(element)}`}
-          element={element}
-        />
+          parent={parent}
+          container={element}
+        >
+          <DraggableElement
+            parent={parent}
+            element={element}
+          >
+            <ElementComponent element={element} />
+          </DraggableElement>
+        </DroppableElement>
       ))}
     </>
   );
@@ -55,13 +66,13 @@ const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>
       return createElement(
         type,
         { ...props, ref },
-        children && <ElementChildrenComponent elements={children} />,
+        children && <ElementChildrenComponent parent={element} elements={children} />,
       );
     }
 
     return (
       <RenderElement edge={type}>
-        {children && <ElementChildrenComponent elements={children} />}
+        {children && <ElementChildrenComponent parent={element} elements={children} />}
       </RenderElement>
     );
   },

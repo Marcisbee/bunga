@@ -1,21 +1,25 @@
 import { useDrop } from 'react-dnd';
 
+import { ItemTypes } from '../../constants/draggable-item-types';
 import { ComponentStore } from '../../store/component.store';
 import { ElementStore } from '../../store/element.store';
 import { cc } from '../../utils/class-names';
-import { ItemTypes } from '../draggable-preview/draggable-preview';
 
-import style from './droppable.module.scss';
+import style from './droppable-component.module.scss';
 
-export interface DroppableResult {
+export interface DroppableComponentResult {
   container: ElementStore | ComponentStore;
 }
 
-interface DroppableProps extends React.PropsWithChildren<unknown> {
+interface DroppableComponentProps extends React.PropsWithChildren<unknown> {
   className?: string;
 }
 
-export function Droppable({ className, container, children }: DroppableProps & DroppableResult) {
+export function DroppableComponent({
+  className,
+  container,
+  children,
+}: DroppableComponentProps & DroppableComponentResult) {
   const [{ isOver, canDrop }, drop] = useDrop(() => ({
     accept: [
       ItemTypes.PREVIEW,

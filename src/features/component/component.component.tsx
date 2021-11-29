@@ -7,7 +7,7 @@ import {
   useMemo,
 } from 'react';
 
-import { Droppable } from '../../components/droppable/droppable';
+import { DroppableComponent } from '../../components/droppable-component/droppable-component';
 import { ShadowView } from '../../components/shadow/shadow.component';
 import { ComponentPositionSilentStore, ComponentStore } from '../../store/component.store';
 import { store } from '../../store/store';
@@ -99,7 +99,7 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
         {name}
       </span>
 
-      <Droppable
+      <DroppableComponent
         container={component}
         className={style.container}
       >
@@ -145,11 +145,13 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
         />
 
         <ShadowView>
+          {/* @TODO: Add root node that will handle adding/removing children. */}
           <ElementChildrenComponent
             elements={elements}
+            // parent={????}
           />
         </ShadowView>
-      </Droppable>
+      </DroppableComponent>
     </>
   );
 }
