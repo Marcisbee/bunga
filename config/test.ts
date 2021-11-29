@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { JSDOM } from 'jsdom';
+import { parseHTML } from 'linkedom';
 
-const { window } = new JSDOM('<main></main>');
+const { window } = parseHTML('<body></body>');
 
 export function setup() {
   // @ts-ignore
