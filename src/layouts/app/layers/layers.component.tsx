@@ -1,10 +1,10 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 
-import { ComponentStore } from '../../store/component.store';
-import { ElementTextStore } from '../../store/element-text.store';
-import { ElementStore } from '../../store/element.store';
-import { store } from '../../store/store';
+import { ComponentStore } from '../../../store/component.store';
+import { ElementTextStore } from '../../../store/element-text.store';
+import { ElementStore } from '../../../store/element.store';
+import { store } from '../../../store/store';
 
 function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
   const { name, customBlockElements } = useStore(store.activeProject!);

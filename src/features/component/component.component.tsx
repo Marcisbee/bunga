@@ -2,12 +2,12 @@ import { onAction } from 'exome';
 import { useStore } from 'exome/react';
 import { useLayoutEffect, useRef } from 'react';
 
+import { Droppable } from '../../components/droppable/droppable';
+import { ShadowView } from '../../components/shadow/shadow.component';
 import { ComponentPositionSilentStore, ComponentStore } from '../../store/component.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
-import { Droppable } from '../droppable/droppable';
 import { ElementChildrenComponent } from '../element/element.component';
-import { ShadowView } from '../shadow/shadow.component';
 
 import style from './component.module.scss';
 

@@ -2,8 +2,8 @@ import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import { useState } from 'react';
 
-import { store } from '../../store/store';
-import { ActiveStyleStore, StyleStore } from '../../store/style.store';
+import { store } from '../../../store/store';
+import { ActiveStyleStore, StyleStore } from '../../../store/style.store';
 
 function ActiveStylesComponent({ active }: { active: StyleStore }) {
   const {

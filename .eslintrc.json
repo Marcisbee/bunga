@@ -7,7 +7,8 @@
     "plugin:react/recommended",
     "airbnb",
     "plugin:@typescript-eslint/recommended",
-    "plugin:react/jsx-runtime"
+    "plugin:react/jsx-runtime",
+    "plugin:clean-regex/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -18,6 +19,7 @@
     "sourceType": "module"
   },
   "plugins": [
+    "clean-regex",
     "react",
     "react-hooks",
     "@typescript-eslint"

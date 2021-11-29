@@ -1,12 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Footer } from '../../layouts/dashboard/footer/footer';
+import { Header } from '../../layouts/dashboard/header/header';
 
 export function HomePage() {
   return (
     <div>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/projects">Projects</Link>
-      </nav>
+      <Header />
+      <Footer />
     </div>
   );
 }

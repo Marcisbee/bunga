@@ -7,13 +7,13 @@ import {
 } from 'react';
 import { BehaviorSubject } from 'rxjs';
 
+import { ShadowView } from '../../../../components/shadow/shadow.component';
 import { useObservable } from '../../../../hooks/use-observable';
 import { Connection } from '../../../../store/edges/connection';
 import { Edge } from '../../../../store/edges/edge';
 import { pendingEdge } from '../../../../store/edges/pending';
 import { StyleStore } from '../../../../store/style.store';
 import { cc } from '../../../../utils/class-names';
-import { ShadowView } from '../../../shadow/shadow.component';
 
 import styles from './generic-edge.module.scss';
 

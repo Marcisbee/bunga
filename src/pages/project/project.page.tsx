@@ -5,10 +5,10 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useParams } from 'react-router-dom';
 
-import { CanvasComponent } from '../../components/canvas/canvas.component';
 import { ErrorBoundary } from '../../components/error-boundary/error-boundary';
-import { LayersComponent } from '../../components/layers/layers.component';
-import { StylesComponent } from '../../components/styles/styles.component';
+import { CanvasComponent } from '../../features/canvas/canvas.component';
+import { LayersComponent } from '../../layouts/app/layers/layers.component';
+import { StylesComponent } from '../../layouts/app/styles/styles.component';
 import { allEdges } from '../../store/edges/all-edges';
 import { Edge } from '../../store/edges/edge';
 import { store } from '../../store/store';

@@ -4,11 +4,10 @@ import {
   createElement,
   forwardRef,
   useRef,
-  useState,
 } from 'react';
+
 import { useObservable } from '../../hooks/use-observable';
 import { ElementTextEdge } from '../../store/edges/element-text.edge';
-
 import { RenderElement } from '../../store/edges/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
