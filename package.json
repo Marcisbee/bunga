@@ -22,7 +22,7 @@
     "explore": "EXPLORE=true vite build",
     "types": "tsc",
     "lint": "eslint .",
-    "test": "uvu src test.ts -r tsm",
+    "test": "uvu src test.ts -r tsm --tsmconfig ./config/tsm.config.js",
     "e2e": "playwright test"
   },
   "devDependencies": {
@@ -40,6 +40,7 @@
   },
   "optionalDependencies": {
     "@playwright/test": "^1.16.3",
+    "@testing-library/react": "^12.1.2",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.3.0",
@@ -50,6 +51,8 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "jsdom": "^18.1.1",
+    "nanospy": "^0.4.0",
     "rollup-plugin-visualizer": "^5.5.2",
     "tsm": "^2.1.4",
     "uvu": "^0.5.2"

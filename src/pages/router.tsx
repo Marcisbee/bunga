@@ -1,9 +1,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { ErrorBoundary } from './components/error-boundary/error-boundary';
-import { HomePage } from './pages/home/home.page';
-import { ProjectPage } from './pages/project/project.page';
-import { ProjectsPage } from './pages/projects/projects.page';
+import { ErrorBoundary } from '../components/error-boundary/error-boundary';
+
+import { HomePage } from './home/home.page';
+import { ProjectPage } from './project/project.page';
+import { ProjectsPage } from './projects/projects.page';
 
 export function Router() {
   return (
