@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Component } from 'react';
 
 import { cc } from '../../utils/class-names';
 
@@ -9,7 +9,7 @@ interface ErrorBoundaryState {
   errorInfo: null | Error;
 }
 
-export class ErrorBoundary extends React.Component<{
+export class ErrorBoundary extends Component<{
   className?: string;
 }> {
   public state: ErrorBoundaryState = {
@@ -44,6 +44,6 @@ export class ErrorBoundary extends React.Component<{
       );
     }
 
-    return children;
+    return children || null;
   }
 }

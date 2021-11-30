@@ -10,9 +10,9 @@ import { StyleStore } from '../style.store';
 import { Connection } from './connection';
 import { Edge } from './edge';
 import { ElementTextEdge } from './element-text.edge';
+import { GateEdge } from './gate.edge';
 import { EdgePosition } from './position';
 import { StyleEdge } from './style.edge';
-import { SwitchEdge } from './switch.edge';
 
 export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
   const { css } = useStore(style);
@@ -112,7 +112,7 @@ export class ElementEdge extends Edge {
 
   public connectableTo: Record<string, typeof Edge[]> = {
     style: [
-      SwitchEdge,
+      GateEdge,
       StyleEdge,
     ],
   };

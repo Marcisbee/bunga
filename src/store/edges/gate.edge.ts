@@ -7,27 +7,24 @@ import { Connection } from './connection';
 import { Edge } from './edge';
 import { StyleEdge } from './style.edge';
 
-type SwitchEdgeInput = {
+type GateEdgeInput = {
   condition: Connection | null,
-  style1: Connection | null,
-  style2: Connection | null,
+  style: Connection | null,
 }
 
-export class SwitchEdge extends Edge {
-  public static title = 'Switch';
+export class GateEdge extends Edge {
+  public static title = 'Gate';
 
   public style = 'operation';
 
-  public input: SwitchEdgeInput = {
+  public input: GateEdgeInput = {
     condition: null,
-    style1: null,
-    style2: null,
+    style: null,
   };
 
   public connectableTo: Record<string, typeof Edge[]> = {
     condition: [BooleanEdge],
-    style1: [StyleEdge],
-    style2: [StyleEdge],
+    style: [StyleEdge],
   };
 
   public output: { default: Connection } = {
@@ -36,19 +33,17 @@ export class SwitchEdge extends Edge {
 
   public selectOutput = (path: string) => {
     const condition = this.selectInput<boolean>('condition');
-    const style1 = this.selectInput<StyleStore>('style1');
-    const style2 = this.selectInput<StyleStore>('style2');
+    const style = this.selectInput<StyleStore>('style');
 
-    if (!condition || !style1 || !style2) {
+    if (!condition || !style) {
       return undefined as any;
     }
 
     return combineLatest([
       condition,
-      style1,
-      style2,
+      style,
     ]).pipe(
-      map(([a, b, c]) => (a ? b : c)),
+      map(([a, b]) => (a ? b : undefined)),
     );
   };
 }

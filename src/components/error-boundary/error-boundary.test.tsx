@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
 import { spyOn, restoreAll } from 'nanospy';
-import * as React from 'react';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 
@@ -13,6 +12,21 @@ const test = suite('ErrorBoundary');
 test.before(ENV.setup);
 test.before.each(ENV.reset);
 test.after.each(restoreAll);
+
+test('returns function', () => {
+  assert.type(ErrorBoundary, 'function');
+});
+
+test('renders component correctly', () => {
+  const { container } = render((
+    <ErrorBoundary />
+  ));
+
+  assert.snapshot(
+    container.innerHTML,
+    '',
+  );
+});
 
 test('renders children correctly', () => {
   const { container } = render((
