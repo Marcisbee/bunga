@@ -20,22 +20,37 @@ interface ElementChildrenComponentProps {
 }
 
 export function ElementChildrenComponent({ parent, elements }: ElementChildrenComponentProps) {
+  useStore(parent);
+
   return (
     <>
-      {elements.map((element) => (
-        <DroppableElement
-          key={`element-c-${getExomeId(element)}`}
-          parent={parent}
-          container={element}
-        >
+      {elements.map((element) => {
+        // if (element instanceof ElementTextStore) {
+        //   return (
+        //     <DraggableElement
+        //       parent={parent}
+        //       element={element}
+        //     >
+        //       <ElementComponent element={element} />
+        //     </DraggableElement>
+        //   );
+        // }
+
+        return (
           <DraggableElement
             parent={parent}
             element={element}
           >
-            <ElementComponent element={element} />
+            <DroppableElement
+              key={`element-c-${getExomeId(element)}`}
+              parent={parent}
+              container={element}
+            >
+              <ElementComponent element={element} />
+            </DroppableElement>
           </DraggableElement>
-        </DroppableElement>
-      ))}
+        );
+      })}
     </>
   );
 }

@@ -47,25 +47,24 @@ export class ElementStore<T extends Record<string, any> = Record<string, any>> e
     const index = this.children.indexOf(before!);
 
     this.children.splice(index, 0, item);
-
-    // So if component is active, set its' new parent in active store
-    // if (activeElementStore.active === item) {
-    //   activeElementStore.setActive(item, path, this);
-    // }
   }
 
   // @undoable
-  // public addAfter(path: string, item: ElementStore, after?: ElementStore) {
-  //   const list = dlv(this.props, path);
-  //   const index = list.indexOf(after) + 1;
+  public addAfter(
+    item: ElementStore | ElementTextStore,
+    after?: ElementStore | ElementTextStore,
+  ) {
+    const index = this.children.indexOf(after!) + 1;
 
-  //   list.splice(index, 0, item);
+    this.children.splice(index, 0, item);
+  }
 
-  //   // So if component is active, set its' new parent in active store
-  //   // if (activeElementStore.active === item) {
-  //   //   activeElementStore.setActive(item, path, this);
-  //   // }
-  // }
+  // @undoable
+  public append(
+    item: ElementStore | ElementTextStore,
+  ) {
+    this.children.push(item);
+  }
 
   // @undoable
   // public updateProps(path: string, value: unknown) {

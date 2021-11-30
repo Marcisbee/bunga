@@ -2,6 +2,7 @@ import React from 'react';
 import { useDrag } from 'react-dnd';
 
 import { ItemTypes } from '../../constants/draggable-item-types';
+import { DropPositionTypes } from '../../constants/drop-position-types';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { cc } from '../../utils/class-names';
@@ -15,7 +16,7 @@ interface DraggableElementProps extends React.PropsWithChildren<unknown> {
 }
 
 export function DraggableElement({ parent, element, children }: DraggableElementProps) {
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging, handlerId }, drag] = useDrag(() => ({
     type: ItemTypes.ELEMENT,
 
     item: {
@@ -35,47 +36,65 @@ export function DraggableElement({ parent, element, children }: DraggableElement
         return;
       }
 
-      console.log('Add', item.element, 'to', dropResult.parent, 'before', dropResult.container);
+      // @TODO: Fix issues with drop position where it randomly changes position.
+      // Maybe allow dragging element outside 1 level (parents siblings)
+      // and inside 1 level (siblings & siblings child)?
+      console.log(dropResult.position);
 
-      return;
+      if (item.element === dropResult.container) {
+        // Don't drop self into itself.
+        return;
+      }
+
       item.parent.remove(item.element);
-      dropResult.parent.addBefore(item.element, dropResult.container);
-      // @TODO: remove
 
-      // if (container instanceof ComponentStore) {
-      //   const itemElement = item.element;
+      if (dropResult.position === DropPositionTypes.TOP) {
+        dropResult.parent.addBefore(item.element, dropResult.container);
+        return;
+      }
 
-      //   if (itemElement instanceof ElementEdge) {
-      //     const el = new ElementStore(itemElement, undefined, [
-      //       new ElementTextStore('another'),
-      //     ]);
+      if (dropResult.position === DropPositionTypes.BOTTOM) {
+        dropResult.parent.addAfter(item.element, dropResult.container);
+        return;
+      }
 
-      //     container.addElement(el);
-      //     return;
-      //   }
+      if (dropResult.container instanceof ElementStore) {
+        dropResult.container.append(item.element);
+        return;
+      }
 
-      //   if (itemElement instanceof ElementTextEdge) {
-      //     const el = new ElementTextStore(itemElement);
-
-      //     container.addElement(el);
-      //   }
-      // }
+      dropResult.parent.append(item.element);
     },
   }));
 
   return (
-    <div
-      ref={drag}
-      role="button"
-      className={cc([
-        style.draggable,
-        isDragging && style.isDragging,
-      ])}
-      onMouseDown={(e) => {
-        e.stopPropagation();
-      }}
-    >
-      {children}
-    </div>
+    <>
+      <style>
+        {`
+          #${handlerId?.toString()}.isDragging {
+            pointer-events: none !important;
+            background-color: #f0f0f0 !important;
+          }
+          #${handlerId?.toString()}.isDragging * {
+            pointer-events: none !important;
+            opacity: 0;
+          }
+        `}
+      </style>
+      <div
+        ref={drag}
+        role="button"
+        id={handlerId?.toString()}
+        className={cc([
+          style.draggable,
+          isDragging && 'isDragging',
+        ])}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        {children}
+      </div>
+    </>
   );
 }

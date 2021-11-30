@@ -6,54 +6,54 @@ import { ElementTextStore } from '../../../store/element-text.store';
 import { ElementStore } from '../../../store/element.store';
 import { store } from '../../../store/store';
 
-function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
-  const { name, customBlockElements } = useStore(store.activeProject!);
+// function ElementAddLayersComponent({ active }: { active: ComponentStore }) {
+//   const { name, customBlockElements } = useStore(store.activeProject!);
 
-  return (
-    <form
-      onSubmit={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
+//   return (
+//     <form
+//       onSubmit={(e) => {
+//         e.stopPropagation();
+//         e.preventDefault();
 
-        const typeInput = ((e.target as HTMLFormElement)[0] as HTMLInputElement);
-        const typeValue = typeInput.value;
+//         const typeInput = ((e.target as HTMLFormElement)[0] as HTMLInputElement);
+//         const typeValue = typeInput.value;
 
-        typeInput.value = '';
+//         typeInput.value = '';
 
-        if (typeValue == null || typeValue === '' || !customBlockElements[Number(typeValue)]) {
-          return;
-        }
+//         if (typeValue == null || typeValue === '' || !customBlockElements[Number(typeValue)]) {
+//           return;
+//         }
 
-        active.addElement(new ElementStore(customBlockElements[Number(typeValue)], undefined, [
-          new ElementTextStore('another'),
-        ]));
-      }}
-    >
-      <select name="type" defaultValue="">
-        <option value="" disabled>Choose tag</option>
-        {/* <option value="div">div</option>
-        <option value="input">input</option>
-        <option value="textarea">textarea</option>
-        <option value="button">button</option>
-        <option value="p">p</option>
-        <option value="h1">h1</option> */}
-        {customBlockElements.map((element, i) => (
-          <option
-            key={`layer-custom-element-${getExomeId(element)}`}
-            value={i}
-          >
-            [
-            {name}
-            ]
-            {' '}
-            {element.input.name}
-          </option>
-        ))}
-      </select>
-      <button type="submit">add</button>
-    </form>
-  );
-}
+//         active.addElement(new ElementStore(customBlockElements[Number(typeValue)], undefined, [
+//           new ElementTextStore('another'),
+//         ]));
+//       }}
+//     >
+//       <select name="type" defaultValue="">
+//         <option value="" disabled>Choose tag</option>
+//         {/* <option value="div">div</option>
+//         <option value="input">input</option>
+//         <option value="textarea">textarea</option>
+//         <option value="button">button</option>
+//         <option value="p">p</option>
+//         <option value="h1">h1</option> */}
+//         {customBlockElements.map((element, i) => (
+//           <option
+//             key={`layer-custom-element-${getExomeId(element)}`}
+//             value={i}
+//           >
+//             [
+//             {name}
+//             ]
+//             {' '}
+//             {element.input.name}
+//           </option>
+//         ))}
+//       </select>
+//       <button type="submit">add</button>
+//     </form>
+//   );
+// }
 
 function ElementLayersComponent({ element }: { element: ElementStore | ElementTextStore }) {
   const el = useStore(element);
@@ -100,11 +100,11 @@ function ElementsLayersComponent({ elements }: { elements: (ElementStore | Eleme
 }
 
 function ActiveLayersComponent({ active }: { active: ComponentStore }) {
-  const { elements } = useStore(active);
+  const { root } = useStore(active);
 
   return (
     <div>
-      <ElementsLayersComponent elements={elements} />
+      <ElementsLayersComponent elements={root.children} />
 
       {/* <hr />
 

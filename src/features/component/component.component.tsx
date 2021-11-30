@@ -64,7 +64,7 @@ function onMouseMoveDiff(
 }
 
 export function ComponentRenderComponent({ component }: ComponentComponentProps) {
-  const { name, elements, position } = useStore(component);
+  const { name, root, position } = useStore(component);
 
   const onMouseDownTopLeft = useMemo(() => (
     onMouseMoveDiff((diffX, diffY) => {
@@ -145,10 +145,9 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
         />
 
         <ShadowView>
-          {/* @TODO: Add root node that will handle adding/removing children. */}
           <ElementChildrenComponent
-            elements={elements}
-            // parent={????}
+            elements={root.children}
+            parent={root}
           />
         </ShadowView>
       </DroppableComponent>

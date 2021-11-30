@@ -38,7 +38,11 @@ export function RenderElement({
 
   return (
     <>
-      {!!elementStyle && <RenderCss id={id} style={elementStyle} />}
+      {elementStyle ? (
+        <RenderCss id={id} style={elementStyle} />
+      ) : (
+        <style>{`#${id} { background-color: #ccc; }`}</style>
+      )}
       <div id={id}>
         {children}
       </div>
@@ -82,7 +86,9 @@ function Render({ edge }: { edge: ElementEdge }) {
         }}
       >
         <RenderElement edge={edge}>
-          Sample
+          <span
+            dangerouslySetInnerHTML={{ __html: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' }}
+          />
         </RenderElement>
       </div>
     </DraggablePreview>
@@ -95,7 +101,7 @@ type ElementEdgeInput = {
 }
 
 export class ElementEdge extends Edge {
-  public static title = 'Block Element';
+  public static title = 'Styled Element';
 
   public style = 'element';
 

@@ -43,17 +43,17 @@ export function DraggablePreview({ preview, children }: DraggablePreviewProps) {
 
         if (itemPreview instanceof ElementEdge) {
           const element = new ElementStore(itemPreview, undefined, [
-            new ElementTextStore('another'),
+            new ElementTextStore('__'),
           ]);
 
-          container.addElement(element);
+          container.root.addBefore(element);
           return;
         }
 
         if (itemPreview instanceof ElementTextEdge) {
           const element = new ElementTextStore(itemPreview);
 
-          container.addElement(element);
+          container.root.addBefore(element);
         }
       }
     },

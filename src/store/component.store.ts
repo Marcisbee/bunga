@@ -2,7 +2,6 @@ import { Exome, registerLoadable } from 'exome';
 
 import { permalink } from '../utils/permalink';
 
-import { ElementTextStore } from './element-text.store';
 import { ElementStore } from './element.store';
 
 export class ComponentPositionSilentStore extends Exome {
@@ -53,7 +52,7 @@ export class ComponentStore extends Exome {
     public position: ComponentPositionStore,
     public name: string,
     public path: string = permalink(name),
-    public elements: (ElementStore | ElementTextStore)[] = [],
+    public root = new ElementStore('root'),
   ) {
     super();
   }
@@ -61,10 +60,6 @@ export class ComponentStore extends Exome {
   public rename(name: string, path: string = permalink(name)) {
     this.name = name;
     this.path = path;
-  }
-
-  public addElement(element: ElementStore | ElementTextStore) {
-    this.elements.push(element);
   }
 }
 
