@@ -5,6 +5,7 @@ import { StyleStore } from '../style.store';
 import { BooleanEdge } from './boolean.edge';
 import { Connection } from './connection';
 import { Edge } from './edge';
+import { LogicEqualsEdge } from './logic-equals.edge';
 import { StyleEdge } from './style.edge';
 
 type GateEdgeInput = {
@@ -23,7 +24,7 @@ export class GateEdge extends Edge {
   };
 
   public connectableTo: Record<string, typeof Edge[]> = {
-    condition: [BooleanEdge],
+    condition: [BooleanEdge, LogicEqualsEdge],
     style: [StyleEdge],
   };
 

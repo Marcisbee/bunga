@@ -132,4 +132,22 @@ export class ElementEdge extends Edge {
   public selectOutput = (path: 'default') => undefined as any;
 
   public render = () => <Render edge={this} />;
+
+  protected onInputConnected = () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.input.style2 = null;
+    this.connectableTo.style2 = this.connectableTo.style;
+  };
+
+  protected onInputDisconnected = (path: string) => {
+    if (path === 'style') {
+      return;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    delete this.input[path];
+    delete this.connectableTo[path];
+  };
 }

@@ -3,6 +3,7 @@ import { Edge } from './edge';
 import { ElementTextEdge } from './element-text.edge';
 import { ElementEdge } from './element.edge';
 import { GateEdge } from './gate.edge';
+import { LogicEqualsEdge } from './logic-equals.edge';
 import { MathAddEdge } from './math-add.edge';
 import { MathDivideEdge } from './math-divide.edge';
 import { MathMultiplyEdge } from './math-multiply.edge';
@@ -22,5 +23,6 @@ export const allEdges: (new (...args: any[]) => Edge)[] = [
   StyleEdge,
   ElementEdge,
   ElementTextEdge,
+  LogicEqualsEdge,
   GateEdge,
 ];

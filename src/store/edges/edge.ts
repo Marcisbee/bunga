@@ -59,13 +59,21 @@ export abstract class Edge extends Exome {
 
   public connectInput(to: string, connection: Connection) {
     this.input[to] = connection;
+
+    this.onInputConnected(to);
   }
 
   public disconnectInput(path: string) {
     this.input[path] = null;
+
+    this.onInputDisconnected(path);
   }
 
   public disconnectOutput(path: string) {
     this.output[path].disconnect(path, this);
   }
+
+  protected onInputConnected = (path: string) => {};
+
+  protected onInputDisconnected = (path: string) => {};
 }
