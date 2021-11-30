@@ -42,15 +42,6 @@
   }
 }
 
-/*
-@TODO:
-When starting a drag from action output and mouse enters component,
-start listening on mouseup event inside shadow dom.
-
-pointer-events: all !important; on all child elements.
-
-When mouseup happens, connect action node and unsubscribe from events.
-*/
 .connections {
   position: fixed;
   left: 0;
