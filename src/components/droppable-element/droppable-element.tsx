@@ -3,6 +3,7 @@ import { useDrop } from 'react-dnd';
 
 import { ItemTypes } from '../../constants/draggable-item-types';
 import { DropPositionTypes } from '../../constants/drop-position-types';
+import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { cc } from '../../utils/class-names';
 
@@ -10,12 +11,14 @@ import style from './droppable-element.module.scss';
 
 export interface DroppableElementResult {
   parent: ElementStore;
-  container: ElementStore;
+  container: ElementStore | ElementTextStore;
   position: keyof typeof DropPositionTypes;
 }
 
 interface DroppableElementProps extends React.PropsWithChildren<unknown> {
   className?: string;
+  parent: DroppableElementResult['parent'];
+  container: DroppableElementResult['container'];
 }
 
 export function DroppableElement({
@@ -23,7 +26,7 @@ export function DroppableElement({
   parent,
   container,
   children,
-}: DroppableElementProps & DroppableElementResult) {
+}: DroppableElementProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [{ isOver, canDrop, handlerId }, drop] = useDrop(() => ({
     accept: [

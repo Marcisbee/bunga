@@ -24,33 +24,20 @@ export function ElementChildrenComponent({ parent, elements }: ElementChildrenCo
 
   return (
     <>
-      {elements.map((element) => {
-        // if (element instanceof ElementTextStore) {
-        //   return (
-        //     <DraggableElement
-        //       parent={parent}
-        //       element={element}
-        //     >
-        //       <ElementComponent element={element} />
-        //     </DraggableElement>
-        //   );
-        // }
-
-        return (
-          <DraggableElement
+      {elements.map((element) => (
+        <DraggableElement
+          parent={parent}
+          element={element}
+        >
+          <DroppableElement
+            key={`element-c-${getExomeId(element)}`}
             parent={parent}
-            element={element}
+            container={element}
           >
-            <DroppableElement
-              key={`element-c-${getExomeId(element)}`}
-              parent={parent}
-              container={element}
-            >
-              <ElementComponent element={element} />
-            </DroppableElement>
-          </DraggableElement>
-        );
-      })}
+            <ElementComponent element={element} />
+          </DroppableElement>
+        </DraggableElement>
+      ))}
     </>
   );
 }
