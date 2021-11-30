@@ -23,7 +23,8 @@
     "types": "tsc",
     "lint": "eslint .",
     "test": "uvu src test.ts -r tsm --tsmconfig ./config/tsm.config.js",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "generate": "npx hygen component"
   },
   "devDependencies": {
     "@testing-library/react": "^12.1.2",
