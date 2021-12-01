@@ -124,8 +124,8 @@ const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>
               const project = store.activeProject!;
               const space = project.activeSpace;
 
-              const textElementEdge = space.addEdge(ElementTextEdge);
               const textEdge = space.addEdge(TextEdge);
+              const textElementEdge = space.addEdge(ElementTextEdge);
 
               textEdge.setAutofocus();
               textEdge.output.default.connect('text', textElementEdge);

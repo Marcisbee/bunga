@@ -1,4 +1,6 @@
 import { BooleanEdge } from './boolean.edge';
+import { ArrayConcatEdge } from './data-array-concat.edge';
+import { ArrayEdge } from './data-array.edge';
 import { Edge } from './edge';
 import { ElementTextEdge } from './element-text.edge';
 import { ElementEdge } from './element.edge';
@@ -16,6 +18,8 @@ export const allEdges: (new (...args: any[]) => Edge)[] = [
   TextEdge,
   NumberEdge,
   BooleanEdge,
+  ArrayEdge,
+  ArrayConcatEdge,
   MathAddEdge,
   MathSubtractEdge,
   MathMultiplyEdge,

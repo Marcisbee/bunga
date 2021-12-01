@@ -8,6 +8,7 @@ import { store } from '../store';
 import { StyleStore } from '../style.store';
 
 import { Connection } from './connection';
+import { ArrayConcatEdge } from './data-array-concat.edge';
 import { Edge } from './edge';
 import { ElementTextEdge } from './element-text.edge';
 import { GateEdge } from './gate.edge';
@@ -33,14 +34,20 @@ export function RenderElement({
 }: { edge: ElementEdge | ElementTextEdge, defaultCss?: string, children: any }) {
   const { selectInput } = useStore(edge);
 
-  const elementStyle = useObservable<StyleStore>(selectInput('style')!);
+  const elementStyle = useObservable<StyleStore | StyleStore[]>(selectInput('style')!);
 
   const id = getExomeId(edge);
 
   return (
     <>
       {elementStyle ? (
-        <RenderCss id={id} style={elementStyle} />
+        elementStyle instanceof Array ? (
+          elementStyle.map((style) => (
+            <RenderCss id={id} style={style} />
+          ))
+        ) : (
+          <RenderCss id={id} style={elementStyle} />
+        )
       ) : (
         defaultCss && (
           <style>{`#${id} { ${defaultCss} }`}</style>
@@ -122,6 +129,7 @@ export class ElementEdge extends Edge {
     style: [
       GateEdge,
       StyleEdge,
+      ArrayConcatEdge,
     ],
   };
 
@@ -137,25 +145,9 @@ export class ElementEdge extends Edge {
     }
   }
 
-  public selectOutput = (path: 'default') => undefined as any;
+  public selectOutput = (path: 'default') => {
+    return this.selectInput<StyleEdge>('style')!;
+  };
 
   public render = () => <Render edge={this} />;
-
-  protected onInputConnected = () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    this.input.style2 = null;
-    this.connectableTo.style2 = this.connectableTo.style;
-  };
-
-  protected onInputDisconnected = (path: string) => {
-    if (path === 'style') {
-      return;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    delete this.input[path];
-    delete this.connectableTo[path];
-  };
 }
