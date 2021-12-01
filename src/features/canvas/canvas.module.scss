@@ -51,3 +51,10 @@
   pointer-events: none;
   z-index: 1;
 }
+
+@media (prefers-color-scheme: dark) {
+  .canvas {
+    background-color: #222;
+    background-image: radial-gradient(circle, #444 1px, rgba(0, 0, 0, 0) 1px);
+  }
+}
