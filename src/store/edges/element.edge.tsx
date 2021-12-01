@@ -29,7 +29,8 @@ export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
 export function RenderElement({
   edge,
   children,
-}: { edge: ElementEdge | ElementTextEdge, children: any }) {
+  defaultCss,
+}: { edge: ElementEdge | ElementTextEdge, defaultCss?: string, children: any }) {
   const { selectInput } = useStore(edge);
 
   const elementStyle = useObservable<StyleStore>(selectInput('style')!);
@@ -41,7 +42,9 @@ export function RenderElement({
       {elementStyle ? (
         <RenderCss id={id} style={elementStyle} />
       ) : (
-        <style>{`#${id} { background-color: #ccc; }`}</style>
+        defaultCss && (
+          <style>{`#${id} { ${defaultCss} }`}</style>
+        )
       )}
       <div id={id}>
         {children}
@@ -85,7 +88,10 @@ function Render({ edge }: { edge: ElementEdge }) {
           styleEdge.output.default.connect('style', edge);
         }}
       >
-        <RenderElement edge={edge}>
+        <RenderElement
+          edge={edge}
+          defaultCss="background-color: #ccc;"
+        >
           <span
             dangerouslySetInnerHTML={{
               __html: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
