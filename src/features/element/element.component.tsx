@@ -8,6 +8,7 @@ import {
 
 import { DraggableElement } from '../../components/draggable-element/draggable-element';
 import { DroppableElement } from '../../components/droppable-element/droppable-element';
+import { DropPositionTypes } from '../../constants/drop-position-types';
 import { useObservable } from '../../hooks/use-observable';
 import { ElementTextEdge } from '../../store/edges/element-text.edge';
 import { RenderElement } from '../../store/edges/element.edge';
@@ -26,16 +27,46 @@ export function ElementChildrenComponent({ parent, elements }: ElementChildrenCo
     <>
       {elements.map((element) => (
         <DraggableElement
+          key={`element-c-${getExomeId(element)}`}
           parent={parent}
           element={element}
         >
           <DroppableElement
-            key={`element-c-${getExomeId(element)}`}
             parent={parent}
-            container={element}
+            element={element}
+            position={DropPositionTypes.INSIDE}
           >
             <ElementComponent element={element} />
           </DroppableElement>
+
+          <DroppableElement
+            parent={parent}
+            element={element}
+            position={DropPositionTypes.TOP}
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '20%',
+              maxHeight: 20,
+              top: 0,
+              left: 0,
+              overflow: 'hidden',
+            }}
+          />
+          <DroppableElement
+            parent={parent}
+            element={element}
+            position={DropPositionTypes.BOTTOM}
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '20%',
+              maxHeight: 20,
+              bottom: 0,
+              left: 0,
+              overflow: 'hidden',
+            }}
+          />
         </DraggableElement>
       ))}
     </>

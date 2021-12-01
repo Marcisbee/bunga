@@ -41,7 +41,7 @@ export function DraggableElement({ parent, element, children }: DraggableElement
       // and inside 1 level (siblings & siblings child)?
       console.log(dropResult.position);
 
-      if (item.element === dropResult.container) {
+      if (item.element === dropResult.element) {
         // Don't drop self into itself.
         return;
       }
@@ -49,17 +49,17 @@ export function DraggableElement({ parent, element, children }: DraggableElement
       item.parent.remove(item.element);
 
       if (dropResult.position === DropPositionTypes.TOP) {
-        dropResult.parent.addBefore(item.element, dropResult.container);
+        dropResult.parent.addBefore(item.element, dropResult.element);
         return;
       }
 
       if (dropResult.position === DropPositionTypes.BOTTOM) {
-        dropResult.parent.addAfter(item.element, dropResult.container);
+        dropResult.parent.addAfter(item.element, dropResult.element);
         return;
       }
 
-      if (dropResult.container instanceof ElementStore) {
-        dropResult.container.append(item.element);
+      if (dropResult.element instanceof ElementStore) {
+        dropResult.element.append(item.element);
         return;
       }
 
@@ -71,6 +71,10 @@ export function DraggableElement({ parent, element, children }: DraggableElement
     <>
       <style>
         {`
+          #${handlerId?.toString()} {
+            display: block;
+            position: relative;
+          }
           #${handlerId?.toString()}.isDragging {
             pointer-events: none !important;
             background-color: #f0f0f0 !important;

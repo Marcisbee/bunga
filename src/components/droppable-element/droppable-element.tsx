@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { CSSProperties, useRef } from 'react';
 import { useDrop } from 'react-dnd';
 
 import { ItemTypes } from '../../constants/draggable-item-types';
@@ -7,24 +7,28 @@ import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { cc } from '../../utils/class-names';
 
-import style from './droppable-element.module.scss';
+// import styles from './droppable-element.module.scss';
 
 export interface DroppableElementResult {
   parent: ElementStore;
-  container: ElementStore | ElementTextStore;
+  element: ElementStore | ElementTextStore;
   position: keyof typeof DropPositionTypes;
 }
 
 interface DroppableElementProps extends React.PropsWithChildren<unknown> {
-  className?: string;
   parent: DroppableElementResult['parent'];
-  container: DroppableElementResult['container'];
+  element: DroppableElementResult['element'];
+  position: keyof typeof DropPositionTypes;
+  className?: string;
+  style?: CSSProperties,
 }
 
 export function DroppableElement({
-  className,
   parent,
-  container,
+  element,
+  className,
+  position,
+  style,
   children,
 }: DroppableElementProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -41,36 +45,12 @@ export function DroppableElement({
       };
     },
 
-    drop: (item, monitor) => {
-      if (!ref.current) {
-        return;
-      }
-
-      const dropTarget = ref.current.getBoundingClientRect();
-      const offset = monitor.getClientOffset();
-
-      if (!offset) {
-        return;
-      }
-
-      const h = ((offset.y - dropTarget.top) * 100) / dropTarget.height;
-
-      console.log(h);
-
-      // @TODO: Create dropping elements for top, bottom, left, right, inside.
-      const position = h >= 80
-        ? DropPositionTypes.BOTTOM
-        : h <= 20
-          ? DropPositionTypes.TOP
-          : DropPositionTypes.INSIDE;
-
-      return {
-        parent,
-        container,
-        position,
-      };
-    },
-  }));
+    drop: () => ({
+      parent,
+      element,
+      position,
+    }),
+  }), [parent, element, position]);
 
   drop(ref);
 
@@ -94,6 +74,7 @@ export function DroppableElement({
             height: 100%;
             z-index: 2;
             background-color: rgba(0, 153, 255, 0.15);
+            pointer-events: none;
           }
         `}
       </style>
@@ -105,6 +86,7 @@ export function DroppableElement({
           canDrop && 'canDrop',
           isOver && 'isOver',
         ])}
+        style={style}
       >
         {children}
       </div>
