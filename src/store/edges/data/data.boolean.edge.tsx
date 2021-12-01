@@ -1,0 +1,58 @@
+import { useStore } from 'exome/react';
+import { BehaviorSubject } from 'rxjs';
+
+import { useObservable } from '../../../hooks/use-observable';
+import { Connection } from '../connection';
+import { Edge } from '../edge';
+
+import { DataEdge } from './data.edge';
+
+export class BooleanEdge extends DataEdge {
+  public static title = '(data) Boolean';
+
+  public input = {
+    value: new BehaviorSubject<boolean | undefined>(false),
+  };
+
+  public connectableTo: Record<string, typeof Edge[]> = {};
+
+  public output: { default: Connection } = {
+    default: new Connection(this, 'default'),
+  };
+
+  public select = {
+    default: this.input.value.pipe(),
+  };
+
+  public customControls = {
+    value: () => <RenderValue edge={this} />,
+  };
+}
+
+function RenderValue({ edge }: { edge: BooleanEdge }) {
+  const { input } = useStore(edge);
+
+  const value = !!useObservable(input.value);
+
+  return (
+    <input
+      type="checkbox"
+      checked={value}
+      onChange={(event) => {
+        input.value.next(event.target.checked);
+      }}
+      style={{
+        fontSize: 11,
+        height: 14,
+        width: 14,
+        padding: 1,
+        marginTop: 2,
+        verticalAlign: 'middle',
+        border: 0,
+        borderRadius: 2,
+        backgroundColor: '#fff',
+        fontWeight: 'bold',
+      }}
+    />
+  );
+}

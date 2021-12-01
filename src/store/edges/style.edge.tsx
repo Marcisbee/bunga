@@ -9,6 +9,30 @@ import { StyleStore } from '../style.store';
 import { Connection } from './connection';
 import { Edge } from './edge';
 
+export class StyleEdge extends Edge {
+  public static title = 'Style';
+
+  public style = 'style';
+
+  public input = {
+    source: new BehaviorSubject<StyleStore | null>(null),
+  };
+
+  public connectableTo: Record<string, typeof Edge[]> = {};
+
+  public output: { default: Connection } = {
+    default: new Connection(this, 'default'),
+  };
+
+  public select = {
+    default: this.selectInput<StyleStore | null>('source').pipe(),
+  };
+
+  public customControls = {
+    source: () => <RenderSource edge={this} />,
+  };
+}
+
 function RenderSourceOption({ style }: { style: StyleStore }) {
   const { name } = useStore(style);
 
@@ -46,30 +70,4 @@ function RenderSource({ edge }: { edge: StyleEdge }) {
       ))}
     </select>
   );
-}
-
-type StyleEdgeInput = {
-  source: BehaviorSubject<StyleStore | null>;
-}
-
-export class StyleEdge extends Edge {
-  public static title = 'Style';
-
-  public style = 'style';
-
-  public input: StyleEdgeInput = {
-    source: new BehaviorSubject<StyleStore | null>(null),
-  };
-
-  public connectableTo: Record<string, typeof Edge[]> = {};
-
-  public output: { default: Connection } = {
-    default: new Connection(this, 'default'),
-  };
-
-  public selectOutput = (path: string) => this.input.source as any;
-
-  public customControls = {
-    source: () => <RenderSource edge={this} />,
-  };
 }

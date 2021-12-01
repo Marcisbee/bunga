@@ -10,9 +10,9 @@ import { DraggableElement } from '../../components/draggable-element/draggable-e
 import { DroppableElement } from '../../components/droppable-element/droppable-element';
 import { DropPositionTypes } from '../../constants/drop-position-types';
 import { useObservable } from '../../hooks/use-observable';
+import { StringEdge } from '../../store/edges/data/data.string.edge';
 import { ElementTextEdge } from '../../store/edges/element-text.edge';
 import { RenderElement } from '../../store/edges/element.edge';
-import { TextEdge } from '../../store/edges/text.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { store } from '../../store/store';
@@ -124,10 +124,10 @@ const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>
               const project = store.activeProject!;
               const space = project.activeSpace;
 
-              const textEdge = space.addEdge(TextEdge);
+              const textEdge = space.addEdge(StringEdge);
               const textElementEdge = space.addEdge(ElementTextEdge);
 
-              textEdge.setAutofocus();
+              // textEdge.setAutofocus();
               textEdge.output.default.connect('text', textElementEdge);
 
               element.append(new ElementTextStore(textElementEdge));

@@ -14,6 +14,7 @@ import { Edge } from '../../../../store/edges/edge';
 import { pendingEdge } from '../../../../store/edges/pending';
 import { StyleStore } from '../../../../store/style.store';
 import { cc } from '../../../../utils/class-names';
+import { observableToPromise } from '../../../../utils/observable-to-promise';
 
 import styles from './generic-edge.module.scss';
 
@@ -62,9 +63,11 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                   <span
                     role="button"
                     className={styles.input}
-                    onClick={() => {
-                      if (input[key]) {
-                        (input[key] as Connection).disconnect(key, edge);
+                    onClick={async () => {
+                      const connection = await observableToPromise<Connection>(input[key]);
+
+                      if (connection) {
+                        connection.disconnect(key, edge);
                       }
 
                       if (from) {
@@ -72,7 +75,14 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                       }
                     }}
                   >
-                    <svg width="10" height="10" viewBox="0 0 18 18" fill={input[key] ? 'currentColor' : 'none'} xmlns="http://www.w3.org/2000/svg">
+                    <svg
+                      width="10"
+                      height="10"
+                      viewBox="0 0 18 18"
+                      // @TODO: figure out how to changes this based on observable value
+                      fill={input[key] ? 'currentColor' : 'none'}
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
                       <circle cx="9" cy="9" r="7.5" stroke="currentColor" strokeWidth="3" />
                     </svg>
                   </span>
@@ -93,7 +103,7 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                   ) : (
                     <input
                       type="text"
-                      defaultValue={(input[key] as BehaviorSubject<any>)!.value}
+                      defaultValue={(input[key] as BehaviorSubject<any>)!.getValue()}
                       onChange={(event) => {
                         (input[key] as BehaviorSubject<any>)!.next(event.target.value);
                       }}
@@ -113,10 +123,7 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                 ) : (
                   <span>
                     {input[key] && (
-                      <EdgeOutput
-                        edge={(input[key] as Connection).from}
-                        id={(input[key] as Connection).path}
-                      />
+                      <EdgeOutput input={input[key]} />
                     )}
                   </span>
                 )}
@@ -140,7 +147,7 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                 <strong>{key}</strong>
               )}
 
-              {/* <span><EdgeOutput edge={edge} id={key} /></span> */}
+              {/* <span><EdgeOutputConnection edge={edge} id={key} /></span> */}
               <span
                 role="button"
                 tabIndex={0}
@@ -161,10 +168,29 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
   );
 }, () => true);
 
-function EdgeOutput({ edge, id }: { edge: Edge, id: string }): React.ReactElement {
-  const { selectOutput } = useStore(edge);
+interface EdgeOutputProps {
+  input: BehaviorSubject<Connection | null>;
+}
 
-  const value = useObservable(useMemo(() => selectOutput(id), [selectOutput, id]));
+function EdgeOutput({ input }: EdgeOutputProps): React.ReactElement {
+  const inputConnection = useObservable(useMemo(() => input, []));
+
+  if (inputConnection instanceof Connection) {
+    return (
+      <EdgeOutputConnection
+        edge={inputConnection.from}
+        id={inputConnection.path}
+      />
+    );
+  }
+
+  return null as any;
+}
+
+function EdgeOutputConnection({ edge, id }: { edge: Edge, id: string }): React.ReactElement {
+  const { select } = useStore(edge);
+
+  const value = useObservable(useMemo(() => select[id], [id]));
 
   if (value instanceof StyleStore) {
     return value.name as unknown as React.ReactElement;

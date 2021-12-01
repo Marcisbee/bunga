@@ -3,9 +3,9 @@ import * as assert from 'uvu/assert';
 
 import { observableToPromise } from '../../utils/observable-to-promise';
 
+import { NumberEdge } from './data/data.number.edge';
 import { Edge } from './edge';
 import { ElementTextEdge } from './element-text.edge';
-import { NumberEdge } from './number.edge';
 
 const test = suite('ElementTextEdge');
 

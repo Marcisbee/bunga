@@ -1,55 +1,37 @@
 import { useStore } from 'exome/react';
+import { BehaviorSubject } from 'rxjs';
 
 import { DraggablePreview } from '../../components/draggable-preview/draggable-preview';
 import { useObservable } from '../../hooks/use-observable';
 import { store } from '../store';
 
-import { BooleanEdge } from './boolean.edge';
 import { Connection } from './connection';
+import { BooleanEdge } from './data/data.boolean.edge';
+import { NumberEdge } from './data/data.number.edge';
+import { StringEdge } from './data/data.string.edge';
 import { Edge } from './edge';
-import { RenderElement } from './element.edge';
-import { MathEdge } from './math.edge';
-import { NumberEdge } from './number.edge';
+import { MathEdge } from './math/math.edge';
 import { EdgePosition } from './position';
-import { TextEdge } from './text.edge';
-
-function Render({ edge }: { edge: ElementTextEdge }) {
-  const { selectInput } = useStore(edge);
-
-  const elementText = useObservable<string>(selectInput('text')!);
-
-  return (
-    <DraggablePreview preview={edge}>
-      <RenderElement edge={edge}>
-        {elementText}
-      </RenderElement>
-    </DraggablePreview>
-  );
-}
-
-type ElementTextEdgeInput = {
-  text: Connection | null;
-}
 
 export class ElementTextEdge extends Edge {
   public static title = 'Text Element';
 
   public style = 'element';
 
-  public input: ElementTextEdgeInput = {
-    text: null,
+  public input = {
+    text: new BehaviorSubject<Connection | null>(null),
   };
 
   public connectableTo: Record<string, typeof Edge[]> = {
     text: [
-      TextEdge,
       BooleanEdge,
+      StringEdge,
       NumberEdge,
       MathEdge,
     ],
   };
 
-  public output: Record<string, any> = {};
+  public output: Record<string, never> = {};
 
   constructor(
     public position: EdgePosition,
@@ -61,7 +43,23 @@ export class ElementTextEdge extends Edge {
     }
   }
 
-  public selectOutput = (path: 'default') => undefined as any;
+  public select = {
+    default: this.selectInput<string | number | null | undefined>('text'),
+  };
 
   public render = () => <Render edge={this} />;
+}
+
+function Render({ edge }: { edge: ElementTextEdge }) {
+  const { select } = useStore(edge);
+
+  const elementText = useObservable(select.default);
+
+  return (
+    <DraggablePreview preview={edge}>
+      <div>
+        {elementText}
+      </div>
+    </DraggablePreview>
+  );
 }

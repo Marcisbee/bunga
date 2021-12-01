@@ -1,32 +1,33 @@
-import { BooleanEdge } from './boolean.edge';
-import { ArrayConcatEdge } from './data-array-concat.edge';
-import { ArrayEdge } from './data-array.edge';
+import { ArrayConcatEdge } from './data/data.array-concat.edge';
+import { ArrayEdge } from './data/data.array.edge';
+import { BooleanEdge } from './data/data.boolean.edge';
+import { NumberEdge } from './data/data.number.edge';
+import { StringEdge } from './data/data.string.edge';
 import { Edge } from './edge';
 import { ElementTextEdge } from './element-text.edge';
 import { ElementEdge } from './element.edge';
-import { GateEdge } from './gate.edge';
-import { LogicEqualsEdge } from './logic-equals.edge';
-import { MathAddEdge } from './math-add.edge';
-import { MathDivideEdge } from './math-divide.edge';
-import { MathMultiplyEdge } from './math-multiply.edge';
-import { MathSubtractEdge } from './math-subtract.edge';
-import { NumberEdge } from './number.edge';
+import { LogicEqualsEdge } from './logic/logic.equals.edge';
+import { LogicGateEdge } from './logic/logic.gate.edge';
+import { MathAddEdge } from './math/math.add.edge';
+import { MathDivideEdge } from './math/math.divide.edge';
+import { MathMultiplyEdge } from './math/math.multiply.edge';
+import { MathSubtractEdge } from './math/math.subtract.edge';
 import { StyleEdge } from './style.edge';
-import { TextEdge } from './text.edge';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const allEdges: (new (...args: any[]) => Edge)[] = [
-  TextEdge,
+  StringEdge,
   NumberEdge,
   BooleanEdge,
-  ArrayEdge,
-  ArrayConcatEdge,
   MathAddEdge,
   MathSubtractEdge,
   MathMultiplyEdge,
   MathDivideEdge,
+  ArrayEdge,
+  ArrayConcatEdge,
   StyleEdge,
   ElementEdge,
   ElementTextEdge,
   LogicEqualsEdge,
-  GateEdge,
+  LogicGateEdge,
 ];

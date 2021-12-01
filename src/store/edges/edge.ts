@@ -1,6 +1,11 @@
 import { Exome } from 'exome';
 import React from 'react';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  mergeMap,
+  Observable,
+  of,
+} from 'rxjs';
 
 import { Connection } from './connection';
 import { EdgePosition } from './position';
@@ -11,11 +16,13 @@ export abstract class Edge extends Exome {
   public style?: string;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public abstract input: Record<string, null | Connection | BehaviorSubject<any>>;
+  public abstract input: Record<string, BehaviorSubject<null | Connection | any>>;
 
   public abstract connectableTo: Record<string, typeof Edge[]>;
 
   public abstract output: Record<string, Connection>;
+
+  public abstract select: Record<string, Observable<unknown>>;
 
   constructor(
     public position: EdgePosition,
@@ -27,21 +34,21 @@ export abstract class Edge extends Exome {
     return (this.constructor as typeof Edge).title;
   }
 
-  public abstract selectOutput<T = unknown>(path: string): Observable<T>;
+  public selectInput = <T = unknown>(path: string): Observable<T> => (
+    this.input[path].pipe<T>(
+      mergeMap((connection: Connection | BehaviorSubject<any>) => {
+        if (connection instanceof Observable) {
+          return connection;
+        }
 
-  public selectInput = <T = unknown>(path: string): Observable<T> | undefined => {
-    const inputValue = this.input[path];
+        if (connection instanceof Connection) {
+          return connection.from.select[connection.path];
+        }
 
-    if (inputValue instanceof Connection) {
-      return inputValue.from?.selectOutput(inputValue.path);
-    }
-
-    if (inputValue instanceof BehaviorSubject) {
-      return inputValue;
-    }
-
-    return undefined;
-  };
+        return of(connection || null);
+      }) as any,
+    )
+  );
 
   public canConnect = (to: string, value: unknown): boolean => {
     const instances = this.connectableTo?.[to];
@@ -58,13 +65,13 @@ export abstract class Edge extends Exome {
   public render?: React.FunctionComponent;
 
   public connectInput(to: string, connection: Connection) {
-    this.input[to] = connection;
+    this.input[to].next(connection);
 
     this.onInputConnected(to);
   }
 
   public disconnectInput(path: string) {
-    this.input[path] = null;
+    this.input[path].next(null);
 
     this.onInputDisconnected(path);
   }

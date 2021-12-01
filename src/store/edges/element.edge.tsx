@@ -4,16 +4,53 @@ import { BehaviorSubject } from 'rxjs';
 
 import { DraggablePreview } from '../../components/draggable-preview/draggable-preview';
 import { useObservable } from '../../hooks/use-observable';
+import { observableToPromise } from '../../utils/observable-to-promise';
 import { store } from '../store';
 import { StyleStore } from '../style.store';
 
 import { Connection } from './connection';
-import { ArrayConcatEdge } from './data-array-concat.edge';
+import { ArrayConcatEdge } from './data/data.array-concat.edge';
 import { Edge } from './edge';
-import { ElementTextEdge } from './element-text.edge';
-import { GateEdge } from './gate.edge';
+import { LogicGateEdge } from './logic/logic.gate.edge';
 import { EdgePosition } from './position';
 import { StyleEdge } from './style.edge';
+
+export class ElementEdge extends Edge {
+  public static title = 'Styled Element';
+
+  public style = 'element';
+
+  public input = {
+    name: new BehaviorSubject<string>('Unknown'),
+    style: new BehaviorSubject<Connection | null>(null),
+  };
+
+  public connectableTo: Record<string, typeof Edge[]> = {
+    style: [
+      LogicGateEdge,
+      StyleEdge,
+      ArrayConcatEdge,
+    ],
+  };
+
+  public output: Record<string, never> = {};
+
+  constructor(
+    public position: EdgePosition,
+  ) {
+    super(position);
+
+    if (store.activeProject) {
+      store.activeProject.customBlockElements.push(this);
+    }
+  }
+
+  public select = {
+    default: this.selectInput<StyleStore | StyleStore[] | null | undefined>('style').pipe(),
+  };
+
+  public render = () => <Render edge={this} />;
+}
 
 export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
   const { css } = useStore(style);
@@ -31,10 +68,10 @@ export function RenderElement({
   edge,
   children,
   defaultCss,
-}: { edge: ElementEdge | ElementTextEdge, defaultCss?: string, children: any }) {
-  const { selectInput } = useStore(edge);
+}: { edge: ElementEdge, defaultCss?: string, children: any }) {
+  const { select } = useStore(edge);
 
-  const elementStyle = useObservable<StyleStore | StyleStore[]>(selectInput('style')!);
+  const elementStyle = useObservable(select.default);
 
   const id = getExomeId(edge);
 
@@ -66,24 +103,22 @@ function Render({ edge }: { edge: ElementEdge }) {
   return (
     <DraggablePreview preview={edge}>
       <div
-        onDoubleClick={(e) => {
+        onDoubleClick={async (e) => {
           e.preventDefault();
           e.stopPropagation();
 
-          const connectedStyle = edge.input.style;
+          const connectedStyle = await observableToPromise(edge.input.style);
           const project = store.activeProject!;
           const space = project.activeSpace;
 
           if (connectedStyle) {
             // Select connected style.
-            connectedStyle.from
-              .selectOutput('default')
-              .subscribe((value) => {
-                if (value instanceof StyleStore) {
-                  project.activeStyle.setActive(value);
-                }
-              })
-              .unsubscribe();
+            const value = await observableToPromise(connectedStyle.from.select.default);
+
+            if (value instanceof StyleStore) {
+              project.activeStyle.setActive(value);
+            }
+
             return;
           }
 
@@ -108,46 +143,4 @@ function Render({ edge }: { edge: ElementEdge }) {
       </div>
     </DraggablePreview>
   );
-}
-
-type ElementEdgeInput = {
-  name: BehaviorSubject<string>;
-  style: Connection | null;
-}
-
-export class ElementEdge extends Edge {
-  public static title = 'Styled Element';
-
-  public style = 'element';
-
-  public input: ElementEdgeInput = {
-    name: new BehaviorSubject('Unknown'),
-    style: null,
-  };
-
-  public connectableTo: Record<string, typeof Edge[]> = {
-    style: [
-      GateEdge,
-      StyleEdge,
-      ArrayConcatEdge,
-    ],
-  };
-
-  public output: Record<string, any> = {};
-
-  constructor(
-    public position: EdgePosition,
-  ) {
-    super(position);
-
-    if (store.activeProject) {
-      store.activeProject.customBlockElements.push(this);
-    }
-  }
-
-  public selectOutput = (path: 'default') => {
-    return this.selectInput<StyleEdge>('style')!;
-  };
-
-  public render = () => <Render edge={this} />;
 }
