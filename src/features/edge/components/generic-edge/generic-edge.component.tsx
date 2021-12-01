@@ -97,6 +97,8 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                       onChange={(event) => {
                         (input[key] as BehaviorSubject<any>)!.next(event.target.value);
                       }}
+                      // eslint-disable-next-line jsx-a11y/no-autofocus
+                      autoFocus={(edge as any).autoFocus}
                       style={{
                         fontSize: 11,
                         width: 80,

@@ -12,6 +12,8 @@ export class TextEdge extends Edge {
 
   public style = 'variable';
 
+  public autoFocus = false;
+
   public input: TextEdgeInput = {
     value: new BehaviorSubject<string>(''),
   };
@@ -23,4 +25,8 @@ export class TextEdge extends Edge {
   };
 
   public selectOutput = (path: string) => this.input.value as any;
+
+  public setAutofocus() {
+    this.autoFocus = true;
+  }
 }

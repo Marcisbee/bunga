@@ -12,8 +12,10 @@ import { DropPositionTypes } from '../../constants/drop-position-types';
 import { useObservable } from '../../hooks/use-observable';
 import { ElementTextEdge } from '../../store/edges/element-text.edge';
 import { RenderElement } from '../../store/edges/element.edge';
+import { TextEdge } from '../../store/edges/text.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
+import { store } from '../../store/store';
 
 interface ElementChildrenComponentProps {
   parent: ElementStore;
@@ -119,7 +121,16 @@ const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>
               e.preventDefault();
               e.stopPropagation();
 
-              // @TODO: Create and connect new text node.
+              const project = store.activeProject!;
+              const space = project.activeSpace;
+
+              const textElementEdge = space.addEdge(ElementTextEdge);
+              const textEdge = space.addEdge(TextEdge);
+
+              textEdge.setAutofocus();
+              textEdge.output.default.connect('text', textElementEdge);
+
+              element.append(new ElementTextStore(textElementEdge));
             }}
           />
         )}
