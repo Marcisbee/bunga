@@ -1,7 +1,9 @@
 import { Exome } from 'exome';
 
+export const defaultTokens = '--primary-color: red;';
+
 export class TokenStore extends Exome {
-  public tokens = '--color-primary: red;';
+  public tokens = defaultTokens;
 
   public constructor(public name: string) {
     super();

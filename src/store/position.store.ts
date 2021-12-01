@@ -18,8 +18,8 @@ export class PositionStore extends Exome {
     this.y = y;
   }
 
-  public resetPosition() {
-    Promise
+  public async resetPosition() {
+    return Promise
       .resolve()
       .then(() => {
         this.setPosition(0, 0);

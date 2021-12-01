@@ -8,8 +8,10 @@ export class ActiveStyleStore extends Exome {
   }
 }
 
+export const defaultStyleCss = 'color: white;\nbackground-color: purple;\npadding: 10px;\nborder: 0;';
+
 export class StyleStore extends Exome {
-  public css = 'color: white;\nbackground-color: purple;\npadding: 10px;\nborder: 0;';
+  public css = defaultStyleCss;
 
   public constructor(public name: string) {
     super();
