@@ -42,9 +42,7 @@ export function DraggablePreview({ preview, children }: DraggablePreviewProps) {
         const itemPreview = item.preview;
 
         if (itemPreview instanceof ElementEdge) {
-          const element = new ElementStore(itemPreview, undefined, [
-            new ElementTextStore('__'),
-          ]);
+          const element = new ElementStore(itemPreview);
 
           container.root.append(element);
           return;

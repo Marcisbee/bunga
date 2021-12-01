@@ -40,16 +40,24 @@ export function DroppableElement({
     collect(monitor) {
       return {
         isOver: monitor.isOver({ shallow: true }),
+        didDrop: monitor.didDrop(),
         canDrop: monitor.canDrop(),
         handlerId: monitor.getHandlerId(),
       };
     },
 
-    drop: () => ({
-      parent,
-      element,
-      position,
-    }),
+    drop: (e, monitor) => {
+      if (monitor.didDrop()) {
+        // Check whether some nested target already handled drop.
+        return;
+      }
+
+      return ({
+        parent,
+        element,
+        position,
+      });
+    },
   }), [parent, element, position]);
 
   drop(ref);

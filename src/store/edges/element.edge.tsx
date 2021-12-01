@@ -87,7 +87,9 @@ function Render({ edge }: { edge: ElementEdge }) {
       >
         <RenderElement edge={edge}>
           <span
-            dangerouslySetInnerHTML={{ __html: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' }}
+            dangerouslySetInnerHTML={{
+              __html: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+            }}
           />
         </RenderElement>
       </div>

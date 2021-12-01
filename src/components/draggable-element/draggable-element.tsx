@@ -36,11 +36,6 @@ export function DraggableElement({ parent, element, children }: DraggableElement
         return;
       }
 
-      // @TODO: Fix issues with drop position where it randomly changes position.
-      // Maybe allow dragging element outside 1 level (parents siblings)
-      // and inside 1 level (siblings & siblings child)?
-      console.log(dropResult.position);
-
       if (item.element === dropResult.element) {
         // Don't drop self into itself.
         return;

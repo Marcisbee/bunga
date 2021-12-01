@@ -99,13 +99,30 @@ const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>
       return createElement(
         type,
         { ...props, ref },
-        children && <ElementChildrenComponent parent={element} elements={children} />,
+        (children && <ElementChildrenComponent parent={element} elements={children} />) || null,
       );
     }
 
     return (
       <RenderElement edge={type}>
-        {children && <ElementChildrenComponent parent={element} elements={children} />}
+        {(children && children.length > 0) ? (
+          <ElementChildrenComponent parent={element} elements={children} />
+        ) : (
+          <span
+            dangerouslySetInnerHTML={{
+              __html: '&nbsp;&nbsp;&nbsp;',
+            }}
+            style={{
+              cursor: 'text',
+            }}
+            onDoubleClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              // @TODO: Create and connect new text node.
+            }}
+          />
+        )}
       </RenderElement>
     );
   },
