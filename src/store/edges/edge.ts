@@ -36,6 +36,7 @@ export abstract class Edge extends Exome {
 
   public selectInput = <T = unknown>(path: string): Observable<T> => (
     this.input[path].pipe<T>(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mergeMap((connection: Connection | BehaviorSubject<any>) => {
         if (connection instanceof Observable) {
           return connection;

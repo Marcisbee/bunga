@@ -14,7 +14,6 @@ import { MathMultiplyEdge } from './math/math.multiply.edge';
 import { MathSubtractEdge } from './math/math.subtract.edge';
 import { StyleEdge } from './style.edge';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const allEdges: (new (...args: any[]) => Edge)[] = [
   StringEdge,
   NumberEdge,
