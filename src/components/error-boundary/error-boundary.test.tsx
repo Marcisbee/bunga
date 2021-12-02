@@ -3,7 +3,7 @@ import { spyOn, restoreAll } from 'nanospy';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 
-import * as ENV from '../../../config/test';
+import { ENV } from '../../../config/test';
 
 import { ErrorBoundary } from './error-boundary';
 
