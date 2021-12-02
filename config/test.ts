@@ -3,7 +3,7 @@ import { parseHTML } from 'linkedom';
 
 const { window } = parseHTML('<body></body>');
 
-export function setup() {
+function setup() {
   // @ts-ignore
   global.window = window;
   global.document = window.document;
@@ -13,8 +13,13 @@ export function setup() {
   global.requestAnimationFrame = null;
 }
 
-export function reset() {
+function reset() {
   window.document.title = '';
   window.document.head.innerHTML = '';
   window.document.body.innerHTML = '<main></main>';
 }
+
+export const ENV = {
+  setup,
+  reset,
+};

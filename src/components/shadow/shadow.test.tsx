@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 
-import * as ENV from '../../../config/test';
+import { ENV } from '../../../config/test';
 
 import { ShadowView } from './shadow.component';
 
