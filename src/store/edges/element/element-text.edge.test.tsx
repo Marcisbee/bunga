@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { wrapWithTestBackend } from 'react-dnd-test-utils';
 import { TestScheduler } from 'rxjs/testing';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
@@ -71,15 +70,14 @@ test('renders output correctly', () => {
   input.input.value.next(333);
   input.output.default.connect('text', instance);
 
+  const [Component] = wrapWithTestBackend(instance.render);
   const { container } = render((
-    <DndProvider backend={HTML5Backend}>
-      <instance.render />
-    </DndProvider>
+    <Component />
   ));
 
   assert.snapshot(
     container.innerHTML,
-    '<div role="button" class="" draggable="true"><div>333</div></div>',
+    '<div role="button" class=""><div>333</div></div>',
   );
 });
 

@@ -8,9 +8,9 @@ import * as assert from 'uvu/assert';
 import { ENV } from '../../../../config/test';
 import { Edge } from '../edge';
 
-import { StringEdge } from './data.string.edge';
+import { NumberEdge } from './data.number.edge';
 
-const test = suite('StringEdge');
+const test = suite('NumberEdge');
 
 let scheduler: TestScheduler;
 
@@ -24,47 +24,47 @@ test.before.each(() => {
   });
 });
 
-test('StringEdge is function', () => {
-  assert.type(StringEdge, 'function');
+test('NumberEdge is function', () => {
+  assert.type(NumberEdge, 'function');
 });
 
-test('StringEdge is instance of Edge', () => {
-  assert.instance(StringEdge.prototype, Edge);
+test('NumberEdge is instance of Edge', () => {
+  assert.instance(NumberEdge.prototype, Edge);
 });
 
 test('can evaluate `value: undefined`', () => {
-  const instance = new StringEdge(null as any);
+  const instance = new NumberEdge(null as any);
 
   scheduler.run(({ expectObservable }) => {
     expectObservable(instance.select.default).toBe('a', { a: undefined });
   });
 });
 
-test('can evaluate `value: ""`', () => {
-  const instance = new StringEdge(null as any);
+test('can evaluate `value: 0`', () => {
+  const instance = new NumberEdge(null as any);
 
-  instance.input.value.next('');
+  instance.input.value.next(0);
 
   scheduler.run(({ expectObservable }) => {
-    expectObservable(instance.select.default).toBe('a', { a: '' });
+    expectObservable(instance.select.default).toBe('a', { a: 0 });
   });
 });
 
-test('can evaluate `value: "foo"`', () => {
-  const instance = new StringEdge(null as any);
+test('can evaluate `value: 15`', () => {
+  const instance = new NumberEdge(null as any);
 
-  instance.input.value.next('test');
+  instance.input.value.next(15);
 
   scheduler.run(({ expectObservable }) => {
-    expectObservable(instance.select.default).toBe('a', { a: 'test' });
+    expectObservable(instance.select.default).toBe('a', { a: 15 });
   });
 });
 
 test('renders custom control correctly `value: null`', () => {
-  const instance = new StringEdge(null as any);
+  const instance = new NumberEdge(null as any);
 
   const { container } = render((
-    <instance.customControls.value />
+    instance.customControls.value()
   ));
 
   const element = container.querySelector('input');
@@ -74,12 +74,12 @@ test('renders custom control correctly `value: null`', () => {
 });
 
 test('renders custom control correctly `value: undefined`', () => {
-  const instance = new StringEdge(null as any);
+  const instance = new NumberEdge(null as any);
 
   instance.input.value.next(undefined);
 
   const { container } = render((
-    <instance.customControls.value />
+    instance.customControls.value()
   ));
 
   const element = container.querySelector('input');
@@ -88,41 +88,41 @@ test('renders custom control correctly `value: undefined`', () => {
   assert.equal(element!.value, '');
 });
 
-test('renders custom control correctly `value: "test"`', () => {
-  const instance = new StringEdge(null as any);
+test('renders custom control correctly `value: 15`', () => {
+  const instance = new NumberEdge(null as any);
 
-  instance.input.value.next('test');
+  instance.input.value.next(15);
 
   const { container } = render((
-    <instance.customControls.value />
+    instance.customControls.value()
   ));
 
   const element = container.querySelector('input');
 
   assert.ok(element);
-  assert.equal(element!.value, 'test');
+  assert.equal(element!.value, '15');
 });
 
 test('updates input value from custom control correctly', () => {
   // Silence TypeError: activeElement.attachEvent is not a function
   spyOn(console, 'error', () => {});
 
-  const instance = new StringEdge(null as any);
+  const instance = new NumberEdge(null as any);
 
   const { container } = render((
-    <instance.customControls.value />
+    instance.customControls.value()
   ));
 
   const element = container.querySelector('input');
 
   assert.ok(element);
 
-  userEvent.type(element!, 'test2');
+  userEvent.type(element!, '1337');
 
-  assert.equal(instance.input.value.value, 'test2');
+  assert.equal(instance.input.value.value, 1337);
 
   scheduler.run(({ expectObservable }) => {
-    expectObservable(instance.select.default).toBe('a', { a: 'test2' });
+    expectObservable(instance.select.default).toBe('a', { a: 1337 });
   });
 });
 

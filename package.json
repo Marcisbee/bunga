@@ -55,6 +55,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "jsdom": "^18.1.1",
     "nanospy": "^0.4.0",
+    "react-dnd-test-utils": "^14.0.2",
     "rollup-plugin-visualizer": "^5.5.2",
     "tsm": "^2.1.4",
     "uvu": "^0.5.2"

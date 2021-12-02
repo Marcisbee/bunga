@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
 import { setExomeId } from 'exome';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { wrapWithTestBackend } from 'react-dnd-test-utils';
 import { TestScheduler } from 'rxjs/testing';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
@@ -77,15 +76,14 @@ test('renders output correctly `style: StyleEdge (null)`', () => {
 
   store.setActiveProject('test project');
 
+  const [Component] = wrapWithTestBackend(instance.render);
   const { container } = render((
-    <DndProvider backend={HTML5Backend}>
-      <instance.render />
-    </DndProvider>
+    <Component />
   ));
 
   assert.snapshot(
     container.innerHTML,
-    '<div role="button" class="" draggable="true">'
+    '<div role="button" class="">'
     + '<div>'
       + '<style>'
         + '#ElementEdge-test { background-color: #ccc; }'
@@ -108,15 +106,14 @@ test('renders output correctly `style: StyleEdge (StyleStore)`', () => {
 
   store.setActiveProject('test project');
 
+  const [Component] = wrapWithTestBackend(instance.render);
   const { container } = render((
-    <DndProvider backend={HTML5Backend}>
-      <instance.render />
-    </DndProvider>
+    <Component />
   ));
 
   assert.snapshot(
     container.innerHTML,
-    '<div role="button" class="" draggable="true">'
+    '<div role="button" class="">'
     + '<div>'
       + '<style>'
         + ':host {--primary-color: red;}'
