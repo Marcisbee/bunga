@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { parseHTML } from 'linkedom';
+import { JSDOM } from 'jsdom';
+// import { parseHTML } from 'linkedom';
 
-const { window } = parseHTML('<body></body>');
+const { window } = new JSDOM();
+// Linkedom has some issues with user events.
+// const { window } = parseHTML('<body></body>');
 
 function setup() {
   // @ts-ignore
@@ -16,7 +19,7 @@ function setup() {
 function reset() {
   window.document.title = '';
   window.document.head.innerHTML = '';
-  window.document.body.innerHTML = '<main></main>';
+  window.document.body.innerHTML = '';
 }
 
 export const ENV = {

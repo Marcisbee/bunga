@@ -79,7 +79,7 @@ test('renders output correctly', () => {
 
   assert.snapshot(
     container.innerHTML,
-    '<div draggable="true" role="button"><div>333</div></div>',
+    '<div role="button" class="" draggable="true"><div>333</div></div>',
   );
 });
 

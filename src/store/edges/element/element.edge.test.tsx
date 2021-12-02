@@ -85,7 +85,7 @@ test('renders output correctly `style: StyleEdge (null)`', () => {
 
   assert.snapshot(
     container.innerHTML,
-    '<div draggable="true" role="button">'
+    '<div role="button" class="" draggable="true">'
     + '<div>'
       + '<style>'
         + '#ElementEdge-test { background-color: #ccc; }'
@@ -116,7 +116,7 @@ test('renders output correctly `style: StyleEdge (StyleStore)`', () => {
 
   assert.snapshot(
     container.innerHTML,
-    '<div draggable="true" role="button">'
+    '<div role="button" class="" draggable="true">'
     + '<div>'
       + '<style>'
         + ':host {--primary-color: red;}'

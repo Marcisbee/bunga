@@ -34,6 +34,7 @@ function RenderValue({ edge }: { edge: NumberEdge }) {
   return (
     <input
       type="number"
+      name="number_value"
       defaultValue={input.value.getValue()}
       onChange={(event) => {
         input.value.next(Number(event.target.value));
