@@ -1,7 +1,7 @@
 import { Exome, registerLoadable } from 'exome';
 
 import { Connection } from './edges/connection';
-import { ElementTextEdge } from './edges/element-text.edge';
+import { ElementTextEdge } from './edges/element/element-text.edge';
 
 export class ElementTextStore extends Exome {
   // public getPosition = () => ({

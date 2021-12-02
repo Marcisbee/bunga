@@ -2,18 +2,17 @@ import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import { BehaviorSubject } from 'rxjs';
 
-import { DraggablePreview } from '../../components/draggable-preview/draggable-preview';
-import { useObservable } from '../../hooks/use-observable';
-import { observableToPromise } from '../../utils/observable-to-promise';
-import { store } from '../store';
-import { StyleStore } from '../style.store';
-
-import { Connection } from './connection';
-import { ArrayConcatEdge } from './data/data.array-concat.edge';
-import { Edge } from './edge';
-import { LogicGateEdge } from './logic/logic.gate.edge';
-import { EdgePosition } from './position';
-import { StyleEdge } from './style.edge';
+import { DraggablePreview } from '../../../components/draggable-preview/draggable-preview';
+import { useObservable } from '../../../hooks/use-observable';
+import { observableToPromise } from '../../../utils/observable-to-promise';
+import { store } from '../../store';
+import { StyleStore } from '../../style.store';
+import { Connection } from '../connection';
+import { ArrayConcatEdge } from '../data/data.array-concat.edge';
+import { Edge } from '../edge';
+import { LogicGateEdge } from '../logic/logic.gate.edge';
+import { EdgePosition } from '../position';
+import { StyleEdge } from '../style.edge';
 
 export class ElementEdge extends Edge {
   public static title = 'Styled Element';

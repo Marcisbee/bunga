@@ -1,9 +1,9 @@
-import { Exome, getExomeId, registerLoadable } from 'exome';
+import { Exome, registerLoadable } from 'exome';
 
 import { permalink } from '../utils/permalink';
 
-import { ElementTextEdge } from './edges/element-text.edge';
-import { ElementEdge } from './edges/element.edge';
+import { ElementTextEdge } from './edges/element/element-text.edge';
+import { ElementEdge } from './edges/element/element.edge';
 import { SpaceStore } from './space.store';
 import { ActiveStyleStore, StyleStore } from './style.store';
 import { TokenStore } from './token.store';

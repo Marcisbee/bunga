@@ -3,8 +3,8 @@ import { useDrag } from 'react-dnd';
 
 import { ItemTypes } from '../../constants/draggable-item-types';
 import { ComponentStore } from '../../store/component.store';
-import { ElementTextEdge } from '../../store/edges/element-text.edge';
-import { ElementEdge } from '../../store/edges/element.edge';
+import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
+import { ElementEdge } from '../../store/edges/element/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { cc } from '../../utils/class-names';

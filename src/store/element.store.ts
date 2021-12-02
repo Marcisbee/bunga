@@ -1,8 +1,8 @@
 import { Exome, registerLoadable } from 'exome';
 
-import { ElementEdge } from './edges/element.edge';
+import { ElementEdge } from './edges/element/element.edge';
 import { ElementTextStore } from './element-text.store';
-import { undoable } from './undo.store';
+// import { undoable } from './undo.store';
 
 export class ActiveElementStore extends Exome {
   public active: ElementStore | null = null;

@@ -11,8 +11,8 @@ import { DroppableElement } from '../../components/droppable-element/droppable-e
 import { DropPositionTypes } from '../../constants/drop-position-types';
 import { useObservable } from '../../hooks/use-observable';
 import { StringEdge } from '../../store/edges/data/data.string.edge';
-import { ElementTextEdge } from '../../store/edges/element-text.edge';
-import { RenderElement } from '../../store/edges/element.edge';
+import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
+import { RenderElement } from '../../store/edges/element/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { store } from '../../store/store';
