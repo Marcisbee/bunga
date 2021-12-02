@@ -67,7 +67,7 @@ export function RenderElement({
   edge,
   children,
   defaultCss,
-}: { edge: ElementEdge, defaultCss?: string, children: any }) {
+}: { edge: ElementEdge, defaultCss?: string, children: React.ReactNode }) {
   const { select } = useStore(edge);
 
   const elementStyle = useObservable(select.default);
@@ -134,6 +134,7 @@ function Render({ edge }: { edge: ElementEdge }) {
           defaultCss="background-color: #ccc;"
         >
           <span
+            // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{
               __html: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
             }}

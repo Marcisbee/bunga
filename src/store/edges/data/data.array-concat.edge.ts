@@ -32,6 +32,7 @@ export class ArrayConcatEdge extends DataEdge {
 
   public select = {
     default: combineLatest([
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.selectInput<any[]>('array'),
       this.selectInput<StyleStore>('value'),
     ]).pipe(

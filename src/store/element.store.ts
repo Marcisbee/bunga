@@ -12,6 +12,7 @@ export class ActiveElementStore extends Exome {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class ElementStore<T extends Record<string, any> = Record<string, any>> extends Exome {
   // public getPosition = () => ({
   //   x: 0,

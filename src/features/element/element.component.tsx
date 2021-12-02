@@ -111,6 +111,7 @@ const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>
           <ElementChildrenComponent parent={element} elements={children} />
         ) : (
           <span
+            // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{
               __html: '&nbsp;&nbsp;&nbsp;',
             }}

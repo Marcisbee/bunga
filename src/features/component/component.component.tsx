@@ -165,7 +165,6 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
   } = useStore(component.position);
   const { move } = store.activeProject!.activeSpace;
   const {
-    selectedAll,
     selectedComponents,
     selectComponent,
     startMouseMove,
@@ -185,6 +184,7 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
     return () => {
       unsubscribe();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

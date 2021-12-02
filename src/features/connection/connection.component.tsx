@@ -36,7 +36,10 @@ interface StartConnectionComponentProps {
 function StartConnectionComponent({ edge, connection }: StartConnectionComponentProps) {
   const { from, to } = useStore(connection);
   const {
-    x, y, width, height,
+    x,
+    y,
+    width,
+    height,
   } = useStore(from.position);
 
   useStore(from.position.silent);

@@ -18,39 +18,39 @@ interface CanvasComponentProps {
 }
 
 // @DEBUG: This is a debug component that renders the canvas boundaries.
-function DebugBoundary({ space }: CanvasComponentProps) {
-  const {
-    x, y, width, height,
-  } = useStore(space.boundary);
+// function DebugBoundary({ space }: CanvasComponentProps) {
+//   const {
+//     x, y, width, height,
+//   } = useStore(space.boundary);
 
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        zIndex: 2,
-        left: x,
-        top: y,
-        width,
-        height,
-        boxShadow: 'inset 0 0 0 1px orangered',
-      }}
-    >
-      <span
-        style={{
-          position: 'absolute',
-          marginTop: -20,
-          color: 'orangered',
-          fontSize: 12,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {JSON.stringify({
-          x, y, w: width, h: height,
-        })}
-      </span>
-    </div>
-  );
-}
+//   return (
+//     <div
+//       style={{
+//         position: 'absolute',
+//         zIndex: 2,
+//         left: x,
+//         top: y,
+//         width,
+//         height,
+//         boxShadow: 'inset 0 0 0 1px orangered',
+//       }}
+//     >
+//       <span
+//         style={{
+//           position: 'absolute',
+//           marginTop: -20,
+//           color: 'orangered',
+//           fontSize: 12,
+//           whiteSpace: 'nowrap',
+//         }}
+//       >
+//         {JSON.stringify({
+//           x, y, w: width, h: height,
+//         })}
+//       </span>
+//     </div>
+//   );
+// }
 
 function CanvasSelectionComponent({ selection }: { selection: SelectionStore }) {
   const ref = useRef<SVGSVGElement>(null);
@@ -155,6 +155,7 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
     return () => {
       window.removeEventListener('resize', handler);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getExomeId(space)]);
 
   useLayoutEffect(() => {
@@ -206,10 +207,13 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
     gesture.on('panmove', handlerMove);
     gesture.on('panend', handlerMoveEnd);
 
+    const canvasCurrent = canvas.current!;
+
     return () => {
-      canvas.current!.removeEventListener('wheel', handler);
+      canvasCurrent.removeEventListener('wheel', handler);
       gesture.destroy();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [centerModifier[0], centerModifier[1], getExomeId(space)]);
 
   return (

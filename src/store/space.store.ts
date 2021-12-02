@@ -36,7 +36,7 @@ export class SpaceStore extends Exome {
       x,
       y,
       width,
-      height,
+      // height,
     } = this.boundary;
 
     const active = this.move.selectedAll[0];
@@ -44,7 +44,7 @@ export class SpaceStore extends Exome {
       x = active.position.x;
       y = active.position.y;
       width = active.position.width;
-      height = active.position.height;
+      // height = active.position.height;
     }
 
     const position = new ComponentPositionStore(
@@ -80,7 +80,7 @@ export class SpaceStore extends Exome {
       x,
       y,
       width,
-      height,
+      // height,
     } = this.boundary;
 
     const active = this.move.selectedAll[0];
@@ -88,7 +88,7 @@ export class SpaceStore extends Exome {
       x = active.position.x;
       y = active.position.y;
       width = active.position.width;
-      height = active.position.height;
+      // height = active.position.height;
     }
 
     const position = new EdgePosition(

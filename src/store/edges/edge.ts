@@ -37,17 +37,19 @@ export abstract class Edge extends Exome {
   public selectInput = <T = unknown>(path: string): Observable<T> => (
     this.input[path].pipe<T>(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mergeMap((connection: Connection | BehaviorSubject<any>) => {
+      mergeMap((connection: Connection | Observable<any>): Observable<T> => {
         if (connection instanceof Observable) {
           return connection;
         }
 
         if (connection instanceof Connection) {
-          return connection.from.select[connection.path];
+          return connection.from.select[connection.path] as unknown as Observable<T>;
+          // @TODO: Check if this maybe fixes some issues:
+          // return of<T>(connection.from.select[connection.path] as unknown as T);
         }
 
-        return of(connection || null);
-      }) as any,
+        return of<T>(connection || null);
+      }),
     )
   );
 
@@ -81,7 +83,9 @@ export abstract class Edge extends Exome {
     this.output[path].disconnect(path, this);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected onInputConnected = (path: string) => {};
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected onInputDisconnected = (path: string) => {};
 }

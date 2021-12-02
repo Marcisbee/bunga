@@ -21,6 +21,7 @@ export function ProjectPage() {
 
   useMemo(() => {
     setActiveProject(params.id!);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const project = useStore(store.activeProject!);
@@ -53,6 +54,7 @@ export function ProjectPage() {
               type="button"
               key={allEdges[0].name}
               onClick={() => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const edgesToSelect: any[] = [];
 
                 new Array(10).fill(0).forEach(() => {

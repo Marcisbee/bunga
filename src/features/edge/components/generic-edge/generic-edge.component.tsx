@@ -103,12 +103,13 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                   ) : (
                     <input
                       type="text"
-                      defaultValue={(input[key] as BehaviorSubject<any>)!.getValue()}
+                      defaultValue={input[key]!.getValue()}
                       onChange={(event) => {
-                        (input[key] as BehaviorSubject<any>)!.next(event.target.value);
+                        input[key]!.next(event.target.value);
                       }}
                       // eslint-disable-next-line jsx-a11y/no-autofocus
-                      autoFocus={(edge as any).autoFocus}
+                      // @TODO: Figure out autofocus
+                      // autoFocus={(edge as any).autoFocus}
                       style={{
                         fontSize: 11,
                         width: 80,
@@ -172,7 +173,8 @@ interface EdgeOutputProps {
   input: BehaviorSubject<Connection | null>;
 }
 
-function EdgeOutput({ input }: EdgeOutputProps): React.ReactElement {
+function EdgeOutput({ input }: EdgeOutputProps): React.ReactElement | null {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const inputConnection = useObservable(useMemo(() => input, []));
 
   if (inputConnection instanceof Connection) {
@@ -184,12 +186,13 @@ function EdgeOutput({ input }: EdgeOutputProps): React.ReactElement {
     );
   }
 
-  return null as any;
+  return null;
 }
 
 function EdgeOutputConnection({ edge, id }: { edge: Edge, id: string }): React.ReactElement {
   const { select } = useStore(edge);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const value = useObservable(useMemo(() => select[id], [id]));
 
   if (value instanceof StyleStore) {
