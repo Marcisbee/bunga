@@ -36,8 +36,8 @@ function RenderValue({ edge }: { edge: NumberEdge }) {
       type="number"
       name="number_value"
       defaultValue={input.value.getValue()}
-      onChange={(event) => {
-        input.value.next(Number(event.target.value));
+      onInput={(event) => {
+        input.value.next(Number((event.target as HTMLInputElement).value));
       }}
       style={{
         fontSize: 11,

@@ -34,9 +34,10 @@ function RenderValue({ edge }: { edge: StringEdge }) {
   return (
     <input
       type="text"
+      name="string_value"
       defaultValue={input.value.getValue()}
-      onChange={(event) => {
-        input.value.next(event.target.value);
+      onInput={(event) => {
+        input.value.next((event.target as HTMLInputElement).value);
       }}
       style={{
         fontSize: 11,
