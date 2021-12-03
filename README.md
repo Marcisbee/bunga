@@ -3,10 +3,10 @@
 ## Generating new component
 
 ```sh
-npm generate component cool-stuff
+npm run generate component cool-stuff
 ```
 
 ```sh
-npm generate feature something-something
+npm run generate feature something-something
 ```
 
