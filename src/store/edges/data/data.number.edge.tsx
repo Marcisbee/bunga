@@ -7,7 +7,7 @@ import { Edge } from '../edge';
 import { DataEdge } from './data.edge';
 
 export class NumberEdge extends DataEdge {
-  public static title = '(data) Number';
+  public static title = 'Number';
 
   public input = {
     value: new BehaviorSubject<number | undefined>(undefined),
@@ -34,7 +34,6 @@ function RenderValue({ edge }: { edge: NumberEdge }) {
   return (
     <input
       type="number"
-      name="number_value"
       defaultValue={input.value.getValue()}
       onInput={(event) => {
         input.value.next(Number((event.target as HTMLInputElement).value));

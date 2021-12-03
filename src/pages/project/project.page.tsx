@@ -45,11 +45,10 @@ export function ProjectPage() {
             <span style={{ float: 'right' }}>current people</span>
             {allEdges.map((edge) => (
               <button type="button" key={(edge as unknown as Edge).title} onClick={() => project.activeSpace.addEdge(edge)}>
-                add
-                {' '}
                 {(edge as unknown as Edge).title}
               </button>
             ))}
+            <br />
             <button
               type="button"
               key={allEdges[0].name}

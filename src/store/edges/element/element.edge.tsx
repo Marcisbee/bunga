@@ -78,9 +78,11 @@ export function RenderElement({
     <>
       {elementStyle ? (
         elementStyle instanceof Array ? (
-          elementStyle.map((style) => (
-            <RenderCss id={id} style={style} />
-          ))
+          elementStyle
+            .filter((style) => !!style)
+            .map((style) => (
+              <RenderCss id={id} style={style} />
+            ))
         ) : (
           <RenderCss id={id} style={elementStyle} />
         )

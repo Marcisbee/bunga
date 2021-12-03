@@ -8,7 +8,7 @@ import { DataEdge } from './data.edge';
 import { NumberEdge } from './data.number.edge';
 
 export class ArrayEdge extends DataEdge {
-  public static title = '(data) Array';
+  public static title = 'Array';
 
   public input = {
     size: new BehaviorSubject<Connection | null>(null),
