@@ -7,7 +7,7 @@ import { Edge } from '../edge';
 import { DataEdge } from './data.edge';
 
 export class StringEdge extends DataEdge {
-  public static title = '(data) String';
+  public static title = 'String';
 
   public input = {
     value: new BehaviorSubject<string | undefined>(undefined),
@@ -34,7 +34,6 @@ function RenderValue({ edge }: { edge: StringEdge }) {
   return (
     <input
       type="text"
-      name="string_value"
       defaultValue={input.value.getValue()}
       onInput={(event) => {
         input.value.next((event.target as HTMLInputElement).value);

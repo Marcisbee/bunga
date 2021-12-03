@@ -8,7 +8,7 @@ import { Edge } from '../edge';
 import { DataEdge } from './data.edge';
 
 export class BooleanEdge extends DataEdge {
-  public static title = '(data) Boolean';
+  public static title = 'Boolean';
 
   public input = {
     value: new BehaviorSubject<boolean | undefined>(false),
