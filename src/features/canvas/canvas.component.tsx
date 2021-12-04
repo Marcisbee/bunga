@@ -12,6 +12,7 @@ import { onMouseMoveDiff } from '../../utils/on-mouse-move-diff';
 import { CanvasToolsComponent } from '../canvas-tools/canvas-tools';
 import { canvasToolsStore } from '../canvas-tools/canvas-tools.store';
 import { ComponentComponent } from '../component/component.component';
+import { ConnectionPreviewComponent } from '../connection-preview/connection-preview';
 import { ConnectionComponent } from '../connection/connection.component';
 import { EdgeComponent } from '../edge/edge.component';
 
@@ -375,6 +376,8 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
               edge={edge}
             />
           ))}
+
+          <ConnectionPreviewComponent />
         </g>
       </svg>
     </div>
