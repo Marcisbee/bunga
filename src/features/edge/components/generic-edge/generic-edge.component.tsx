@@ -15,6 +15,7 @@ import { pendingEdge } from '../../../../store/edges/pending';
 import { StyleStore } from '../../../../store/style.store';
 import { cc } from '../../../../utils/class-names';
 import { observableToPromise } from '../../../../utils/observable-to-promise';
+import { onMouseMoveDiff } from '../../../../utils/on-mouse-move-diff';
 
 import styles from './generic-edge.module.scss';
 
@@ -29,7 +30,12 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
     output,
     customControls,
   } = useStore(edge);
-  const { from, setFrom, connectTo } = useStore(pendingEdge);
+  const {
+    from,
+    setFrom,
+    unsetFrom,
+    connectTo,
+  } = useStore(pendingEdge);
 
   return (
     <div
@@ -63,7 +69,11 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                   <span
                     role="button"
                     className={styles.input}
-                    onClick={async () => {
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onMouseUp={async () => {
                       const connection = await observableToPromise<Connection>(input[key]);
 
                       if (connection) {
@@ -153,8 +163,24 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                 role="button"
                 tabIndex={0}
                 className={styles.output}
-                onClick={() => {
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+
                   setFrom(key, edge);
+
+                  onMouseMoveDiff((diffX, diffY) => {
+                    const x = pendingEdge.position.x + diffX;
+                    const y = pendingEdge.position.y + diffY;
+
+                    if (pendingEdge.position.x === x && pendingEdge.position.y === y) {
+                      return;
+                    }
+
+                    pendingEdge.position.moveTo(x, y);
+                  }, () => {
+                    unsetFrom();
+                  })(e);
                 }}
               >
                 <svg width="14" height="14" viewBox="0 0 19 13" fill={output[key].to.length > 0 ? 'currentColor' : 'none'} xmlns="http://www.w3.org/2000/svg">

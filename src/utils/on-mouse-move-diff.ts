@@ -2,6 +2,7 @@ import { MouseEventHandler } from 'react';
 
 export function onMouseMoveDiff(
   moving: (diffX: number, diffY: number) => void,
+  stopped?: () => void,
 ): MouseEventHandler<HTMLElement> {
   return (mouseDownEvent) => {
     mouseDownEvent.stopPropagation();
@@ -31,6 +32,10 @@ export function onMouseMoveDiff(
     const handlerEnd = (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
+
+      if (stopped) {
+        stopped();
+      }
 
       window.removeEventListener('mousemove', handlerMove);
 
