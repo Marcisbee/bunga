@@ -49,6 +49,26 @@ test('renders component with pending connection', () => {
   );
 });
 
+test('renders component with pending connection from custom start position', () => {
+  spyOn(console, 'error', () => { });
+
+  const position = new EdgePosition('edge', 999, 123);
+  const edge = new NumberEdge(position);
+
+  pendingEdge.setFrom('default', edge);
+
+  const { container } = render((
+    <ConnectionPreviewComponent />
+  ));
+
+  pendingEdge.position.moveTo(22, 55);
+
+  assert.snapshot(
+    container.innerHTML,
+    '<g class=""><path d="M999,138 C999,165.5 1010,193 1021,193" marker-end="none"></path></g>',
+  );
+});
+
 test('renders component with moving pending connection', async () => {
   spyOn(console, 'error', () => { });
 
