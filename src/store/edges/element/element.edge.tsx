@@ -63,11 +63,18 @@ export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
   );
 }
 
+interface RenderElementProps extends React.HTMLAttributes<HTMLDivElement> {
+  edge: ElementEdge,
+  defaultCss?: string,
+  children?: React.ReactNode,
+}
+
 export function RenderElement({
   edge,
   children,
   defaultCss,
-}: { edge: ElementEdge, defaultCss?: string, children: React.ReactNode }) {
+  ...props
+}: RenderElementProps) {
   const { select } = useStore(edge);
 
   const elementStyle = useObservable(select.default);
@@ -91,7 +98,7 @@ export function RenderElement({
           <style>{`#${id} { ${defaultCss} }`}</style>
         )
       )}
-      <div id={id}>
+      <div {...props} id={id}>
         {children}
       </div>
     </>

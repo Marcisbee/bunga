@@ -15,6 +15,7 @@ import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
 import { RenderElement } from '../../store/edges/element/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
+import { InteractiveModeEvent, interactiveModeStore } from '../../store/interactive-mode.store';
 import { store } from '../../store/store';
 
 interface ElementChildrenComponentProps {
@@ -23,6 +24,7 @@ interface ElementChildrenComponentProps {
 }
 
 export function ElementChildrenComponent({ parent, elements }: ElementChildrenComponentProps) {
+  const { isInteractive } = useStore(interactiveModeStore);
   useStore(parent);
 
   return (
@@ -41,34 +43,38 @@ export function ElementChildrenComponent({ parent, elements }: ElementChildrenCo
             <ElementComponent element={element} />
           </DroppableElement>
 
-          <DroppableElement
-            parent={parent}
-            element={element}
-            position={DropPositionTypes.TOP}
-            style={{
-              position: 'absolute',
-              width: '100%',
-              height: '20%',
-              maxHeight: 20,
-              top: 0,
-              left: 0,
-              overflow: 'hidden',
-            }}
-          />
-          <DroppableElement
-            parent={parent}
-            element={element}
-            position={DropPositionTypes.BOTTOM}
-            style={{
-              position: 'absolute',
-              width: '100%',
-              height: '20%',
-              maxHeight: 20,
-              bottom: 0,
-              left: 0,
-              overflow: 'hidden',
-            }}
-          />
+          {!isInteractive && (
+            <>
+              <DroppableElement
+                parent={parent}
+                element={element}
+                position={DropPositionTypes.TOP}
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '20%',
+                  maxHeight: 20,
+                  top: 0,
+                  left: 0,
+                  overflow: 'hidden',
+                }}
+              />
+              <DroppableElement
+                parent={parent}
+                element={element}
+                position={DropPositionTypes.BOTTOM}
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '20%',
+                  maxHeight: 20,
+                  bottom: 0,
+                  left: 0,
+                  overflow: 'hidden',
+                }}
+              />
+            </>
+          )}
         </DraggableElement>
       ))}
     </>
@@ -95,45 +101,71 @@ export function ElementComponent({ element }: ElementComponentProps) {
 
 const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>(
   ({ element }, ref) => {
+    const { isInteractive, dispatch } = useStore(interactiveModeStore);
     const { type, props, children } = useStore(element);
+
+    const events: React.HTMLAttributes<HTMLDivElement> = isInteractive
+      ? {
+        onClick: (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const interactiveEvent = new InteractiveModeEvent(
+            element,
+            'click',
+            e.nativeEvent,
+          );
+
+          dispatch(interactiveEvent);
+        },
+      } : {};
 
     if (!type || typeof type === 'string') {
       return createElement(
         type,
-        { ...props, ref },
+        {
+          ...props,
+          ...events,
+          ref,
+        },
         (children && <ElementChildrenComponent parent={element} elements={children} />) || null,
       );
     }
 
     return (
-      <RenderElement edge={type}>
+      <RenderElement
+        edge={type}
+        {...events}
+      >
         {(children && children.length > 0) ? (
           <ElementChildrenComponent parent={element} elements={children} />
         ) : (
-          <span
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html: '&nbsp;&nbsp;&nbsp;',
-            }}
-            style={{
-              cursor: 'text',
-            }}
-            onDoubleClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+          !isInteractive && (
+            <span
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{
+                __html: '&nbsp;&nbsp;&nbsp;',
+              }}
+              style={{
+                cursor: 'text',
+              }}
+              onDoubleClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
 
-              const project = store.activeProject!;
-              const space = project.activeSpace;
+                const project = store.activeProject!;
+                const space = project.activeSpace;
 
-              const textEdge = space.addEdge(StringEdge);
-              const textElementEdge = space.addEdge(ElementTextEdge);
+                const textEdge = space.addEdge(StringEdge);
+                const textElementEdge = space.addEdge(ElementTextEdge);
 
-              // textEdge.setAutofocus();
-              textEdge.output.default.connect('text', textElementEdge);
+                // textEdge.setAutofocus();
+                textEdge.output.default.connect('text', textElementEdge);
 
-              element.append(new ElementTextStore(textElementEdge));
-            }}
-          />
+                element.append(new ElementTextStore(textElementEdge));
+              }}
+            />
+          )
         )}
       </RenderElement>
     );
@@ -159,9 +191,9 @@ const ElementTextComponent = forwardRef<HTMLElement, { element: ElementTextStore
 
 const ElementDynamicTextComponent = forwardRef<HTMLElement, { edge: ElementTextEdge }>(
   ({ edge }, ref) => {
-    const { selectInput } = useStore(edge);
+    const { select } = useStore(edge);
 
-    const value = useObservable<string>(selectInput('text')!);
+    const value = useObservable(select.default);
 
     return createElement('span', { ref }, value);
   },

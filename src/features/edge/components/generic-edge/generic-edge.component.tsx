@@ -97,7 +97,12 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                     </svg>
                   </span>
                 )}
-                {key}
+                { key !== 'default' ? key : (
+                  <span
+                    // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{ __html: '&nbsp;' }}
+                  />
+                )}
               </span>
               <div
                 role="button"

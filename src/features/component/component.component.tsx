@@ -9,6 +9,7 @@ import {
 import { DroppableComponent } from '../../components/droppable-component/droppable-component';
 import { ShadowView } from '../../components/shadow/shadow.component';
 import { ComponentPositionSilentStore, ComponentStore } from '../../store/component.store';
+import { interactiveModeStore } from '../../store/interactive-mode.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 import { onMouseMoveDiff } from '../../utils/on-mouse-move-diff';
@@ -21,6 +22,7 @@ interface ComponentComponentProps {
 }
 
 export function ComponentRenderComponent({ component }: ComponentComponentProps) {
+  const { isInteractive } = useStore(interactiveModeStore);
   const { name, root, position } = useStore(component);
 
   const onMouseDownTopLeft = useMemo(() => (
@@ -58,7 +60,10 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
 
       <DroppableComponent
         container={component}
-        className={style.container}
+        className={cc([
+          style.container,
+          isInteractive && style.interactive,
+        ])}
       >
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <i
@@ -126,6 +131,7 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
     selectComponent,
     startMouseMove,
   } = useStore(move);
+  const { isInteractive } = useStore(interactiveModeStore);
 
   const isActive = selectedComponents.indexOf(component) > -1;
 
@@ -155,6 +161,10 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
       onDoubleClick={(e) => {
         // Stop bubbling to top canvas.
         e.stopPropagation();
+
+        if (isInteractive) {
+          return;
+        }
 
         if (e.button > 0) {
           return;

@@ -1,3 +1,4 @@
+import { useStore } from 'exome/react';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 
@@ -7,6 +8,7 @@ import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
 import { ElementEdge } from '../../store/edges/element/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
+import { interactiveModeStore } from '../../store/interactive-mode.store';
 import { cc } from '../../utils/class-names';
 import { DroppableComponentResult } from '../droppable-component/droppable-component';
 
@@ -17,6 +19,7 @@ interface DraggablePreviewProps extends React.PropsWithChildren<unknown> {
 }
 
 export function DraggablePreview({ preview, children }: DraggablePreviewProps) {
+  const { isInteractive } = useStore(interactiveModeStore);
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.PREVIEW,
 
@@ -59,15 +62,17 @@ export function DraggablePreview({ preview, children }: DraggablePreviewProps) {
 
   return (
     <div
-      ref={drag}
+      ref={isInteractive ? undefined : drag}
       role="button"
       className={cc([
         style.draggable,
         isDragging && style.isDragging,
       ])}
-      onMouseDown={(e) => {
-        e.stopPropagation();
-      }}
+      onMouseDown={isInteractive
+        ? undefined
+        : (e) => {
+          e.stopPropagation();
+        }}
     >
       {children}
     </div>

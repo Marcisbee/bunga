@@ -5,6 +5,7 @@ import { DraggablePreview } from '../../../components/draggable-preview/draggabl
 import { useObservable } from '../../../hooks/use-observable';
 import { store } from '../../store';
 import { Connection } from '../connection';
+import { CountEdge } from '../data/count.edge';
 import { BooleanEdge } from '../data/data.boolean.edge';
 import { NumberEdge } from '../data/data.number.edge';
 import { StringEdge } from '../data/data.string.edge';
@@ -27,6 +28,7 @@ export class ElementTextEdge extends Edge {
       StringEdge,
       NumberEdge,
       MathEdge,
+      CountEdge,
     ],
   };
 
@@ -43,7 +45,8 @@ export class ElementTextEdge extends Edge {
   }
 
   public select = {
-    default: this.selectInput<string | number | null | undefined>('text'),
+    default: this.selectInput<string | number | null | undefined>('text')
+      .pipe(),
   };
 
   public render = () => <Render edge={this} />;

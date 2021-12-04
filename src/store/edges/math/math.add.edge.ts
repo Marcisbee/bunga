@@ -5,6 +5,7 @@ import {
 } from 'rxjs';
 
 import { Connection } from '../connection';
+import { CountEdge } from '../data/count.edge';
 import { NumberEdge } from '../data/data.number.edge';
 import { Edge } from '../edge';
 
@@ -22,10 +23,12 @@ export class MathAddEdge extends MathEdge {
     a: [
       NumberEdge,
       MathEdge,
+      CountEdge,
     ],
     b: [
       NumberEdge,
       MathEdge,
+      CountEdge,
     ],
   };
 

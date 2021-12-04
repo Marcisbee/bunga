@@ -4,10 +4,16 @@
   left: 50%;
   top: 10px;
   transform: translateX(-50%);
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.group {
+  display: inline-block;
   background-color: #ceddeb;
   color: #000;
   border-radius: 6px;
-  z-index: 10;
+  margin: 0 4px;
 }
 
 .tool {
