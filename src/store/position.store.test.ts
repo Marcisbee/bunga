@@ -81,10 +81,10 @@ test('resets position', async () => {
   store.setPosition(10, 20);
   store.setPosition(45, 95);
 
-  const output = store.resetPosition();
+  store.resetPosition();
 
-  assert.instance(output, Promise);
-  assert.is(await output, undefined);
+  await Promise.resolve();
+
   assert.snapshot(
     JSON.stringify(store, null, 2),
     JSON.stringify(expected, null, 2),

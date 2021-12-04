@@ -7,6 +7,10 @@ import TinyGesture from 'tinygesture';
 
 import { SelectionStore } from '../../store/move.store';
 import { SpaceStore } from '../../store/space.store';
+import { cc } from '../../utils/class-names';
+import { onMouseMoveDiff } from '../../utils/on-mouse-move-diff';
+import { CanvasToolsComponent } from '../canvas-tools/canvas-tools';
+import { canvasToolsStore } from '../canvas-tools/canvas-tools.store';
 import { ComponentComponent } from '../component/component.component';
 import { ConnectionComponent } from '../connection/connection.component';
 import { EdgeComponent } from '../edge/edge.component';
@@ -141,6 +145,8 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
   } = useStore(move);
   const { resetPosition } = useStore(position);
 
+  const { activeTool } = useStore(canvasToolsStore);
+
   useLayoutEffect(() => {
     const target = canvasRoot.current!;
 
@@ -221,12 +227,30 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
       ref={canvas}
       tabIndex={0}
       role="button"
-      className={styles.canvas}
+      className={cc([
+        styles.canvas,
+        activeTool === 'move' && styles.move,
+        activeTool === 'grab' && styles.grab,
+      ])}
       style={{
         backgroundPosition: `${position.x}px ${position.y}px`,
       }}
       onMouseDown={(e) => {
         if (e.button > 0) {
+          return;
+        }
+
+        if (activeTool === 'grab') {
+          onMouseMoveDiff((diffX, diffY) => {
+            const x = position.x + diffX;
+            const y = position.y + diffY;
+
+            if (position.x === x && position.y === y) {
+              return;
+            }
+
+            position.setPosition(x, y);
+          })(e);
           return;
         }
 
@@ -290,16 +314,23 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
         selection={selection}
       />
 
+      <CanvasToolsComponent />
+
       <div
         style={{
           display: 'block',
           position: 'fixed',
           right: 10,
           bottom: 10,
+          zIndex: 10,
         }}
       >
         <button
           type="button"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
           onClick={resetPosition}
         >
           Reset position

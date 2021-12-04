@@ -1,0 +1,43 @@
+.container {
+  display: block;
+  position: fixed;
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+  background-color: #ceddeb;
+  color: #000;
+  border-radius: 6px;
+  z-index: 10;
+}
+
+.tool {
+  display: inline-block;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  height: 36px;
+  vertical-align: top;
+  padding: 0 8px;
+
+  &:first-child {
+    border-top-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+  }
+
+  &:last-child {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+
+  svg {
+    display: block;
+  }
+
+  &:hover {
+    background-color: #dceaf7;
+  }
+
+  &.active {
+    background-color: #60bdff;
+  }
+}

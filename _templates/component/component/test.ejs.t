@@ -6,22 +6,22 @@ import { render } from '@testing-library/react';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 
-import * as ENV from '../../../config/test';
+import { ENV } from '../../../config/test';
 
-import { <%= camelized %> } from './<%= h.changeCase.paramCase(name) %>';
+import { <%= camelized %>Component } from './<%= h.changeCase.paramCase(name) %>';
 
-const test = suite('<%= camelized %>');
+const test = suite('<%= camelized %>Component');
 
 test.before(ENV.setup);
 test.before.each(ENV.reset);
 
 test('returns function', () => {
-  assert.type(<%= camelized %>, 'function');
+  assert.type(<%= camelized %>Component, 'function');
 });
 
 test('renders component correctly', () => {
   const { container } = render((
-    <<%= camelized %> />
+    <<%= camelized %>Component />
   ));
 
   assert.snapshot(

@@ -4,9 +4,9 @@ to: src/features/<%= h.changeCase.paramCase(name) %>/<%= h.changeCase.paramCase(
 <% camelized = h.changeCase.pascal(name) -%>
 import style from './<%= h.changeCase.paramCase(name) %>.module.scss';
 
-interface <%= camelized %>Props {}
+interface <%= camelized %>ComponentProps {}
 
-export function <%= camelized %>({}: <%= camelized %>Props) {
+export function <%= camelized %>Component({}: <%= camelized %>ComponentProps) {
   return (
     <div><%= camelized %></div>
   );

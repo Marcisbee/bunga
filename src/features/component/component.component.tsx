@@ -3,7 +3,6 @@ import { useStore } from 'exome/react';
 import {
   useLayoutEffect,
   useRef,
-  MouseEventHandler,
   useMemo,
 } from 'react';
 
@@ -12,55 +11,13 @@ import { ShadowView } from '../../components/shadow/shadow.component';
 import { ComponentPositionSilentStore, ComponentStore } from '../../store/component.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
+import { onMouseMoveDiff } from '../../utils/on-mouse-move-diff';
 import { ElementChildrenComponent } from '../element/element.component';
 
 import style from './component.module.scss';
 
 interface ComponentComponentProps {
   component: ComponentStore;
-}
-
-function onMouseMoveDiff(
-  moving: (diffX: number, diffY: number) => void,
-): MouseEventHandler<HTMLElement> {
-  return (mouseDownEvent) => {
-    mouseDownEvent.stopPropagation();
-    mouseDownEvent.preventDefault();
-
-    let x = mouseDownEvent.pageX;
-    let y = mouseDownEvent.pageY;
-
-    const handlerMove = (e: MouseEvent) => {
-      e.stopPropagation();
-
-      if (e.pageX === x && e.pageY === y) {
-        return;
-      }
-
-      const diffX = e.pageX - x;
-      const diffY = e.pageY - y;
-
-      x = e.pageX;
-      y = e.pageY;
-
-      moving(diffX, diffY);
-    };
-
-    window.addEventListener('mousemove', handlerMove, { passive: true });
-
-    const handlerEnd = (e: MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      window.removeEventListener('mousemove', handlerMove);
-
-      window.removeEventListener('mouseup', handlerEnd);
-      window.removeEventListener('mouseleave', handlerEnd);
-    };
-
-    window.addEventListener('mouseup', handlerEnd);
-    window.addEventListener('mouseleave', handlerEnd);
-  };
 }
 
 export function ComponentRenderComponent({ component }: ComponentComponentProps) {
