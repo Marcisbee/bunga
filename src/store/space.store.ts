@@ -135,7 +135,7 @@ export class SpaceStore extends Exome {
 
     for (const key in edge.input) {
       if (Object.prototype.hasOwnProperty.call(edge.input, key)) {
-        const connection = edge.input[key];
+        const connection = edge.input[key].getValue();
 
         if (connection instanceof Connection) {
           connection.disconnect(key, edge);
