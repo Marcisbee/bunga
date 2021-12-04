@@ -79,8 +79,8 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                       width="10"
                       height="10"
                       viewBox="0 0 18 18"
-                      // @TODO: figure out how to changes this based on observable value
-                      fill={input[key] ? 'currentColor' : 'none'}
+                      // @TODO: figure out how to change this based on observable value
+                      fill={input[key].getValue() ? 'currentColor' : 'none'}
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <circle cx="9" cy="9" r="7.5" stroke="currentColor" strokeWidth="3" />
