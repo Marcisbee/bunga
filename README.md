@@ -14,3 +14,4 @@ All commands are run from the root of the project, from a terminal:
 | `npm run types`                           | Runs typescript type check for all project                |
 | `npm run generate component cool-name`    | Generates new component to `./src/components/cool-name/`  |
 | `npm run generate feature cool-name`      | Generates new component to `./src/features/cool-name/`    |
+
