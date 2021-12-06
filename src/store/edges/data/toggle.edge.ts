@@ -11,7 +11,7 @@ import {
 import { interactiveModeStore } from '../../interactive-mode.store';
 import { Connection } from '../connection';
 import { Edge } from '../edge';
-import { MouseEventEdge } from '../event.edge';
+import { MouseEventEdge } from '../event/event.mouse.edge';
 
 import { BooleanEdge } from './data.boolean.edge';
 import { NumberEdge } from './data.number.edge';

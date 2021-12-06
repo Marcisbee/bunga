@@ -9,7 +9,7 @@ import { DebugLogEdge } from './debug/log.edge';
 import { Edge } from './edge';
 import { ElementTextEdge } from './element/element-text.edge';
 import { ElementEdge } from './element/element.edge';
-import { MouseEventEdge } from './event.edge';
+import { MouseEventEdge } from './event/event.mouse.edge';
 import { LogicEqualsEdge } from './logic/logic.equals.edge';
 import { LogicGateEdge } from './logic/logic.gate.edge';
 import { MathAddEdge } from './math/math.add.edge';
