@@ -5,14 +5,16 @@ import {
 } from 'rxjs';
 
 import { Connection } from '../connection';
-import { CountEdge } from '../data/count.edge';
+import { BooleanEdge } from '../data/data.boolean.edge';
 import { NumberEdge } from '../data/data.number.edge';
+import { StringEdge } from '../data/data.string.edge';
 import { Edge } from '../edge';
+import { MathEdge } from '../math/math.edge';
 
-import { MathEdge } from './math.edge';
+import { LogicEdge } from './logic.edge';
 
-export class MathAddEdge extends MathEdge {
-  public static title = 'Math.add';
+export class LogicOrEdge extends LogicEdge {
+  public static title = 'Logic.or';
 
   public input = {
     a: new BehaviorSubject<Connection | null>(null),
@@ -21,14 +23,18 @@ export class MathAddEdge extends MathEdge {
 
   public connectableTo: Record<string, typeof Edge[]> = {
     a: [
+      LogicEdge,
+      BooleanEdge,
       NumberEdge,
       MathEdge,
-      CountEdge,
+      StringEdge,
     ],
     b: [
+      LogicEdge,
+      BooleanEdge,
       NumberEdge,
       MathEdge,
-      CountEdge,
+      StringEdge,
     ],
   };
 
@@ -41,7 +47,7 @@ export class MathAddEdge extends MathEdge {
       this.selectInput<number>('a'),
       this.selectInput<number>('b'),
     ]).pipe(
-      map(([a, b]) => a + b),
+      map(([a, b]) => !!a || !!b),
     ),
   };
 }

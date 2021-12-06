@@ -32,6 +32,10 @@
     border-radius: inherit;
     pointer-events: none;
   }
+
+  &.interactive {
+    box-shadow: 0 0 0 3px #19bd2f;
+  }
 }
 
 .active {

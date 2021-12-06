@@ -3,8 +3,10 @@ import { BehaviorSubject } from 'rxjs';
 
 import { DraggablePreview } from '../../../components/draggable-preview/draggable-preview';
 import { useObservable } from '../../../hooks/use-observable';
+import { interactiveModeStore } from '../../interactive-mode.store';
 import { store } from '../../store';
 import { Connection } from '../connection';
+import { CountEdge } from '../data/count.edge';
 import { BooleanEdge } from '../data/data.boolean.edge';
 import { NumberEdge } from '../data/data.number.edge';
 import { StringEdge } from '../data/data.string.edge';
@@ -27,6 +29,7 @@ export class ElementTextEdge extends Edge {
       StringEdge,
       NumberEdge,
       MathEdge,
+      CountEdge,
     ],
   };
 
@@ -43,7 +46,8 @@ export class ElementTextEdge extends Edge {
   }
 
   public select = {
-    default: this.selectInput<string | number | null | undefined>('text'),
+    default: this.selectInput<string | number | null | undefined>('text')
+      .pipe(),
   };
 
   public render = () => <Render edge={this} />;
@@ -51,8 +55,17 @@ export class ElementTextEdge extends Edge {
 
 function Render({ edge }: { edge: ElementTextEdge }) {
   const { select } = useStore(edge);
+  const { isInteractive } = useStore(interactiveModeStore);
 
   const elementText = useObservable(select.default);
+
+  if (isInteractive) {
+    return (
+      <div>
+        {elementText}
+      </div>
+    );
+  }
 
   return (
     <DraggablePreview preview={edge}>

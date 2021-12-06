@@ -1,3 +1,4 @@
+import { useStore } from 'exome/react';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 
@@ -5,6 +6,7 @@ import { ItemTypes } from '../../constants/draggable-item-types';
 import { DropPositionTypes } from '../../constants/drop-position-types';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
+import { interactiveModeStore } from '../../store/interactive-mode.store';
 import { cc } from '../../utils/class-names';
 import { DroppableElementResult } from '../droppable-element/droppable-element';
 
@@ -16,6 +18,7 @@ interface DraggableElementProps extends React.PropsWithChildren<unknown> {
 }
 
 export function DraggableElement({ parent, element, children }: DraggableElementProps) {
+  const { isInteractive } = useStore(interactiveModeStore);
   const [{ isDragging, handlerId }, drag] = useDrag(() => ({
     type: ItemTypes.ELEMENT,
 
@@ -67,7 +70,7 @@ export function DraggableElement({ parent, element, children }: DraggableElement
       <style>
         {`
           #${handlerId?.toString()} {
-            display: block;
+            display: inline-block;
             position: relative;
           }
           #${handlerId?.toString()}.isDragging {
@@ -81,16 +84,18 @@ export function DraggableElement({ parent, element, children }: DraggableElement
         `}
       </style>
       <div
-        ref={drag}
+        ref={isInteractive ? undefined : drag}
         role="button"
         id={handlerId?.toString()}
         className={cc([
           style.draggable,
           isDragging && 'isDragging',
         ])}
-        onMouseDown={(e) => {
-          e.stopPropagation();
-        }}
+        onMouseDown={isInteractive
+          ? undefined
+          : (e) => {
+            e.stopPropagation();
+          }}
       >
         {children}
       </div>

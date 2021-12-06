@@ -1,6 +1,5 @@
 import {
   BehaviorSubject,
-  combineLatest,
   map,
 } from 'rxjs';
 
@@ -13,23 +12,15 @@ import { MathEdge } from '../math/math.edge';
 
 import { LogicEdge } from './logic.edge';
 
-export class LogicEqualsEdge extends Edge {
-  public static title = 'Logic.equals';
+export class LogicNotEdge extends LogicEdge {
+  public static title = 'Logic.not';
 
   public input = {
-    a: new BehaviorSubject<Connection | null>(null),
-    b: new BehaviorSubject<Connection | null>(null),
+    value: new BehaviorSubject<Connection | null>(null),
   };
 
   public connectableTo: Record<string, typeof Edge[]> = {
-    a: [
-      LogicEdge,
-      BooleanEdge,
-      NumberEdge,
-      MathEdge,
-      StringEdge,
-    ],
-    b: [
+    value: [
       LogicEdge,
       BooleanEdge,
       NumberEdge,
@@ -43,11 +34,9 @@ export class LogicEqualsEdge extends Edge {
   };
 
   public select = {
-    default: combineLatest([
-      this.selectInput<number>('a'),
-      this.selectInput<number>('b'),
-    ]).pipe(
-      map(([a, b]) => a === b),
-    ),
+    default: this.selectInput<unknown>('value')
+      .pipe(
+        map((a) => !a),
+      ),
   };
 }
