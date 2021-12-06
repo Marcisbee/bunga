@@ -19,8 +19,8 @@ import { Connection } from './connection';
 import { Edge } from './edge';
 import { ElementEdge } from './element/element.edge';
 
-export class EventEdge extends Edge {
-  public static title = 'Event';
+export class MouseEventEdge extends Edge {
+  public static title = 'Mouse Event';
 
   public style = 'operation';
 
@@ -125,7 +125,7 @@ function ComponentControlOption({
   );
 }
 
-function ElementControl({ edge, path = [] }: { edge: EventEdge, path?: string[] }) {
+function ElementControl({ edge, path = [] }: { edge: MouseEventEdge, path?: string[] }) {
   const { input } = useStore(edge);
   const { activeSpace } = useStore(store.activeProject!);
   const { components } = useStore(activeSpace);
@@ -158,7 +158,7 @@ function ElementControl({ edge, path = [] }: { edge: EventEdge, path?: string[] 
   );
 }
 
-function TypeControl({ edge }: { edge: EventEdge }) {
+function TypeControl({ edge }: { edge: MouseEventEdge }) {
   const { input } = useStore(edge);
 
   const value = useObservable(input.type);

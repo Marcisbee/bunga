@@ -11,7 +11,7 @@ import {
 import { interactiveModeStore } from '../../interactive-mode.store';
 import { Connection } from '../connection';
 import { Edge } from '../edge';
-import { EventEdge } from '../event.edge';
+import { MouseEventEdge } from '../event.edge';
 
 import { BooleanEdge } from './data.boolean.edge';
 import { NumberEdge } from './data.number.edge';
@@ -30,11 +30,11 @@ export class ToggleEdge extends Edge {
       BooleanEdge,
     ],
     on: [
-      EventEdge,
+      MouseEventEdge,
       NumberEdge,
     ],
     off: [
-      EventEdge,
+      MouseEventEdge,
       NumberEdge,
     ],
   };

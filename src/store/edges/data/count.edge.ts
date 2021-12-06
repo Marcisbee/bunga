@@ -9,7 +9,7 @@ import {
 import { interactiveModeStore } from '../../interactive-mode.store';
 import { Connection } from '../connection';
 import { Edge } from '../edge';
-import { EventEdge } from '../event.edge';
+import { MouseEventEdge } from '../event.edge';
 
 import { NumberEdge } from './data.number.edge';
 
@@ -23,7 +23,7 @@ export class CountEdge extends Edge {
   public connectableTo: Record<string, typeof Edge[]> = {
     default: [
       NumberEdge,
-      EventEdge,
+      MouseEventEdge,
     ],
   };
 
