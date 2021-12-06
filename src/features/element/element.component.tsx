@@ -31,10 +31,14 @@ export function ElementChildrenComponent({ parent, elements }: ElementChildrenCo
     return (
       <>
         {elements.map((element) => (
-          <ElementComponent
+          <div
             key={`element-c-${getExomeId(element)}`}
-            element={element}
-          />
+            style={{ display: 'inline-block' }}
+          >
+            <ElementComponent
+              element={element}
+            />
+          </div>
         ))}
       </>
     );
@@ -56,38 +60,34 @@ export function ElementChildrenComponent({ parent, elements }: ElementChildrenCo
             <ElementComponent element={element} />
           </DroppableElement>
 
-          {!isInteractive && (
-            <>
-              <DroppableElement
-                parent={parent}
-                element={element}
-                position={DropPositionTypes.TOP}
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '20%',
-                  maxHeight: 20,
-                  top: 0,
-                  left: 0,
-                  overflow: 'hidden',
-                }}
-              />
-              <DroppableElement
-                parent={parent}
-                element={element}
-                position={DropPositionTypes.BOTTOM}
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '20%',
-                  maxHeight: 20,
-                  bottom: 0,
-                  left: 0,
-                  overflow: 'hidden',
-                }}
-              />
-            </>
-          )}
+          <DroppableElement
+            parent={parent}
+            element={element}
+            position={DropPositionTypes.TOP}
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '20%',
+              maxHeight: 20,
+              top: 0,
+              left: 0,
+              overflow: 'hidden',
+            }}
+          />
+          <DroppableElement
+            parent={parent}
+            element={element}
+            position={DropPositionTypes.BOTTOM}
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '20%',
+              maxHeight: 20,
+              bottom: 0,
+              left: 0,
+              overflow: 'hidden',
+            }}
+          />
         </DraggableElement>
       ))}
     </>

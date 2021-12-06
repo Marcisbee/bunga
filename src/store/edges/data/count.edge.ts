@@ -3,6 +3,7 @@ import {
   mergeMap,
   of,
   scan,
+  startWith,
   takeWhile,
 } from 'rxjs';
 
@@ -46,6 +47,7 @@ export class CountEdge extends Edge {
               .pipe(
                 takeWhile(() => interactiveModeStore.isInteractive$.value),
                 scan((acc) => acc + 1, 0),
+                startWith(0),
               )
           );
         }),
