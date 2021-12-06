@@ -10,8 +10,11 @@ import { Edge } from './edge';
 import { ElementTextEdge } from './element/element-text.edge';
 import { ElementEdge } from './element/element.edge';
 import { MouseEventEdge } from './event/event.mouse.edge';
+import { LogicAndEdge } from './logic/logic.and.edge';
 import { LogicEqualsEdge } from './logic/logic.equals.edge';
 import { LogicGateEdge } from './logic/logic.gate.edge';
+import { LogicNotEdge } from './logic/logic.not.edge';
+import { LogicOrEdge } from './logic/logic.or.edge';
 import { MathAddEdge } from './math/math.add.edge';
 import { MathDivideEdge } from './math/math.divide.edge';
 import { MathMultiplyEdge } from './math/math.multiply.edge';
@@ -32,6 +35,9 @@ export const allEdges: (new (...args: any[]) => Edge)[] = [
   ElementEdge,
   ElementTextEdge,
   LogicEqualsEdge,
+  LogicAndEdge,
+  LogicOrEdge,
+  LogicNotEdge,
   LogicGateEdge,
   MouseEventEdge,
   CountEdge,

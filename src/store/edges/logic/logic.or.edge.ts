@@ -13,8 +13,8 @@ import { MathEdge } from '../math/math.edge';
 
 import { LogicEdge } from './logic.edge';
 
-export class LogicEqualsEdge extends Edge {
-  public static title = 'Logic.equals';
+export class LogicOrEdge extends LogicEdge {
+  public static title = 'Logic.or';
 
   public input = {
     a: new BehaviorSubject<Connection | null>(null),
@@ -47,7 +47,7 @@ export class LogicEqualsEdge extends Edge {
       this.selectInput<number>('a'),
       this.selectInput<number>('b'),
     ]).pipe(
-      map(([a, b]) => a === b),
+      map(([a, b]) => !!a || !!b),
     ),
   };
 }
