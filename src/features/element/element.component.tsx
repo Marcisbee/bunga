@@ -15,7 +15,7 @@ import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
 import { RenderElement } from '../../store/edges/element/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
-import { InteractiveModeEvent, interactiveModeStore } from '../../store/interactive-mode.store';
+import { InteractiveModeEvent, interactiveModeStore, useInteractiveEvents } from '../../store/interactive-mode.store';
 import { store } from '../../store/store';
 
 interface ElementChildrenComponentProps {
@@ -101,24 +101,9 @@ export function ElementComponent({ element }: ElementComponentProps) {
 
 const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>(
   ({ element }, ref) => {
-    const { isInteractive, dispatch } = useStore(interactiveModeStore);
+    const { isInteractive } = useStore(interactiveModeStore);
     const { type, props, children } = useStore(element);
-
-    const events: React.HTMLAttributes<HTMLDivElement> = isInteractive
-      ? {
-        onClick: (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-
-          const interactiveEvent = new InteractiveModeEvent(
-            element,
-            'click',
-            e.nativeEvent,
-          );
-
-          dispatch(interactiveEvent);
-        },
-      } : {};
+    const events = useInteractiveEvents(element);
 
     if (!type || typeof type === 'string') {
       return createElement(

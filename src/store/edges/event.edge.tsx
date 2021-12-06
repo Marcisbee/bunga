@@ -10,18 +10,14 @@ import {
 } from 'rxjs';
 
 import { useObservable } from '../../hooks/use-observable';
+import { ComponentStore } from '../component.store';
 import { ElementStore } from '../element.store';
-import { interactiveModeStore } from '../interactive-mode.store';
+import { InteractiveEventType, interactiveModeStore } from '../interactive-mode.store';
 import { store } from '../store';
 
 import { Connection } from './connection';
 import { Edge } from './edge';
 import { ElementEdge } from './element/element.edge';
-
-// eslint-disable-next-line no-shadow
-export enum EventEdgeType {
-  click = 'click',
-}
 
 export class EventEdge extends Edge {
   public static title = 'Event';
@@ -30,7 +26,7 @@ export class EventEdge extends Edge {
 
   public input = {
     element: new BehaviorSubject<ElementStore | null>(null),
-    type: new BehaviorSubject<EventEdgeType>(EventEdgeType.click),
+    type: new BehaviorSubject<keyof typeof InteractiveEventType>(InteractiveEventType.click),
   };
 
   public connectableTo: Record<string, typeof Edge[]> = {};
@@ -42,7 +38,7 @@ export class EventEdge extends Edge {
   public select = {
     default: combineLatest([
       this.selectInput<ElementStore>('element'),
-      this.selectInput<EventEdgeType>('type'),
+      this.selectInput<keyof typeof InteractiveEventType>('type'),
     ]).pipe(
       filter(([target, name]) => !!target && !!name),
       mergeMap(([target, name]) => (
@@ -61,17 +57,29 @@ export class EventEdge extends Edge {
   };
 }
 
+function ElementEdgeControlOption({ element, path }: { element: ElementStore, path: string[] }) {
+  const edge = element.type as ElementEdge;
+
+  useStore(edge);
+
+  const value = useObservable(edge.input.name);
+
+  return (
+    <option value={path.join('.')}>
+      {value}
+    </option>
+  );
+}
+
 function ElementControlOption({ element, path }: { element: ElementStore, path: string[] }) {
   useStore(element);
 
-  // const value = getExomeId(element);
-
   if (element.type instanceof ElementEdge) {
     return (
-      <option value={path.join('.')}>
-        {/* @TODO: Subscribe to name changes here */}
-        {element.type.input.name.getValue()}
-      </option>
+      <ElementEdgeControlOption
+        element={element}
+        path={path}
+      />
     );
   }
 
@@ -80,17 +88,52 @@ function ElementControlOption({ element, path }: { element: ElementStore, path: 
   );
 }
 
+function ComponentControlOption({
+  component,
+  path,
+  index,
+  eventId,
+}: { component: ComponentStore, path: string[], index: number, eventId: string }) {
+  const { name, root } = useStore(component);
+  const { children } = useStore(root);
+
+  return (
+    <optgroup label={name}>
+      {(children
+        .map((element, elementIndex) => {
+          if (!(element instanceof ElementStore)) {
+            return null;
+          }
+
+          const childPath = path.concat([
+            String(index),
+            'root',
+            'children',
+            String(elementIndex),
+          ]);
+
+          return (
+            <ElementControlOption
+              key={`element-e-${eventId}-option-${getExomeId(component)}-${childPath.join('-')}`}
+              path={childPath}
+              element={element}
+            />
+          );
+        })
+      )}
+    </optgroup>
+  );
+}
+
 function ElementControl({ edge, path = [] }: { edge: EventEdge, path?: string[] }) {
   const { input } = useStore(edge);
   const { activeSpace } = useStore(store.activeProject!);
   const { components } = useStore(activeSpace);
 
-  // const value = useObservable(input.element);
-
   return (
     <select
+      // @TODO: Get default value path.
       defaultValue=""
-      // value={value ? getExomeId(value) : ''}
       onChange={(e) => {
         const target: ElementStore = dlv(components, e.target.value);
         input.element.next(target);
@@ -103,28 +146,13 @@ function ElementControl({ edge, path = [] }: { edge: EventEdge, path?: string[] 
     >
       <option value="" disabled>Choose element</option>
       {components.map((component, componentIndex) => (
-        <optgroup label={component.name}>
-          {(component.root.children
-            .map((element, elementIndex) => {
-              if (!(element instanceof ElementStore)) {
-                return null;
-              }
-
-              return (
-                <ElementControlOption
-                  key={`element-e-option-${getExomeId(component)}`}
-                  path={path.concat([
-                    String(componentIndex),
-                    'root',
-                    'children',
-                    String(elementIndex),
-                  ])}
-                  element={element}
-                />
-              );
-            })
-          )}
-        </optgroup>
+        <ComponentControlOption
+          component={component}
+          key={`component-e-${getExomeId(edge)}-optgroup-${getExomeId(component)}`}
+          path={path}
+          index={componentIndex}
+          eventId={getExomeId(edge)}
+        />
       ))}
     </select>
   );
@@ -147,7 +175,7 @@ function TypeControl({ edge }: { edge: EventEdge }) {
         fontSize: 12,
       }}
     >
-      {Object.keys(EventEdgeType).map((name) => (
+      {Object.keys(InteractiveEventType).map((name) => (
         <option
           key={`event-e-option-${name}`}
           value={name}

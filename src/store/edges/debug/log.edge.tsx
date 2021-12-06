@@ -3,11 +3,7 @@ import { useEffect, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
 
 import { Connection } from '../connection';
-import { CountEdge } from '../data/count.edge';
-import { NumberEdge } from '../data/data.number.edge';
-import { StringEdge } from '../data/data.string.edge';
 import { Edge } from '../edge';
-import { EventEdge } from '../event.edge';
 
 export class DebugLogEdge extends Edge {
   public static title = 'Debug.log';
@@ -18,10 +14,7 @@ export class DebugLogEdge extends Edge {
 
   public connectableTo: Record<string, typeof Edge[]> = {
     input: [
-      NumberEdge,
-      StringEdge,
-      EventEdge,
-      CountEdge,
+      Edge,
     ],
   };
 

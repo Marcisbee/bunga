@@ -4,6 +4,7 @@ import { ArrayEdge } from './data/data.array.edge';
 import { BooleanEdge } from './data/data.boolean.edge';
 import { NumberEdge } from './data/data.number.edge';
 import { StringEdge } from './data/data.string.edge';
+import { ToggleEdge } from './data/toggle.edge';
 import { DebugLogEdge } from './debug/log.edge';
 import { Edge } from './edge';
 import { ElementTextEdge } from './element/element-text.edge';
@@ -34,5 +35,6 @@ export const allEdges: (new (...args: any[]) => Edge)[] = [
   LogicGateEdge,
   EventEdge,
   CountEdge,
+  ToggleEdge,
   DebugLogEdge,
 ];
