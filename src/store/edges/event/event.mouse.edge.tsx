@@ -6,7 +6,7 @@ import {
   combineLatest,
   filter,
   map,
-  mergeMap,
+  switchMap,
 } from 'rxjs';
 
 import { useObservable } from '../../../hooks/use-observable';
@@ -40,7 +40,7 @@ export class MouseEventEdge extends Edge {
       this.selectInput<keyof typeof InteractiveEventType>('type'),
     ]).pipe(
       filter(([target, name]) => !!target && !!name),
-      mergeMap(([target, name]) => (
+      switchMap(([target, name]) => (
         interactiveModeStore.event
           .pipe(
             filter((event) => event.target === target && event.type === name),
