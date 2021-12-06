@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DraggablePreview } from '../../../components/draggable-preview/draggable-preview';
 import { useObservable } from '../../../hooks/use-observable';
 import { observableToPromise } from '../../../utils/observable-to-promise';
+import { interactiveModeStore } from '../../interactive-mode.store';
 import { store } from '../../store';
 import { StyleStore } from '../../style.store';
 import { Connection } from '../connection';
@@ -108,48 +109,58 @@ export function RenderElement({
 function Render({ edge }: { edge: ElementEdge }) {
   useStore(edge);
 
-  return (
-    <DraggablePreview preview={edge}>
-      <div
-        onDoubleClick={async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
+  const { isInteractive } = useStore(interactiveModeStore);
 
-          const connectedStyle = await observableToPromise(edge.input.style);
-          const project = store.activeProject!;
-          const space = project.activeSpace;
+  const element = (
+    <div
+      onDoubleClick={async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-          if (connectedStyle) {
-            // Select connected style.
-            const value = await observableToPromise(connectedStyle.from.select.default);
+        const connectedStyle = await observableToPromise(edge.input.style);
+        const project = store.activeProject!;
+        const space = project.activeSpace;
 
-            if (value instanceof StyleStore) {
-              project.activeStyle.setActive(value);
-            }
+        if (connectedStyle) {
+          // Select connected style.
+          const value = await observableToPromise(connectedStyle.from.select.default);
 
-            return;
+          if (value instanceof StyleStore) {
+            project.activeStyle.setActive(value);
           }
 
-          // Create new style and connect to element.
-          const style = project.addStyle();
-          const styleEdge = space.addEdge(StyleEdge);
+          return;
+        }
 
-          styleEdge.input.source.next(style);
-          styleEdge.output.default.connect('style', edge);
-        }}
+        // Create new style and connect to element.
+        const style = project.addStyle();
+        const styleEdge = space.addEdge(StyleEdge);
+
+        styleEdge.input.source.next(style);
+        styleEdge.output.default.connect('style', edge);
+      }}
+    >
+      <RenderElement
+        edge={edge}
+        defaultCss="background-color: #ccc;"
       >
-        <RenderElement
-          edge={edge}
-          defaultCss="background-color: #ccc;"
-        >
-          <span
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-            }}
-          />
-        </RenderElement>
-      </div>
+        <span
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+          }}
+        />
+      </RenderElement>
+    </div>
+  );
+
+  if (isInteractive) {
+    return element;
+  }
+
+  return (
+    <DraggablePreview preview={edge}>
+      {element}
     </DraggablePreview>
   );
 }

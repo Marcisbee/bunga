@@ -70,7 +70,7 @@ export function DraggableElement({ parent, element, children }: DraggableElement
       <style>
         {`
           #${handlerId?.toString()} {
-            display: block;
+            display: inline-block;
             position: relative;
           }
           #${handlerId?.toString()}.isDragging {

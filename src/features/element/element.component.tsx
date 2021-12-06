@@ -15,7 +15,7 @@ import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
 import { RenderElement } from '../../store/edges/element/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
-import { InteractiveModeEvent, interactiveModeStore, useInteractiveEvents } from '../../store/interactive-mode.store';
+import { interactiveModeStore, useInteractiveEvents } from '../../store/interactive-mode.store';
 import { store } from '../../store/store';
 
 interface ElementChildrenComponentProps {
@@ -26,6 +26,19 @@ interface ElementChildrenComponentProps {
 export function ElementChildrenComponent({ parent, elements }: ElementChildrenComponentProps) {
   const { isInteractive } = useStore(interactiveModeStore);
   useStore(parent);
+
+  if (isInteractive) {
+    return (
+      <>
+        {elements.map((element) => (
+          <ElementComponent
+            key={`element-c-${getExomeId(element)}`}
+            element={element}
+          />
+        ))}
+      </>
+    );
+  }
 
   return (
     <>
