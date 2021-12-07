@@ -21,26 +21,49 @@ import { MathMultiplyEdge } from './math/math.multiply.edge';
 import { MathSubtractEdge } from './math/math.subtract.edge';
 import { StyleEdge } from './style.edge';
 
-export const allEdges: (new (...args: any[]) => Edge)[] = [
-  StringEdge,
-  NumberEdge,
-  BooleanEdge,
-  MathAddEdge,
-  MathSubtractEdge,
-  MathMultiplyEdge,
-  MathDivideEdge,
-  ArrayEdge,
-  ArrayConcatEdge,
-  StyleEdge,
-  ElementEdge,
-  ElementTextEdge,
-  LogicEqualsEdge,
-  LogicAndEdge,
-  LogicOrEdge,
-  LogicNotEdge,
-  LogicGateEdge,
-  MouseEventEdge,
-  CountEdge,
-  ToggleEdge,
-  DebugLogEdge,
-];
+export type EdgeConstructor = new (...args: any[]) => Edge;
+
+export const edgeGroups: Record<string, EdgeConstructor[]> = {
+  data: [
+    StringEdge,
+    NumberEdge,
+    BooleanEdge,
+    ArrayEdge,
+  ],
+  templates: [
+    ElementEdge,
+    ElementTextEdge,
+  ],
+  style: [
+    StyleEdge,
+  ],
+  event: [
+    MouseEventEdge,
+  ],
+  state: [
+    CountEdge,
+    ToggleEdge,
+  ],
+  math: [
+    MathAddEdge,
+    MathSubtractEdge,
+    MathMultiplyEdge,
+    MathDivideEdge,
+  ],
+  logic: [
+    LogicEqualsEdge,
+    LogicAndEdge,
+    LogicOrEdge,
+    LogicNotEdge,
+    LogicGateEdge,
+  ],
+  utilities: [
+    ArrayConcatEdge,
+  ],
+  debug: [
+    DebugLogEdge,
+  ],
+};
+
+export const allEdges: EdgeConstructor[] = ([] as EdgeConstructor[])
+  .concat(...Object.values(edgeGroups));

@@ -6,24 +6,13 @@ import { cc } from '../../utils/class-names';
 import style from './canvas-tools.module.scss';
 import { canvasToolsStore, CanvasTools } from './canvas-tools.store';
 
-function stopPropagation(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-  e.preventDefault();
-  e.stopPropagation();
-}
-
 export function CanvasToolsComponent() {
   const { activeTool, setActiveTool } = useStore(canvasToolsStore);
   const { isInteractive, setInteractive } = useStore(interactiveModeStore);
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div
-      onMouseDown={stopPropagation}
-      className={style.container}
-    >
-      <div
-        className={style.group}
-      >
+    <div className={style.container}>
+      <div className={style.group}>
         {Object.entries(CanvasTools).map(([key, tool]) => (
           <button
             key={`c-t-${key}`}

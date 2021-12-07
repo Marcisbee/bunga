@@ -1,0 +1,159 @@
+.container {
+  display: block;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 10;
+}
+
+.group {
+  display: inline-block;
+  background-color: #fff;
+  color: #000;
+  border-radius: 6px;
+  margin: 0 4px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+.tool {
+  display: inline-block;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  height: 36px;
+  width: 36px;
+  line-height: 38px;
+  vertical-align: top;
+  padding: 0 8px;
+
+  &:first-child {
+    border-top-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+  }
+
+  &:last-child {
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+
+  svg {
+    display: inline-block;
+  }
+
+  &:hover {
+    background-color: #ecf6ff;
+  }
+
+  &.active {
+    background-color: #0081f1;
+  }
+}
+
+.popup {
+  display: block;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 500px;
+}
+
+.search {
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1);
+  position: relative;
+  z-index: 1;
+  margin-bottom: 6px;
+
+  > svg {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    pointer-events: none;
+    fill: #ccc;
+  }
+
+  input {
+    display: block;
+    width: 100%;
+    border: 0;
+    outline: none;
+    background-color: transparent;
+    border-radius: inherit;
+    font-size: 16px;
+    padding: 8px 12px 8px 40px;
+  }
+}
+
+.results {
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),0 4px 8px rgba(16,22,26,.2),0 18px 46px 6px rgba(16,22,26,.2);
+  height: 300px;
+  position: relative;
+}
+
+.list {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 160px;
+  height: 100%;
+  box-shadow: 1px 0 0 0 #f0f0f0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 4px;
+
+  .noResults {
+    display: block;
+    color: #999;
+    padding: 50% 0;
+    text-align: center;
+  }
+
+  > div {
+    display: block;
+    margin-bottom: 2px;
+
+    > strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.7rem;
+      background-color: #f8f8f8;
+      padding: 4px 12px;
+      color: #aaa;
+    }
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border-radius: 2px;
+    border: 0;
+    background-color: transparent;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+
+    &:hover {
+      color: #0081f1;
+      background-color: #ecf6ff;
+    }
+
+    &.active {
+      background-color: #0081f1;
+      color: #fff;
+    }
+  }
+}
+
+.preview {
+  display: block;
+  margin-left: 160px;
+  text-align: center;
+}
