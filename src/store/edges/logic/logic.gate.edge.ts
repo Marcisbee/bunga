@@ -7,6 +7,7 @@ import {
 import { StyleStore } from '../../style.store';
 import { Connection } from '../connection';
 import { BooleanEdge } from '../data/data.boolean.edge';
+import { ToggleEdge } from '../data/toggle.edge';
 import { Edge } from '../edge';
 import { StyleEdge } from '../style.edge';
 
@@ -21,8 +22,14 @@ export class LogicGateEdge extends Edge {
   };
 
   public connectableTo: Record<string, typeof Edge[]> = {
-    condition: [BooleanEdge, LogicEqualsEdge],
-    style: [StyleEdge],
+    condition: [
+      BooleanEdge,
+      ToggleEdge,
+      LogicEqualsEdge,
+    ],
+    style: [
+      StyleEdge,
+    ],
   };
 
   public output: { default: Connection } = {
