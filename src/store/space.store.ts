@@ -63,7 +63,7 @@ export class SpaceStore extends Exome {
     const component = new ComponentStore(
       Math.random().toString(),
       position,
-      'Unnamed component',
+      `Component ${this.components.length + 1}`,
     );
     this.components.push(component);
     this.move.selectComponent(component);

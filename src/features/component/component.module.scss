@@ -34,19 +34,19 @@
   }
 
   &.interactive {
-    box-shadow: 0 0 0 3px #19bd2f;
+    box-shadow: 0 0 0 3px var(--ternary-color);
   }
 }
 
 .active {
   .name {
-    color: #2196f3;
+    color: var(--layer-color-component);
     font-weight: 500;
     letter-spacing: 0.4;
   }
 
   .container::after {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 0 0 1px #2196f3;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 0 0 1px var(--layer-color-component);
   }
 
   .resize {
@@ -69,7 +69,7 @@
   width: 8px;
   height: 8px;
   background-color: #fff;
-  border: 1px solid #2196f3;
+  border: 1px solid var(--layer-color-component);
   z-index: 1;
 
   &::before {
@@ -92,7 +92,7 @@
   font-size: 8px;
   font-weight: 900;
   color: #fff;
-  background-color: #2196f3;
+  background-color: var(--layer-color-component);
   padding: 1px 6px;
   line-height: 16px;
   height: 18px;

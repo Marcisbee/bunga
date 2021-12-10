@@ -1,20 +1,57 @@
-.container {
+.cursors {
   display: block;
   position: fixed;
   left: 50%;
-  top: 10px;
+  top: 16px;
   transform: translateX(-50%);
   z-index: 10;
   white-space: nowrap;
+}
+
+.interactive {
+  display: block;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  z-index: 10;
+
+  .group {
+    padding: 0;
+  }
+
+  svg {
+    margin-left: 5px !important;
+  }
+
+  .tool.active {
+    background-color: var(--ternary-color);
+  }
+}
+
+.edgeSelector {
+  display: block;
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  z-index: 10;
+
+  .group {
+    padding: 0;
+  }
 }
 
 .group {
   display: inline-block;
   background-color: #fff;
   color: #000;
-  border-radius: 6px;
+  border-radius: 40px;
+  padding: 2px;
   margin: 0 4px;
   box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+
+  &:hover {
+    box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.05), 0 4px 8px rgba(16,22,26,.12);
+  }
 }
 
 .tool {
@@ -22,9 +59,14 @@
   background: transparent;
   color: inherit;
   border: 0;
-  height: 36px;
+  height: 40px;
+  width: 40px;
+  line-height: 42px;
   vertical-align: top;
   padding: 0 8px;
+  border-radius: 40px;
+  text-align: center;
+  color: var(--primary-color);
 
   &:first-child {
     border-top-left-radius: inherit;
@@ -38,13 +80,19 @@
 
   svg {
     display: block;
+    margin: 0 auto;
   }
 
   &:hover {
-    background-color: #ecf6ff;
+    background-color: #f5f5f5;
+  }
+
+  &:active {
+    background-color: #f0f0f0;
   }
 
   &.active {
-    background-color: #0081f1;
+    background-color: var(--primary-color);
+    color: #fff;
   }
 }

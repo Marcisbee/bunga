@@ -6,11 +6,13 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useParams } from 'react-router-dom';
 
 import { ErrorBoundary } from '../../components/error-boundary/error-boundary';
+import { TabSwitchComponent } from '../../components/tab-switch/tab-switch';
 import { CanvasToolsComponent } from '../../features/canvas-tools/canvas-tools';
 import { CanvasComponent } from '../../features/canvas/canvas.component';
-import { EdgeSelectorComponent } from '../../features/edge-selector/edge-selector';
-import { LayersComponent } from '../../layouts/app/layers/layers.component';
-import { StylesComponent } from '../../layouts/app/styles/styles.component';
+import { LayersManagerComponent } from '../../features/layers-manager/layers-manager';
+import { SpacesManagerComponent } from '../../features/spaces-manager/spaces-manager';
+import { StylesManagerComponent } from '../../features/styles-manager/styles-manager';
+import { TokensManagerComponent } from '../../features/tokens-manager/tokens-manager';
 import { store } from '../../store/store';
 
 import style from './project.module.scss';
@@ -30,18 +32,28 @@ export function ProjectPage() {
     <DndProvider backend={HTML5Backend}>
       <div className={style.app}>
         <div style={{ width: 240 }}>
-          Project:
-          {' '}
-          {params.id}
-          <hr />
+          <div style={{ padding: '5px 5px 10px 5px' }}>
+            <small>Owner</small>
+            <br />
+            <strong>
+              Project:
+              {' '}
+              {params.id}
+            </strong>
+          </div>
 
-          <ErrorBoundary>
-            <LayersComponent />
-          </ErrorBoundary>
+          <div style={{ userSelect: 'none' }}>
+            <ErrorBoundary>
+              <SpacesManagerComponent />
+            </ErrorBoundary>
+
+            <ErrorBoundary>
+              <LayersManagerComponent />
+            </ErrorBoundary>
+          </div>
         </div>
 
         <div className={style.middle}>
-          <EdgeSelectorComponent />
           <CanvasToolsComponent />
 
           <ErrorBoundary>
@@ -54,7 +66,17 @@ export function ProjectPage() {
 
         <div style={{ width: 240 }}>
           <ErrorBoundary>
-            <StylesComponent />
+            <TabSwitchComponent
+              value="Styles"
+              options={[
+                'Styles',
+                'Tokens',
+              ]}
+              render={{
+                Styles: <StylesManagerComponent />,
+                Tokens: <TokensManagerComponent />,
+              }}
+            />
           </ErrorBoundary>
         </div>
       </div>

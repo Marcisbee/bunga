@@ -5,12 +5,14 @@
   position: relative;
   transform: translate3d(0,0,0);
   will-change: transform;
-  background-color: aliceblue;
+  background-color: #F4F6F8;
   user-select: none;
   background-size: 20px 20px;
-  background-image: radial-gradient(circle, rgb(214, 227, 240) 1px, rgba(0, 0, 0, 0) 1px);
+  background-image: radial-gradient(circle, #e3e6e9 1px, rgba(0, 0, 0, 0) 1px);
   background-position: 0px 0px;
   outline: none;
+  border-left: 1px solid #e0e4e8;
+  border-right: 1px solid #e0e4e8;
 
   &.move {
     cursor: default;

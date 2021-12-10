@@ -7,11 +7,11 @@ import { cc } from '../../utils/class-names';
 
 import style from './edge-selector.module.scss';
 
-interface EdgeSelectorPopupComponentProps {
+interface EdgeSelectorComponentProps {
   onClose: () => void;
 }
 
-function EdgeSelectorPopupComponent({ onClose }: EdgeSelectorPopupComponentProps) {
+export function EdgeSelectorComponent({ onClose }: EdgeSelectorComponentProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const filteredEdgeList = useMemo(() => {
     const normalizedSearchTerm = searchTerm
@@ -134,7 +134,9 @@ function EdgeSelectorPopupComponent({ onClose }: EdgeSelectorPopupComponentProps
 
                   return (
                     <div key={`edge-selector-${group}`}>
-                      <strong>{group}</strong>
+                      <strong>
+                        {group.toUpperCase()}
+                      </strong>
                       {filteredEdges.map((edge) => (
                         // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
                         <button
@@ -186,59 +188,5 @@ function EdgeSelectorPopupComponent({ onClose }: EdgeSelectorPopupComponentProps
         </div>
       </div>
     </div>
-  );
-}
-
-export function EdgeSelectorComponent() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  useLayoutEffect(() => {
-    const handler = isOpen
-      ? (e: KeyboardEvent) => {
-        // Close
-
-        if (e.key === 'Escape') {
-          e.stopPropagation();
-          setIsOpen(false);
-        }
-      }
-      : (e: KeyboardEvent) => {
-        // Open with cmd+k
-        if (e.key === 'k' && e.metaKey) {
-          e.preventDefault();
-          e.stopPropagation();
-          setIsOpen(true);
-        }
-      };
-
-    window.addEventListener('keydown', handler);
-
-    return () => {
-      window.removeEventListener('keydown', handler);
-    };
-  }, [isOpen]);
-
-  return (
-    <>
-      <div className={style.container}>
-        <div className={style.group}>
-          <button
-            type="button"
-            className={cc([
-              style.tool,
-            ])}
-            onClick={() => {
-              setIsOpen((s) => !s);
-            }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" /></svg>
-          </button>
-        </div>
-      </div>
-
-      {isOpen && (
-        <EdgeSelectorPopupComponent onClose={() => setIsOpen(false)} />
-      )}
-    </>
   );
 }
