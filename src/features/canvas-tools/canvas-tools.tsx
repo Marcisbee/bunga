@@ -1,29 +1,19 @@
 import { useStore } from 'exome/react';
+import { useLayoutEffect, useState } from 'react';
 
 import { interactiveModeStore } from '../../store/interactive-mode.store';
 import { cc } from '../../utils/class-names';
+import { EdgeSelectorComponent } from '../edge-selector/edge-selector';
 
 import style from './canvas-tools.module.scss';
 import { canvasToolsStore, CanvasTools } from './canvas-tools.store';
 
-function stopPropagation(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-  e.preventDefault();
-  e.stopPropagation();
-}
-
-export function CanvasToolsComponent() {
+function CanvasToolsCursorsComponent() {
   const { activeTool, setActiveTool } = useStore(canvasToolsStore);
-  const { isInteractive, setInteractive } = useStore(interactiveModeStore);
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div
-      onMouseDown={stopPropagation}
-      className={style.container}
-    >
-      <div
-        className={style.group}
-      >
+    <div className={style.cursors}>
+      <div className={style.group}>
         {Object.entries(CanvasTools).map(([key, tool]) => (
           <button
             key={`c-t-${key}`}
@@ -37,22 +27,8 @@ export function CanvasToolsComponent() {
             }}
           >
             {tool === 'move' && (
-              <svg width="23" height="25" viewBox="0 0 23 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g filter="url(#filter0_d_32_2)">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M12.8407 12.5161L17.4865 10.8649L5 4L8.64025 17.7764L11.3663 13.668L14.63 17.8454L16.1044 16.6935L12.8407 12.5161Z" fill="#363B3E" />
-                  <path d="M13.6618 12.7549L17.654 11.3361L18.7031 10.9632L17.7274 10.4268L5.24089 3.56185L4.21854 2.99978L4.51659 4.12773L8.15684 17.9042L8.44129 18.9806L9.05688 18.0529L11.3994 14.5225L14.236 18.1532L14.5439 18.5472L14.9379 18.2394L16.4122 17.0875L16.8063 16.7797L16.4984 16.3857L13.6618 12.7549Z" stroke="white" strokeOpacity="0.8" />
-                </g>
-                <defs>
-                  <filter id="filter0_d_32_2" x="0.437073" y="-0.000427246" width="22.4826" height="24.1853" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-                    <feOffset dy="1" />
-                    <feGaussianBlur stdDeviation="1.5" />
-                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_32_2" />
-                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_32_2" result="shape" />
-                  </filter>
-                </defs>
+              <svg width="16" height="16" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fillRule="evenodd" clipRule="evenodd" d="M10.1102 4.57278L0.750153 0.320007L2.96394 10.3597L5.66901 6.39429L10.1102 4.57278Z" fill="currentColor" />
               </svg>
             )}
 
@@ -82,10 +58,16 @@ export function CanvasToolsComponent() {
           </button>
         ))}
       </div>
+    </div>
+  );
+}
 
-      <div
-        className={style.group}
-      >
+function CanvasToolsInteractiveComponent() {
+  const { isInteractive, setInteractive } = useStore(interactiveModeStore);
+
+  return (
+    <div className={style.interactive}>
+      <div className={style.group}>
         <button
           type="button"
           className={cc([
@@ -96,9 +78,75 @@ export function CanvasToolsComponent() {
             setInteractive(!isInteractive);
           }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-3 17v-10l9 5.146-9 4.854z" /></svg>
+          <svg width="16" height="16" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5L0.5 9.33013L0.5 0.669872L8 5Z" fill="currentColor" />
+          </svg>
         </button>
       </div>
     </div>
+  );
+}
+
+function CanvasToolsEdgeSelectorComponent() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useLayoutEffect(() => {
+    const handler = isOpen
+      ? (e: KeyboardEvent) => {
+        // Close
+
+        if (e.key === 'Escape') {
+          e.stopPropagation();
+          setIsOpen(false);
+        }
+      }
+      : (e: KeyboardEvent) => {
+        // Open with cmd+k
+        if (e.key === 'k' && e.metaKey) {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsOpen(true);
+        }
+      };
+
+    window.addEventListener('keydown', handler);
+
+    return () => {
+      window.removeEventListener('keydown', handler);
+    };
+  }, [isOpen]);
+
+  return (
+    <>
+      <div className={style.edgeSelector}>
+        <div className={style.group}>
+          <button
+            type="button"
+            className={cc([
+              style.tool,
+            ])}
+            onClick={() => {
+              setIsOpen((s) => !s);
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" /></svg>
+          </button>
+        </div>
+      </div>
+
+      {isOpen && (
+        <EdgeSelectorComponent onClose={() => setIsOpen(false)} />
+      )}
+    </>
+  );
+}
+
+export function CanvasToolsComponent() {
+  return (
+    <>
+      <CanvasToolsEdgeSelectorComponent />
+      <CanvasToolsCursorsComponent />
+      <CanvasToolsInteractiveComponent />
+    </>
   );
 }

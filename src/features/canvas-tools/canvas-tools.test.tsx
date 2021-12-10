@@ -22,7 +22,7 @@ test('renders component correctly', () => {
 
   const icons = container.querySelectorAll('svg');
 
-  assert.is(icons.length, 3);
+  assert.is(icons.length, 4);
 });
 
 test.run();

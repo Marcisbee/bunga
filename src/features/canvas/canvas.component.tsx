@@ -9,7 +9,6 @@ import { SelectionStore } from '../../store/move.store';
 import { SpaceStore } from '../../store/space.store';
 import { cc } from '../../utils/class-names';
 import { onMouseMoveDiff } from '../../utils/on-mouse-move-diff';
-import { CanvasToolsComponent } from '../canvas-tools/canvas-tools';
 import { canvasToolsStore } from '../canvas-tools/canvas-tools.store';
 import { ComponentComponent } from '../component/component.component';
 import { ConnectionPreviewComponent } from '../connection-preview/connection-preview';
@@ -308,14 +307,13 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
           move.reset();
 
           space.boundary.updateBoundary();
+          return false;
         }
       }}
     >
       <CanvasSelectionComponent
         selection={selection}
       />
-
-      <CanvasToolsComponent />
 
       <div
         style={{
