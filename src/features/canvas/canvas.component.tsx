@@ -267,6 +267,24 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
       onKeyDown={(e) => {
         const modifier = e.shiftKey ? 30 : 10;
 
+        if (e.key === 'Backspace' || e.key === 'Delete') {
+          e.preventDefault();
+          e.stopPropagation();
+
+          move.selectedComponents.forEach((component) => {
+            space.removeComponent(component);
+          });
+
+          move.selectedEdges.forEach((edge) => {
+            space.removeEdge(edge);
+          });
+
+          move.reset();
+
+          space.boundary.updateBoundary();
+          return false;
+        }
+
         if (!e.key.startsWith('Arrow')) {
           return;
         }
@@ -290,25 +308,6 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
         e.preventDefault();
         e.stopPropagation();
         space.boundary.updateBoundary();
-      }}
-      onKeyUp={(e) => {
-        if (e.key === 'Backspace' || e.key === 'Delete') {
-          e.preventDefault();
-          e.stopPropagation();
-
-          move.selectedComponents.forEach((component) => {
-            space.removeComponent(component);
-          });
-
-          move.selectedEdges.forEach((edge) => {
-            space.removeEdge(edge);
-          });
-
-          move.reset();
-
-          space.boundary.updateBoundary();
-          return false;
-        }
       }}
     >
       <CanvasSelectionComponent

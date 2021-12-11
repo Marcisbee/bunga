@@ -87,6 +87,16 @@
   vertical-align: middle;
   height: 18px;
 
+  input {
+    display: inline-block;
+    width: 100%;
+    padding: 0 4px;
+    border: 0;
+    margin: 0;
+    outline: none;
+    border-radius: 2px;
+  }
+
   &::before {
     display: block;
     position: absolute;
