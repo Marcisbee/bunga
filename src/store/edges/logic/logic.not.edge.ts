@@ -13,7 +13,7 @@ import { MathEdge } from '../math/math.edge';
 import { LogicEdge } from './logic.edge';
 
 export class LogicNotEdge extends LogicEdge {
-  public static title = 'Logic.not';
+  public static title = 'Not';
 
   public input = {
     value: new BehaviorSubject<Connection | null>(null),

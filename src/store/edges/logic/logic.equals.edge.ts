@@ -14,7 +14,7 @@ import { MathEdge } from '../math/math.edge';
 import { LogicEdge } from './logic.edge';
 
 export class LogicEqualsEdge extends Edge {
-  public static title = 'Logic.equals';
+  public static title = 'Equals';
 
   public input = {
     a: new BehaviorSubject<Connection | null>(null),

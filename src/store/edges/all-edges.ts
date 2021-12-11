@@ -13,6 +13,10 @@ import { MouseEventEdge } from './event/event.mouse.edge';
 import { LogicAndEdge } from './logic/logic.and.edge';
 import { LogicEqualsEdge } from './logic/logic.equals.edge';
 import { LogicGateEdge } from './logic/logic.gate.edge';
+import { LogicGreaterThanEdge } from './logic/logic.gt.edge';
+import { LogicGreaterThanOrEqualEdge } from './logic/logic.gte.edge';
+import { LogicLessThanEdge } from './logic/logic.lt.edge';
+import { LogicLessThanOrEqualEdge } from './logic/logic.lte.edge';
 import { LogicNotEdge } from './logic/logic.not.edge';
 import { LogicOrEdge } from './logic/logic.or.edge';
 import { MathAddEdge } from './math/math.add.edge';
@@ -52,6 +56,10 @@ export const edgeGroups: Record<string, EdgeConstructor[]> = {
   ],
   logic: [
     LogicEqualsEdge,
+    LogicGreaterThanEdge,
+    LogicGreaterThanOrEqualEdge,
+    LogicLessThanEdge,
+    LogicLessThanOrEqualEdge,
     LogicAndEdge,
     LogicOrEdge,
     LogicNotEdge,

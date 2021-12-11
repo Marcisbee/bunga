@@ -1,4 +1,5 @@
-export function stopPropagation(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-  e.preventDefault();
+export function stopPropagation(
+  e: React.MouseEvent<HTMLDivElement, MouseEvent> | React.KeyboardEvent<HTMLDivElement>,
+) {
   e.stopPropagation();
 }
