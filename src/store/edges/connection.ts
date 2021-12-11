@@ -13,7 +13,6 @@ export class Connection extends Exome {
     super();
   }
 
-  // @TODO: Make sure undo store disconnects all other connections
   @undoable()
   public disconnect(to: string, edge: Edge) {
     // Disconnect edge to connection

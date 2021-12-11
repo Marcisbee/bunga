@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { useObservable } from '../../hooks/use-observable';
 import { store } from '../store';
 import { StyleStore } from '../style.store';
+import { undoable } from '../undo.store';
 
 import { Connection } from './connection';
 import { Edge } from './edge';
@@ -31,6 +32,18 @@ export class StyleEdge extends Edge {
   public customControls = {
     source: () => <RenderSource edge={this} />,
   };
+
+  @undoable<StyleEdge>({
+    saveHandler(instance) {
+      return instance.input.source.getValue();
+    },
+    restoreHandler(instance, payload, savedValue) {
+      instance.input.source.next(savedValue || null);
+    },
+  })
+  public updateInputSource(value: StyleStore | null) {
+    this.input.source.next(value);
+  }
 }
 
 function RenderSourceOption({ style }: { style: StyleStore }) {
@@ -42,7 +55,7 @@ function RenderSourceOption({ style }: { style: StyleStore }) {
 }
 
 function RenderSource({ edge }: { edge: StyleEdge }) {
-  const { input } = useStore(edge);
+  const { input, updateInputSource } = useStore(edge);
   const { styles: stylesList } = useStore(store.activeProject!);
 
   const value = useObservable(input.source);
@@ -53,7 +66,7 @@ function RenderSource({ edge }: { edge: StyleEdge }) {
       onChange={(e) => {
         const selectedStyle = stylesList.find((s) => getExomeId(s) === e.target.value)!;
 
-        input.source.next(selectedStyle);
+        updateInputSource(selectedStyle);
       }}
       style={{
         border: 0,

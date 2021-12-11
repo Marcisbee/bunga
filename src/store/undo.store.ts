@@ -5,22 +5,25 @@ import {
   updateMap,
 } from 'exome';
 
-type TraceSaveHandler = (instance: Exome, dependencies?: string[]) => any;
-type TraceRestoreHandler = (instance: Exome, value: any) => void;
+type TraceSaveHandler<T extends Exome> =
+  (instance: T, payload: any[], dependencies?: string[]) => any;
+type TraceRestoreHandler<T extends Exome, V = any> =
+  (instance: T, payload: any[], value: V) => void;
 
 interface Trace {
   store: string;
   instance: Exome;
   action: string;
   state: string[];
+  payload: any[];
   dependencies?: string[];
-  saveHandler?: TraceSaveHandler;
-  restoreHandler?: TraceRestoreHandler;
+  saveHandler?: TraceSaveHandler<any>;
+  restoreHandler?: TraceRestoreHandler<any, any>;
 }
 
 const refs = new Map<string, Exome>();
 
-function saveLocalState(instance: Exome, dependencies?: string[]): string {
+function saveLocalState(instance: Exome, payload: any[], dependencies?: string[]): string {
   const saveableObject: Record<string, any> = {};
 
   Object.keys(instance)
@@ -51,7 +54,7 @@ function saveLocalState(instance: Exome, dependencies?: string[]): string {
   }), 2);
 }
 
-function loadLocalState(instance: Exome, state: string): void {
+function loadLocalState(instance: Exome, payload: any[], state: string): void {
   const stateObject = JSON.parse(state, (key, value) => {
     if (typeof value === 'string' && /^__\$\$\$ExomeUndoReference:/.test(value)) {
       const id = value.substr(24);
@@ -109,7 +112,7 @@ class Undo extends Exome {
     }
 
     undo.forEach((trace) => {
-      (trace.restoreHandler || loadLocalState)(trace.instance, trace.state[0]);
+      (trace.restoreHandler || loadLocalState)(trace.instance, trace.payload, trace.state[0]);
     });
 
     this.redoStack.push(undo);
@@ -123,7 +126,11 @@ class Undo extends Exome {
     }
 
     redo.forEach((trace) => {
-      (trace.restoreHandler || loadLocalState)(trace.instance, trace.state[trace.state.length - 1]);
+      (trace.restoreHandler || loadLocalState)(
+        trace.instance,
+        trace.payload,
+        trace.state[trace.state.length - 1],
+      );
     });
 
     this.undoStack.push(redo);
@@ -134,7 +141,7 @@ class Undo extends Exome {
     this.redoStack = [];
   }
 
-  public undoable = ({
+  public undoable = <T extends Exome>({
     saveIntermediateActions,
     batchOnly,
     saveHandler,
@@ -143,11 +150,11 @@ class Undo extends Exome {
   }: {
     saveIntermediateActions?: boolean,
     batchOnly?: boolean,
-    saveHandler?: TraceSaveHandler,
-    restoreHandler?: TraceRestoreHandler,
+    saveHandler?: TraceSaveHandler<T>,
+    restoreHandler?: TraceRestoreHandler<T, any>,
     dependencies?: string[],
   } = {}) => (
-    target: Exome,
+    target: T,
     propertyKey: string,
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
@@ -181,7 +188,8 @@ class Undo extends Exome {
         store: target.constructor.name,
         instance: this,
         action: propertyKey,
-        state: [(saveHandler || saveLocalState)(this, dependencies)],
+        state: [(saveHandler || saveLocalState)((this as any), args, dependencies)],
+        payload: args,
         dependencies,
         saveHandler,
         restoreHandler,
@@ -225,7 +233,7 @@ class Undo extends Exome {
     match.state.splice(
       1,
       1,
-      (trace.saveHandler || saveLocalState)(trace.instance, trace.dependencies),
+      (trace.saveHandler || saveLocalState)(trace.instance, trace.payload, trace.dependencies),
     );
 
     return output;
@@ -238,8 +246,9 @@ class Undo extends Exome {
       action: trace.action,
       state: [
         trace.state[0],
-        (trace.saveHandler || saveLocalState)(trace.instance, trace.dependencies),
+        (trace.saveHandler || saveLocalState)(trace.instance, trace.payload, trace.dependencies),
       ],
+      payload: trace.payload,
       dependencies: trace.dependencies,
       saveHandler: trace.saveHandler,
       restoreHandler: trace.restoreHandler,

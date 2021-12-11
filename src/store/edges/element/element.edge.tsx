@@ -8,6 +8,7 @@ import { observableToPromise } from '../../../utils/observable-to-promise';
 import { interactiveModeStore } from '../../interactive-mode.store';
 import { store } from '../../store';
 import { StyleStore } from '../../style.store';
+import { undoable } from '../../undo.store';
 import { Connection } from '../connection';
 import { ArrayConcatEdge } from '../data/data.array-concat.edge';
 import { Edge } from '../edge';
@@ -49,7 +50,47 @@ export class ElementEdge extends Edge {
     default: this.selectInput<StyleStore | StyleStore[] | null | undefined>('style').pipe(),
   };
 
+  public customControls = {
+    name: () => <RenderValue edge={this} />,
+  };
+
   public render = () => <Render edge={this} />;
+
+  @undoable<ElementEdge>({
+    saveHandler(instance) {
+      return instance.input.name.getValue();
+    },
+    restoreHandler(instance, payload, savedValue) {
+      instance.input.name.next(savedValue || null);
+    },
+  })
+  public updateInputName(value: string) {
+    this.input.name.next(value);
+  }
+}
+
+function RenderValue({ edge }: { edge: ElementEdge }) {
+  const { input, updateInputName } = useStore(edge);
+  const value = useObservable(input.name);
+
+  return (
+    <input
+      type="text"
+      value={value || ''}
+      onInput={(event) => {
+        updateInputName((event.target as HTMLInputElement).value);
+      }}
+      style={{
+        fontSize: 11,
+        width: 80,
+        padding: 1,
+        border: 0,
+        borderRadius: 2,
+        backgroundColor: '#fff',
+        fontWeight: 'bold',
+      }}
+    />
+  );
 }
 
 export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
