@@ -2,9 +2,9 @@ import { Exome } from 'exome';
 import React from 'react';
 import {
   BehaviorSubject,
-  mergeMap,
   Observable,
   of,
+  switchMap,
 } from 'rxjs';
 
 import { Connection } from './connection';
@@ -37,7 +37,7 @@ export abstract class Edge extends Exome {
   public selectInput = <T = unknown>(path: string): Observable<T> => (
     this.input[path].pipe<T>(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mergeMap((connection: Connection | Observable<any>): Observable<T> => {
+      switchMap((connection: Connection | Observable<any>): Observable<T> => {
         if (connection instanceof Observable) {
           return connection;
         }
