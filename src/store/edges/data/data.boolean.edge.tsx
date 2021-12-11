@@ -2,6 +2,7 @@ import { useStore } from 'exome/react';
 import { BehaviorSubject } from 'rxjs';
 
 import { useObservable } from '../../../hooks/use-observable';
+import { undoable } from '../../undo.store';
 import { Connection } from '../connection';
 import { Edge } from '../edge';
 
@@ -27,10 +28,22 @@ export class BooleanEdge extends DataEdge {
   public customControls = {
     value: () => <RenderValue edge={this} />,
   };
+
+  @undoable<BooleanEdge>({
+    saveHandler(instance) {
+      return instance.input.value.getValue();
+    },
+    restoreHandler(instance, payload, savedValue) {
+      instance.input.value.next(savedValue || null);
+    },
+  })
+  public updateInputValue(value: boolean) {
+    this.input.value.next(value);
+  }
 }
 
 function RenderValue({ edge }: { edge: BooleanEdge }) {
-  const { input } = useStore(edge);
+  const { input, updateInputValue } = useStore(edge);
 
   const value = !!useObservable(input.value);
 
@@ -39,7 +52,7 @@ function RenderValue({ edge }: { edge: BooleanEdge }) {
       type="checkbox"
       checked={value}
       onChange={(event) => {
-        input.value.next(event.target.checked);
+        updateInputValue(event.target.checked);
       }}
       style={{
         fontSize: 11,

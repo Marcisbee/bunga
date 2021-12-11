@@ -7,14 +7,26 @@ export default defineConfig(({ command }) => {
   if (command === 'serve') {
     return {
       plugins: [
-        react(),
+        react({
+          babel: {
+            plugins: [
+              ['@babel/plugin-proposal-decorators', { legacy: true }],
+            ],
+          },
+        }),
       ],
     };
   }
 
   return {
     plugins: [
-      react(),
+      react({
+        babel: {
+          plugins: [
+            ['@babel/plugin-proposal-decorators', { legacy: true }],
+          ],
+        },
+      }),
       process.env.EXPLORE && visualizer(),
     ],
     build: {

@@ -1,5 +1,7 @@
 import { Exome } from 'exome';
 
+import { undoable } from '../undo.store';
+
 export class EdgePositionSilent extends Exome {
   public x = 0;
 
@@ -32,6 +34,13 @@ export class EdgePosition extends Exome {
     super();
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'x',
+      'y',
+    ],
+  })
   public moveTo(x: number, y: number) {
     this.x = x;
     this.y = y;

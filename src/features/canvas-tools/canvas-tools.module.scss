@@ -68,6 +68,16 @@
   text-align: center;
   color: var(--primary-color);
 
+  &:disabled {
+    color: #ccc;
+
+    &,
+    &:hover,
+    &:active {
+      background-color: transparent;
+    }
+  }
+
   &:first-child {
     border-top-left-radius: inherit;
     border-bottom-left-radius: inherit;

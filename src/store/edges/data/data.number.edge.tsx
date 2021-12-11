@@ -1,6 +1,8 @@
 import { useStore } from 'exome/react';
 import { BehaviorSubject } from 'rxjs';
 
+import { useObservable } from '../../../hooks/use-observable';
+import { undoable } from '../../undo.store';
 import { Connection } from '../connection';
 import { Edge } from '../edge';
 
@@ -26,17 +28,30 @@ export class NumberEdge extends DataEdge {
   public customControls = {
     value: () => <RenderValue edge={this} />,
   };
+
+  @undoable<NumberEdge>({
+    saveHandler(instance) {
+      return instance.input.value.getValue();
+    },
+    restoreHandler(instance, payload, savedValue) {
+      instance.input.value.next(savedValue || null);
+    },
+  })
+  public updateInputValue(value: number) {
+    this.input.value.next(value);
+  }
 }
 
 function RenderValue({ edge }: { edge: NumberEdge }) {
-  const { input } = useStore(edge);
+  const { input, updateInputValue } = useStore(edge);
+  const value = useObservable(input.value);
 
   return (
     <input
       type="number"
-      defaultValue={input.value.getValue()}
+      value={value || ''}
       onInput={(event) => {
-        input.value.next(Number((event.target as HTMLInputElement).value));
+        updateInputValue(Number((event.target as HTMLInputElement).value));
       }}
       style={{
         fontSize: 11,

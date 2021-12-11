@@ -7,22 +7,24 @@ import {
   switchMap,
 } from 'rxjs';
 
+import { undoable } from '../undo.store';
+
 import { Connection } from './connection';
 import { EdgePosition } from './position';
 
-export abstract class Edge extends Exome {
+export class Edge extends Exome {
   public static title: string;
 
   public style?: string;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public abstract input: Record<string, BehaviorSubject<null | Connection | any>>;
+  public input!: Record<string, BehaviorSubject<null | Connection | any>>;
 
-  public abstract connectableTo: Record<string, typeof Edge[]>;
+  public connectableTo!: Record<string, typeof Edge[]>;
 
-  public abstract output: Record<string, Connection>;
+  public output!: Record<string, Connection>;
 
-  public abstract select: Record<string, Observable<unknown>>;
+  public select!: Record<string, Observable<unknown>>;
 
   constructor(
     public position: EdgePosition,
@@ -44,8 +46,6 @@ export abstract class Edge extends Exome {
 
         if (connection instanceof Connection) {
           return connection.from.select[connection.path] as unknown as Observable<T>;
-          // @TODO: Check if this maybe fixes some issues:
-          // return of<T>(connection.from.select[connection.path] as unknown as T);
         }
 
         return of<T>(connection || null);
@@ -67,12 +67,28 @@ export abstract class Edge extends Exome {
 
   public render?: React.FunctionComponent;
 
+  @undoable<Edge>({
+    saveHandler(instance, payload) {
+      return instance.input[payload[0]].getValue();
+    },
+    restoreHandler(instance, payload, savedValue) {
+      instance.input[payload[0]].next(savedValue || null);
+    },
+  })
   public connectInput(to: string, connection: Connection) {
     this.input[to].next(connection);
 
     this.onInputConnected(to);
   }
 
+  @undoable<Edge>({
+    saveHandler(instance, payload) {
+      return instance.input[payload[0]].getValue();
+    },
+    restoreHandler(instance, payload, savedValue) {
+      instance.input[payload[0]].next(savedValue || null);
+    },
+  })
   public disconnectInput(path: string) {
     this.input[path].next(null);
 
