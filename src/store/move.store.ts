@@ -274,6 +274,7 @@ export class MoveStore extends Exome {
   @undoable({
     saveIntermediateActions: true,
     dependencies: [
+      'cachedAll',
       'selectedEdges',
       'selectedComponents',
       'previouslySelectedEdges',
@@ -303,6 +304,7 @@ export class MoveStore extends Exome {
   @undoable({
     saveIntermediateActions: true,
     dependencies: [
+      'cachedAll',
       'selectedEdges',
       'selectedComponents',
       'previouslySelectedEdges',
@@ -336,6 +338,16 @@ export class MoveStore extends Exome {
     });
   };
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'cachedAll',
+      'selectedEdges',
+      'selectedComponents',
+      'previouslySelectedEdges',
+      'previouslySelectedComponents',
+    ],
+  })
   public reset() {
     this.cachedAll = null;
 
