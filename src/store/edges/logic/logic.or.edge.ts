@@ -14,7 +14,7 @@ import { MathEdge } from '../math/math.edge';
 import { LogicEdge } from './logic.edge';
 
 export class LogicOrEdge extends LogicEdge {
-  public static title = 'Logic.or';
+  public static title = 'Or';
 
   public input = {
     a: new BehaviorSubject<Connection | null>(null),

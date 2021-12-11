@@ -16,6 +16,7 @@ import { StyleStore } from '../../../../store/style.store';
 import { cc } from '../../../../utils/class-names';
 import { observableToPromise } from '../../../../utils/observable-to-promise';
 import { onMouseMoveDiff } from '../../../../utils/on-mouse-move-diff';
+import { stopPropagation } from '../../../../utils/stop-propagation';
 
 import styles from './generic-edge.module.scss';
 
@@ -104,13 +105,12 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                   />
                 )}
               </span>
+              {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
               <div
-                role="button"
-                // @TODO: fix this
-                onMouseDown={(e) => e.stopPropagation()}
-                onMouseMove={(e) => e.stopPropagation()}
-                onKeyDown={(e) => e.stopPropagation()}
-                onKeyUp={(e) => e.stopPropagation()}
+                onMouseDown={stopPropagation}
+                onMouseMove={stopPropagation}
+                onKeyDown={stopPropagation}
+                onKeyUp={stopPropagation}
               >
                 {!connectableTo[key] ? (
                   customControls?.[key] ? (

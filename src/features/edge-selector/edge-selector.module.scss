@@ -5,7 +5,10 @@
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
-  width: 500px;
+  width: 660px;
+  max-width: 90%;
+  height: 450px;
+  max-height: 80%;
   border-radius: 6px;
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),0 4px 8px rgba(16,22,26,.2),0 18px 46px 6px rgba(16,22,26,.2);
 }
@@ -17,6 +20,7 @@
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
   z-index: 1;
+  height: 44px;
 
   &:focus-within {
     outline: 3px solid var(--secondary-color);
@@ -46,7 +50,7 @@
 
 .results {
   background-color: #fff;
-  height: 300px;
+  height: calc(100% - 44px);
   position: relative;
   border-bottom-left-radius: inherit;
   border-bottom-right-radius: inherit;
@@ -57,7 +61,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 180px;
+  width: 220px;
   height: 100%;
   box-shadow: 1px 0 0 0 #f0f0f0;
   overflow-x: hidden;
@@ -103,6 +107,6 @@
 
 .preview {
   display: block;
-  margin-left: 180px;
+  margin-left: 220px;
   text-align: center;
 }

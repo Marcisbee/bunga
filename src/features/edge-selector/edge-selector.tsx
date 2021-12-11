@@ -168,6 +168,8 @@ export function EdgeSelectorComponent({ onClose }: EdgeSelectorComponentProps) {
             <div className={style.noResults} />
           ) : (
             <div>
+              <br />
+              <br />
               Preview of
               {' "'}
               {(active as unknown as Edge).title}

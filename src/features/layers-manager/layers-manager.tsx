@@ -1,5 +1,6 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
+import { useState } from 'react';
 
 import { useObservable } from '../../hooks/use-observable';
 import { ComponentStore } from '../../store/component.store';
@@ -140,10 +141,82 @@ function ChildLayersComponent({ component }: { component: ComponentStore }) {
   );
 }
 
+function LayersManagerComponentComponent({ component }: { component: ComponentStore }) {
+  const { activeSpace } = useStore(store.activeProject!);
+  const { move, removeComponent, boundary } = useStore(activeSpace);
+  const { selectedComponents, selectComponent } = useStore(move);
+  const { name, rename } = useStore(component);
+
+  const [isRenameMode, setIsRenameMode] = useState(false);
+
+  return (
+    <div>
+      <div
+        role="button"
+        tabIndex={0}
+        className={cc([
+          style.item,
+          style.component,
+          selectedComponents.indexOf(component) > -1 && style.active,
+        ])}
+        onClick={(e) => selectComponent(component, e.shiftKey)}
+        onDoubleClick={() => setIsRenameMode(true)}
+        onKeyDown={(e) => {
+          if (e.key === 'Backspace' || e.key === 'Delete') {
+            e.preventDefault();
+            e.stopPropagation();
+
+            move.selectedComponents.forEach((comp) => {
+              removeComponent(comp);
+            });
+
+            move.reset();
+
+            boundary.updateBoundary();
+            return false;
+          }
+        }}
+      >
+        <span className={style.itemName}>
+          {isRenameMode ? (
+            <input
+              type="text"
+              value={name}
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus
+              onChange={(e) => {
+                rename(e.target.value);
+              }}
+              onBlur={() => {
+                setIsRenameMode(false);
+              }}
+              onKeyDown={(e) => {
+                e.stopPropagation();
+
+                if (e.key === 'Enter') {
+                  setIsRenameMode(false);
+                  return;
+                }
+
+                if (e.key === 'Escape') {
+                  setIsRenameMode(false);
+                }
+              }}
+            />
+          ) : (
+            name
+          )}
+        </span>
+      </div>
+
+      <ChildLayersComponent component={component} />
+    </div>
+  );
+}
+
 export function LayersManagerComponent() {
   const { activeSpace } = useStore(store.activeProject!);
-  const { components, addComponent, move } = useStore(activeSpace);
-  const { selectedComponents, selectComponent } = useStore(move);
+  const { components, addComponent } = useStore(activeSpace);
 
   return (
     <div className={paneStyle.pane}>
@@ -159,23 +232,10 @@ export function LayersManagerComponent() {
 
       <div className={style.list} style={{ maxHeight: 'none' }}>
         {components.map((component) => (
-          <div key={`layer-component-${getExomeId(component)}`}>
-            <div
-              role="button"
-              onClick={(e) => selectComponent(component, e.shiftKey)}
-              className={cc([
-                style.item,
-                style.component,
-                selectedComponents.indexOf(component) > -1 && style.active,
-              ])}
-            >
-              <span className={style.itemName}>
-                {component.name}
-              </span>
-            </div>
-
-            <ChildLayersComponent component={component} />
-          </div>
+          <LayersManagerComponentComponent
+            key={`layer-component-${getExomeId(component)}`}
+            component={component}
+          />
         ))}
       </div>
     </div>

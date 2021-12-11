@@ -10,7 +10,7 @@ import { ArrayEdge } from './data.array.edge';
 import { DataEdge } from './data.edge';
 
 export class ArrayConcatEdge extends DataEdge {
-  public static title = 'Array.concat';
+  public static title = 'Array concat';
 
   public input = {
     array: new BehaviorSubject<Connection | null>(null),
@@ -38,7 +38,7 @@ export class ArrayConcatEdge extends DataEdge {
       this.selectInput<any[]>('array'),
       this.selectInput<StyleStore>('value'),
     ]).pipe(
-      map(([array, value]) => array.concat(value)),
+      map(([array, value]) => (array || []).concat(value)),
     ),
   };
 }

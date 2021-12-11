@@ -14,7 +14,7 @@ import { StyleEdge } from '../style.edge';
 import { LogicEqualsEdge } from './logic.equals.edge';
 
 export class LogicGateEdge extends Edge {
-  public static title = 'Logic.gate';
+  public static title = 'Gate';
 
   public input = {
     condition: new BehaviorSubject<Connection | null>(null),
