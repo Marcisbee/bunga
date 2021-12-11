@@ -9,7 +9,7 @@ interface Trace {
   store: string;
   instance: Exome;
   action: string;
-  state: string;
+  state: string[];
   dependencies?: string[];
 }
 
@@ -84,6 +84,8 @@ class Undo extends Exome {
     return (this.redoStack || []).length > 0;
   }
 
+  private batch: Trace[] = [];
+
   private nextTickId = 0;
 
   private tickId = 0;
@@ -101,7 +103,9 @@ class Undo extends Exome {
       return;
     }
 
-    loadLocalState(undo[0].instance, undo[0].state);
+    undo.forEach((trace) => {
+      loadLocalState(trace.instance, trace.state[0]);
+    });
 
     this.redoStack.push(undo);
   }
@@ -113,13 +117,9 @@ class Undo extends Exome {
       return;
     }
 
-    const next = redo[redo.length - 1];
-
-    if (!next) {
-      return;
-    }
-
-    loadLocalState(next.instance, next.state);
+    redo.forEach((trace) => {
+      loadLocalState(trace.instance, trace.state[trace.state.length - 1]);
+    });
 
     this.undoStack.push(redo);
   }
@@ -148,33 +148,38 @@ class Undo extends Exome {
         return;
       }
 
-      // @TODO: Bundle changes if they happen in same tick.
-      // let didChangeId = false;
+      if (self.tickId === self.nextTickId) {
+        self.nextTickId = self.tickId + 1;
+      }
 
-      // if (self.tickId === self.nextTickId) {
-      //   didChangeId = true;
-      //   self.nextTickId = self.tickId + 1;
-      // }
+      Promise.resolve().then(() => {
+        if (self.tickId === self.nextTickId) {
+          return;
+        }
 
-      // Promise.resolve().then(() => {
-      //   self.tickId = self.nextTickId;
-      // });
+        self.tickId = self.nextTickId;
 
-      const trace = {
+        self.pushBatch();
+      });
+
+      const trace: Trace = {
         store: target.constructor.name,
         instance: this,
         action: propertyKey,
-        state: saveLocalState(this, dependencies),
+        state: [saveLocalState(this, dependencies)],
         dependencies,
       };
 
-      if (!saveIntermediateActions) {
-        const lastUndo = self.undoStack[self.undoStack.length - 1];
+      const lastUndo = self.batch || self.undoStack[self.undoStack.length - 1];
 
-        if (lastUndo
-            && lastUndo[0].instance === trace.instance
-            && lastUndo[0].action === trace.action) {
-          return self.replaceLastUndoStack(trace, fn.call(this, ...args));
+      if (!saveIntermediateActions && lastUndo) {
+        const matchingTrace = lastUndo.find((t) => (
+          t.instance === trace.instance
+          && t.action === trace.action
+        ));
+
+        if (lastUndo && matchingTrace) {
+          return self.replaceLastUndoStack(trace, matchingTrace, fn.call(this, ...args));
         }
       }
 
@@ -184,37 +189,42 @@ class Undo extends Exome {
     return descriptor;
   };
 
-  private replaceLastUndoStack<T = any>(trace: any, output: T): T {
-    const lastUndo = this.undoStack[this.undoStack.length - 1];
-
-    lastUndo.splice(1, 1, {
-      store: trace.store,
-      instance: trace.instance,
-      action: trace.action,
-      state: saveLocalState(trace.instance, trace.dependencies),
-      dependencies: trace.dependencies,
-    });
-
-    this.redoStack = [];
-
-    return output;
-  }
-
-  private pushToUndoStack<T = any>(trace: any, output: T): T {
-    this.undoStack.push([
-      trace,
-      {
-        store: trace.store,
-        instance: trace.instance,
-        action: trace.action,
-        state: saveLocalState(trace.instance, trace.dependencies),
-        dependencies: trace.dependencies,
-      },
-    ]);
+  private pushBatch() {
+    this.undoStack.push(this.batch);
+    this.batch = [];
 
     if (this.undoStack.length > this.maxSize) {
       this.undoStack.shift();
     }
+  }
+
+  private replaceLastUndoStack<T = any>(trace: Trace, match: Trace, output: T): T {
+    match.state.splice(1, 1, saveLocalState(trace.instance, trace.dependencies));
+
+    return output;
+  }
+
+  private pushToUndoStack<T = any>(trace: Trace, output: T): T {
+    this.batch.push({
+      store: trace.store,
+      instance: trace.instance,
+      action: trace.action,
+      state: [trace.state[0], saveLocalState(trace.instance, trace.dependencies)],
+      dependencies: trace.dependencies,
+    });
+    // this.undoStack.push([
+    //   {
+    //     store: trace.store,
+    //     instance: trace.instance,
+    //     action: trace.action,
+    //     state: [trace.state[0], saveLocalState(trace.instance, trace.dependencies)],
+    //     dependencies: trace.dependencies,
+    //   },
+    // ]);
+
+    // if (this.undoStack.length > this.maxSize) {
+    //   this.undoStack.shift();
+    // }
 
     this.redoStack = [];
 
