@@ -1,5 +1,6 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
+import { useState } from 'react';
 
 import { store } from '../../store/store';
 import { ActiveStyleStore, StyleStore } from '../../store/style.store';
@@ -10,22 +11,12 @@ import style from './styles-manager.module.scss';
 
 function ActiveStylesComponent({ active }: { active: StyleStore }) {
   const {
-    name,
     css,
-    setName,
     setCss,
   } = useStore(active);
 
   return (
     <div>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => {
-          setName(e.target.value);
-        }}
-        style={{ width: '100%' }}
-      />
       <textarea
         style={{ width: '100%', resize: 'vertical' }}
         rows={10}
@@ -43,7 +34,9 @@ function ListStylesComponent({
   styleStore,
 }: { activeStyle: ActiveStyleStore, styleStore: StyleStore }) {
   const { active, setActive } = useStore(activeStyle);
-  const { name } = useStore(styleStore);
+  const { name, setName } = useStore(styleStore);
+
+  const [isRenameMode, setIsRenameMode] = useState(false);
 
   return (
     <div
@@ -54,8 +47,38 @@ function ListStylesComponent({
         active === styleStore && style.active,
       ])}
       onClick={() => setActive(styleStore)}
+      onDoubleClick={() => setIsRenameMode(true)}
     >
-      {name}
+      <span className={style.itemName}>
+        {isRenameMode ? (
+          <input
+            type="text"
+            value={name}
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            onBlur={() => {
+              setIsRenameMode(false);
+            }}
+            onKeyDown={(e) => {
+              e.stopPropagation();
+
+              if (e.key === 'Enter') {
+                setIsRenameMode(false);
+                return;
+              }
+
+              if (e.key === 'Escape') {
+                setIsRenameMode(false);
+              }
+            }}
+          />
+        ) : (
+          name
+        )}
+      </span>
     </div>
   );
 }

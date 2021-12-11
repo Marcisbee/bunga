@@ -64,7 +64,7 @@ export function ProjectPage() {
           </ErrorBoundary>
         </div>
 
-        <div style={{ width: 240 }}>
+        <div style={{ width: 240, userSelect: 'none' }}>
           <ErrorBoundary>
             <TabSwitchComponent
               value="Styles"
