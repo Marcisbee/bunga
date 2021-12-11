@@ -34,6 +34,7 @@ export class StyleEdge extends Edge {
   };
 
   @undoable<StyleEdge>({
+    saveIntermediateActions: true,
     saveHandler(instance) {
       return instance.input.source.getValue();
     },
