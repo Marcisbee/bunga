@@ -273,6 +273,7 @@ export class MoveStore extends Exome {
 
   @undoable({
     saveIntermediateActions: true,
+    batchOnly: true,
     dependencies: [
       'cachedAll',
       'selectedEdges',
@@ -303,6 +304,7 @@ export class MoveStore extends Exome {
 
   @undoable({
     saveIntermediateActions: true,
+    batchOnly: true,
     dependencies: [
       'cachedAll',
       'selectedEdges',
@@ -340,6 +342,7 @@ export class MoveStore extends Exome {
 
   @undoable({
     saveIntermediateActions: true,
+    batchOnly: true,
     dependencies: [
       'cachedAll',
       'selectedEdges',

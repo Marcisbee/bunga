@@ -131,9 +131,11 @@ class Undo extends Exome {
 
   public undoable = ({
     saveIntermediateActions,
+    batchOnly,
     dependencies,
   }: {
     saveIntermediateActions?: boolean,
+    batchOnly?: boolean,
     dependencies?: string[],
   } = {}) => (
     target: Exome,
@@ -153,6 +155,10 @@ class Undo extends Exome {
       }
 
       Promise.resolve().then(() => {
+        if (batchOnly) {
+          return;
+        }
+
         if (self.tickId === self.nextTickId) {
           return;
         }
