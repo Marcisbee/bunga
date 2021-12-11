@@ -2,11 +2,43 @@ import { useStore } from 'exome/react';
 import { useLayoutEffect, useState } from 'react';
 
 import { interactiveModeStore } from '../../store/interactive-mode.store';
+import { undoStore } from '../../store/undo.store';
 import { cc } from '../../utils/class-names';
 import { EdgeSelectorComponent } from '../edge-selector/edge-selector';
 
 import style from './canvas-tools.module.scss';
 import { canvasToolsStore, CanvasTools } from './canvas-tools.store';
+
+function CanvasUndoRedo() {
+  const {
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useStore(undoStore);
+
+  return (
+    <div className={style.group}>
+      <button
+        type="button"
+        className={style.tool}
+        onClick={undo}
+        disabled={!canUndo}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M18.885 3.515c-4.617-4.618-12.056-4.676-16.756-.195l-2.129-2.258v7.938h7.484l-2.066-2.191c2.82-2.706 7.297-2.676 10.073.1 4.341 4.341 1.737 12.291-5.491 12.291v4.8c3.708 0 6.614-1.244 8.885-3.515 4.686-4.686 4.686-12.284 0-16.97z" /></svg>
+      </button>
+
+      <button
+        type="button"
+        className={style.tool}
+        onClick={redo}
+        disabled={!canRedo}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M5.115 3.515c4.617-4.618 12.056-4.676 16.756-.195l2.129-2.258v7.938h-7.484l2.066-2.191c-2.82-2.706-7.297-2.676-10.073.1-4.341 4.341-1.737 12.291 5.491 12.291v4.8c-3.708 0-6.614-1.244-8.885-3.515-4.686-4.686-4.686-12.284 0-16.97z" /></svg>
+      </button>
+    </div>
+  );
+}
 
 function CanvasToolsCursorsComponent() {
   const { activeTool, setActiveTool } = useStore(canvasToolsStore);
@@ -58,6 +90,8 @@ function CanvasToolsCursorsComponent() {
           </button>
         ))}
       </div>
+
+      <CanvasUndoRedo />
     </div>
   );
 }

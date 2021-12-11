@@ -1,5 +1,7 @@
 import { Exome } from 'exome';
 
+import { undoable } from '../undo.store';
+
 import { Edge } from './edge';
 
 export class Connection extends Exome {
@@ -11,6 +13,8 @@ export class Connection extends Exome {
     super();
   }
 
+  // @TODO: Make sure undo store disconnects all other connections
+  @undoable()
   public disconnect(to: string, edge: Edge) {
     // Disconnect edge to connection
     edge.disconnectInput(to);
@@ -20,6 +24,7 @@ export class Connection extends Exome {
     return true;
   }
 
+  @undoable()
   public connect(to: string, edge: Edge): boolean {
     if (!edge.canConnect(to, this.from)) {
       return false;
@@ -32,6 +37,7 @@ export class Connection extends Exome {
     return true;
   }
 
+  @undoable()
   public disconnectAll() {
     this.to.forEach((to) => {
       to[1].disconnectInput(to[0]);

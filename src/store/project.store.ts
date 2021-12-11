@@ -7,6 +7,7 @@ import { ElementEdge } from './edges/element/element.edge';
 import { SpaceStore } from './space.store';
 import { ActiveStyleStore, StyleStore } from './style.store';
 import { TokenStore } from './token.store';
+import { undoable } from './undo.store';
 
 export class ProjectStore extends Exome {
   public activeSpace: SpaceStore;
@@ -34,11 +35,22 @@ export class ProjectStore extends Exome {
     [this.activeSpace] = this.spaces;
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: ['activeSpace'],
+  })
   public setActiveSpace(space: SpaceStore): SpaceStore {
     this.activeSpace = space;
     return space;
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'spaces',
+      'activeSpace',
+    ],
+  })
   public addSpace(name = `Space ${this.spaces.length + 1}`) {
     const space = new SpaceStore(name);
 
@@ -46,6 +58,13 @@ export class ProjectStore extends Exome {
     this.activeSpace = space;
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'spaces',
+      'activeSpace',
+    ],
+  })
   public removeSpace(space: SpaceStore) {
     if (this.spaces.length <= 1) {
       return;
@@ -60,6 +79,13 @@ export class ProjectStore extends Exome {
     }
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'styles',
+      'activeStyle',
+    ],
+  })
   public addStyle() {
     const style = new StyleStore(`Style ${this.styles.length + 1}`);
 
@@ -69,6 +95,13 @@ export class ProjectStore extends Exome {
     return style;
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'name',
+      'path',
+    ],
+  })
   public rename(name: string, path: string = permalink(name)) {
     this.name = name;
     this.path = path;

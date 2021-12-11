@@ -44,8 +44,6 @@ export abstract class Edge extends Exome {
 
         if (connection instanceof Connection) {
           return connection.from.select[connection.path] as unknown as Observable<T>;
-          // @TODO: Check if this maybe fixes some issues:
-          // return of<T>(connection.from.select[connection.path] as unknown as T);
         }
 
         return of<T>(connection || null);

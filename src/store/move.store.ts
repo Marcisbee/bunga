@@ -3,6 +3,7 @@ import { Exome } from 'exome';
 import { ComponentStore } from './component.store';
 import { Edge } from './edges/edge';
 import { store } from './store';
+import { undoable } from './undo.store';
 
 interface Rectangle {
   left: number;
@@ -270,6 +271,13 @@ export class MoveStore extends Exome {
     store.activeProject!.activeSpace.boundary.updateBoundary();
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'selectedEdges',
+      'selectedComponents',
+    ],
+  })
   public selectEdge(edge: Edge, shiftKey = false): boolean {
     this.cachedAll = null;
 
@@ -290,6 +298,13 @@ export class MoveStore extends Exome {
     return true;
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'selectedEdges',
+      'selectedComponents',
+    ],
+  })
   public selectComponent(component: ComponentStore, shiftKey = false) {
     this.cachedAll = null;
 

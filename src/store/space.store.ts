@@ -10,6 +10,7 @@ import { EdgePosition } from './edges/position';
 import { ActiveElementStore } from './element.store';
 import { MoveStore } from './move.store';
 import { PositionStore } from './position.store';
+import { undoable } from './undo.store';
 
 export class SpaceStore extends Exome {
   public move = new MoveStore();
@@ -29,6 +30,12 @@ export class SpaceStore extends Exome {
     super();
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'components',
+    ],
+  })
   public addComponent() {
     this.boundary.updateBoundary();
 
@@ -73,6 +80,12 @@ export class SpaceStore extends Exome {
     return component;
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'edges',
+    ],
+  })
   public addEdge<T extends Edge>(Apply: new (...args: any[]) => T): T {
     this.boundary.updateBoundary();
 
@@ -116,10 +129,22 @@ export class SpaceStore extends Exome {
     return edge as unknown as T;
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'components',
+    ],
+  })
   public removeComponent(component: ComponentStore) {
     this.components.splice(this.components.indexOf(component), 1);
   }
 
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'edges',
+    ],
+  })
   public removeEdge(edge: Edge) {
     this.edges.splice(this.edges.indexOf(edge), 1);
 
@@ -144,6 +169,12 @@ export class SpaceStore extends Exome {
     }
   }
 
+  @undoable({
+    dependencies: [
+      'name',
+      'path',
+    ],
+  })
   public rename(name: string, path: string = permalink(name)) {
     this.name = name;
     this.path = path;
