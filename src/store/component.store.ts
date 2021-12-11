@@ -3,6 +3,7 @@ import { Exome, registerLoadable } from 'exome';
 import { permalink } from '../utils/permalink';
 
 import { ElementStore } from './element.store';
+import { undoable } from './undo.store';
 
 export class ComponentPositionSilentStore extends Exome {
   public x = 0;
@@ -57,6 +58,9 @@ export class ComponentStore extends Exome {
     super();
   }
 
+  @undoable({
+    dependencies: ['name', 'path'],
+  })
   public rename(name: string, path: string = permalink(name)) {
     this.name = name;
     this.path = path;

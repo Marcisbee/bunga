@@ -170,7 +170,9 @@ class Undo extends Exome {
         dependencies,
       };
 
-      const lastUndo = self.batch || self.undoStack[self.undoStack.length - 1];
+      const lastUndo = self.batch.length > 0
+        ? self.batch
+        : self.undoStack[self.undoStack.length - 1];
 
       if (!saveIntermediateActions && lastUndo) {
         const matchingTrace = lastUndo.find((t) => (
@@ -190,6 +192,10 @@ class Undo extends Exome {
   };
 
   private pushBatch() {
+    if (this.batch.length === 0) {
+      return;
+    }
+
     this.undoStack.push(this.batch);
     this.batch = [];
 
@@ -212,19 +218,6 @@ class Undo extends Exome {
       state: [trace.state[0], saveLocalState(trace.instance, trace.dependencies)],
       dependencies: trace.dependencies,
     });
-    // this.undoStack.push([
-    //   {
-    //     store: trace.store,
-    //     instance: trace.instance,
-    //     action: trace.action,
-    //     state: [trace.state[0], saveLocalState(trace.instance, trace.dependencies)],
-    //     dependencies: trace.dependencies,
-    //   },
-    // ]);
-
-    // if (this.undoStack.length > this.maxSize) {
-    //   this.undoStack.shift();
-    // }
 
     this.redoStack = [];
 

@@ -159,7 +159,18 @@ function LayersManagerComponentComponent({ component }: { component: ComponentSt
           style.component,
           selectedComponents.indexOf(component) > -1 && style.active,
         ])}
-        onClick={(e) => selectComponent(component, e.shiftKey)}
+        onClick={(e) => {
+          if (e.shiftKey) {
+            selectComponent(component, e.shiftKey);
+            return;
+          }
+
+          if (selectedComponents.indexOf(component) > -1) {
+            return;
+          }
+
+          selectComponent(component);
+        }}
         onDoubleClick={() => setIsRenameMode(true)}
         onKeyDown={(e) => {
           if (e.key === 'Backspace' || e.key === 'Delete') {

@@ -276,6 +276,8 @@ export class MoveStore extends Exome {
     dependencies: [
       'selectedEdges',
       'selectedComponents',
+      'previouslySelectedEdges',
+      'previouslySelectedComponents',
     ],
   })
   public selectEdge(edge: Edge, shiftKey = false): boolean {
@@ -303,6 +305,8 @@ export class MoveStore extends Exome {
     dependencies: [
       'selectedEdges',
       'selectedComponents',
+      'previouslySelectedEdges',
+      'previouslySelectedComponents',
     ],
   })
   public selectComponent(component: ComponentStore, shiftKey = false) {
