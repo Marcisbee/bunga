@@ -25,7 +25,13 @@ function SingleSpacesManagerComponent({ space }: { space: SpaceStore }) {
         style.item,
         activeSpace === space && style.active,
       ])}
-      onClick={() => setActiveSpace(space)}
+      onClick={() => {
+        if (space === activeSpace) {
+          return;
+        }
+
+        setActiveSpace(space);
+      }}
       onDoubleClick={() => setIsRenameMode(true)}
     >
       <span className={style.itemName}>

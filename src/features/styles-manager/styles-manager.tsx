@@ -46,7 +46,13 @@ function ListStylesComponent({
         style.text,
         active === styleStore && style.active,
       ])}
-      onClick={() => setActive(styleStore)}
+      onClick={() => {
+        if (styleStore === active) {
+          return;
+        }
+
+        setActive(styleStore);
+      }}
       onDoubleClick={() => setIsRenameMode(true)}
     >
       <span className={style.itemName}>
