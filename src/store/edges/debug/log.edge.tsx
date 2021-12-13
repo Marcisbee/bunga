@@ -2,6 +2,7 @@ import { useStore } from 'exome/react';
 import { useEffect, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
 
+import { Constructor } from '../../../types/constructor';
 import { Connection } from '../connection';
 import { Edge } from '../edge';
 
@@ -12,7 +13,7 @@ export class DebugLogEdge extends Edge {
     input: new BehaviorSubject<Connection | null>(null),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {
+  public connectableTo: Record<string, Constructor<Edge>[]> = {
     input: [
       Edge,
     ],

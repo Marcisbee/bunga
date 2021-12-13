@@ -4,6 +4,7 @@ import {
   map,
 } from 'rxjs';
 
+import { Constructor } from '../../../types/constructor';
 import { Connection } from '../connection';
 import { CountEdge } from '../data/count.edge';
 import { NumberEdge } from '../data/data.number.edge';
@@ -19,7 +20,7 @@ export class MathDivideEdge extends MathEdge {
     b: new BehaviorSubject<Connection | null>(null),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {
+  public connectableTo: Record<string, Constructor<Edge>[]> = {
     a: [
       NumberEdge,
       MathEdge,

@@ -2,6 +2,7 @@ import { useStore } from 'exome/react';
 import { BehaviorSubject } from 'rxjs';
 
 import { useObservable } from '../../../hooks/use-observable';
+import { Constructor } from '../../../types/constructor';
 import { undoable } from '../../undo.store';
 import { Connection } from '../connection';
 import { Edge } from '../edge';
@@ -15,7 +16,7 @@ export class StringEdge extends DataEdge {
     value: new BehaviorSubject<string | undefined>(undefined),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {};
+  public connectableTo: Record<string, Constructor<Edge>[]> = {};
 
   public output: { default: Connection } = {
     default: new Connection(this, 'default'),

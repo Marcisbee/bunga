@@ -7,6 +7,7 @@ import {
   switchMap,
 } from 'rxjs';
 
+import { Constructor } from '../../types/constructor';
 import { undoable } from '../undo.store';
 
 import { Connection } from './connection';
@@ -20,7 +21,7 @@ export class Edge extends Exome {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public input!: Record<string, BehaviorSubject<null | Connection | any>>;
 
-  public connectableTo!: Record<string, typeof Edge[]>;
+  public connectableTo!: Record<string, Constructor<Edge>[]>;
 
   public output!: Record<string, Connection>;
 

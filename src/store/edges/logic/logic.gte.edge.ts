@@ -4,6 +4,7 @@ import {
   map,
 } from 'rxjs';
 
+import { Constructor } from '../../../types/constructor';
 import { Connection } from '../connection';
 import { NumberEdge } from '../data/data.number.edge';
 import { StringEdge } from '../data/data.string.edge';
@@ -18,7 +19,7 @@ export class LogicGreaterThanOrEqualEdge extends Edge {
     b: new BehaviorSubject<Connection | null>(null),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {
+  public connectableTo: Record<string, Constructor<Edge>[]> = {
     a: [
       NumberEdge,
       MathEdge,

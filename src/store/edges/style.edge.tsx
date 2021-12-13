@@ -3,6 +3,7 @@ import { useStore } from 'exome/react';
 import { BehaviorSubject } from 'rxjs';
 
 import { useObservable } from '../../hooks/use-observable';
+import { Constructor } from '../../types/constructor';
 import { store } from '../store';
 import { StyleStore } from '../style.store';
 import { undoable } from '../undo.store';
@@ -19,7 +20,7 @@ export class StyleEdge extends Edge {
     source: new BehaviorSubject<StyleStore | null>(null),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {};
+  public connectableTo: Record<string, Constructor<Edge>[]> = {};
 
   public output: { default: Connection } = {
     default: new Connection(this, 'default'),

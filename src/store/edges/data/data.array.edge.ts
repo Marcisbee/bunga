@@ -1,5 +1,6 @@
 import { BehaviorSubject, map } from 'rxjs';
 
+import { Constructor } from '../../../types/constructor';
 import { Connection } from '../connection';
 import { Edge } from '../edge';
 import { MathEdge } from '../math/math.edge';
@@ -14,7 +15,7 @@ export class ArrayEdge extends DataEdge {
     size: new BehaviorSubject<Connection | null>(null),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {
+  public connectableTo: Record<string, Constructor<Edge>[]> = {
     size: [
       NumberEdge,
       MathEdge,
