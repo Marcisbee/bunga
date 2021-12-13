@@ -14,7 +14,7 @@ import { Edge } from './edge';
 export class StyleEdge extends Edge {
   public static title = 'Style';
 
-  public style = 'style';
+  public static style = 'style';
 
   public input = {
     source: new BehaviorSubject<StyleStore | null>(null),

@@ -20,7 +20,7 @@ import { StyleEdge } from '../style.edge';
 export class ElementEdge extends Edge {
   public static title = 'Styled Element';
 
-  public style = 'element';
+  public static style = 'element';
 
   public input = {
     name: new BehaviorSubject<string>('Unknown'),

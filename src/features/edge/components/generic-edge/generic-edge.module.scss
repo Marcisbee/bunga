@@ -1,39 +1,6 @@
 @use "sass:color";
 
-$style-color: #8c00ff;
-$variable-color: #004a8f;
-$operation-color: #181611;
-$element-color: orangered;
-
 .container {
-  --edge-color: #{color.change($operation-color, $blackness: 70%)};
-  --edge-bg: #{color.change($operation-color, $lightness: 90%)};
-  --edge-hr: #{color.change($operation-color, $lightness: 84%)};
-
-  &.style {
-    --edge-color: #{color.change($style-color, $blackness: 70%)};
-    --edge-bg: #{color.change($style-color, $lightness: 90%)};
-    --edge-hr: #{color.change($style-color, $lightness: 84%)};
-  }
-
-  &.variable {
-    --edge-color: #{color.change($variable-color, $blackness: 70%)};
-    --edge-bg: #{color.change($variable-color, $lightness: 90%)};
-    --edge-hr: #{color.change($variable-color, $lightness: 84%)};
-  }
-
-  &.operation {
-    --edge-color: #{color.change($operation-color, $blackness: 70%)};
-    --edge-bg: #{color.change($operation-color, $lightness: 90%)};
-    --edge-hr: #{color.change($operation-color, $lightness: 84%)};
-  }
-
-  &.element {
-    --edge-color: #{color.change($element-color, $blackness: 70%)};
-    --edge-bg: #{color.change($element-color, $lightness: 90%)};
-    --edge-hr: #{color.change($element-color, $lightness: 84%)};
-  }
-
   flex: 1;
   align-items: center;
   justify-content: center;

@@ -18,7 +18,7 @@ import { EdgePosition } from '../position';
 export class ElementTextEdge extends Edge {
   public static title = 'Text Element';
 
-  public style = 'element';
+  public static style = 'element';
 
   public input = {
     text: new BehaviorSubject<Connection | null>(null),

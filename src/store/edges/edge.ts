@@ -1,4 +1,5 @@
 import { Exome } from 'exome';
+import { nestie } from 'nestie';
 import React from 'react';
 import {
   BehaviorSubject,
@@ -11,12 +12,15 @@ import { Constructor } from '../../types/constructor';
 import { undoable } from '../undo.store';
 
 import { Connection } from './connection';
+import style from './edge.module.scss';
 import { EdgePosition } from './position';
+
+export const EdgeStyles: Record<string, Record<'color' | 'hr' | 'bg', string>> = nestie(style, '-');
 
 export class Edge extends Exome {
   public static title: string;
 
-  public style?: string;
+  public static style?: keyof typeof EdgeStyles;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public input!: Record<string, BehaviorSubject<null | Connection | any>>;
@@ -35,6 +39,10 @@ export class Edge extends Exome {
 
   public get title() {
     return (this.constructor as typeof Edge).title;
+  }
+
+  public get style() {
+    return (this.constructor as typeof Edge).style;
   }
 
   public selectInput = <T = unknown>(path: string): Observable<T> => (

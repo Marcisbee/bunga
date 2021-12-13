@@ -10,7 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ShadowView } from '../../../../components/shadow/shadow.component';
 import { useObservable } from '../../../../hooks/use-observable';
 import { Connection } from '../../../../store/edges/connection';
-import { Edge } from '../../../../store/edges/edge';
+import { Edge, EdgeStyles } from '../../../../store/edges/edge';
 import { pendingEdge } from '../../../../store/edges/pending';
 import { StyleStore } from '../../../../store/style.store';
 import { cc } from '../../../../utils/class-names';
@@ -42,8 +42,12 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
     <div
       className={cc([
         styles.container,
-        styles[edge.style!],
       ])}
+      style={{
+        '--edge-color': EdgeStyles[edge.style! || 'operation'].color,
+        '--edge-bg': EdgeStyles[edge.style! || 'operation'].bg,
+        '--edge-hr': EdgeStyles[edge.style! || 'operation'].hr,
+      } as React.CSSProperties}
     >
       <div className={styles.head}>
         {edge.style === 'variable' && (

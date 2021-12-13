@@ -1,0 +1,18 @@
+@use "sass:color";
+
+$edgeStyles: (
+  style: #8c00ff,
+  variable: #004a8f,
+  operation: #181611,
+  element: orangered,
+);
+
+:export {
+  @each $type, $color in $edgeStyles {
+    #{$type}: {
+      color: color.change($color, $blackness: 70%);
+      bg: color.change($color, $lightness: 90%);
+      hr: color.change($color, $lightness: 84%);
+    }
+  }
+}

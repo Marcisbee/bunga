@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 
 import { allEdges, EdgeConstructor, edgeGroups } from '../../store/edges/all-edges';
-import { Edge } from '../../store/edges/edge';
+import { Edge, EdgeStyles } from '../../store/edges/edge';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 
@@ -116,6 +116,37 @@ export function EdgeSelectorComponent({ onClose }: EdgeSelectorComponentProps) {
       </div>
 
       <div className={style.results}>
+        <div className={style.filters}>
+          <button type="button" className={style.active}>
+            All
+            <mark>{filteredEdgeList.length}</mark>
+          </button>
+          <del>
+            <button disabled type="button">
+              Components
+              <mark>0</mark>
+            </button>
+          </del>
+          {Object.entries(edgeGroups).map(([group, edges]) => {
+            const filteredEdges = edges
+              .filter((edge) => filteredEdgeList.indexOf(edge) !== -1);
+
+            if (filteredEdges.length === 0) {
+              return null;
+            }
+
+            return (
+              <button
+                key={`edge-selector-${group}`}
+                type="button"
+              >
+                {`${group} edges`}
+                <mark>{edgeGroups[group].length}</mark>
+              </button>
+            );
+          })}
+        </div>
+
         <div className={style.list}>
           {filteredEdgeList.length === 0 ? (
             <div className={style.noResults}>
@@ -135,57 +166,44 @@ export function EdgeSelectorComponent({ onClose }: EdgeSelectorComponentProps) {
                   return (
                     <div key={`edge-selector-${group}`}>
                       <strong>
-                        {group.toUpperCase()}
+                        {`${group.toUpperCase()} EDGES`}
                       </strong>
-                      {filteredEdges.map((edge) => (
-                        // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-                        <button
-                          key={`edge-selector-${group}-${(edge as unknown as Edge).title}`}
-                          type="button"
-                          onMouseOver={() => {
-                            setActive(() => edge);
-                          }}
-                          onClick={() => {
-                            store.activeProject!.activeSpace.addEdge(edge);
-                            onClose();
-                          }}
-                          className={cc([
-                            active === edge && style.active,
-                          ])}
-                        >
-                          {(edge as unknown as Edge).title}
-                        </button>
-                      ))}
+                      <div className={style.grid}>
+                        {filteredEdges.map((edge) => (
+                          // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+                          <button
+                            key={`edge-selector-${group}-${(edge as unknown as Edge).title}`}
+                            type="button"
+                            onMouseOver={() => {
+                              setActive(() => edge);
+                            }}
+                            onClick={() => {
+                              store.activeProject!.activeSpace.addEdge(edge);
+                              onClose();
+                            }}
+                            className={cc([
+                              active === edge && style.active,
+                            ])}
+                            style={{
+                              '--edge-color': EdgeStyles[(edge as unknown as Edge).style! || 'operation'].color,
+                              '--edge-bg': EdgeStyles[(edge as unknown as Edge).style! || 'operation'].bg,
+                              '--edge-hr': EdgeStyles[(edge as unknown as Edge).style! || 'operation'].hr,
+                            } as React.CSSProperties}
+                          >
+                            <i className={style.itemIcon}>
+                              <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fillRule="evenodd" clipRule="evenodd"><path d="M12 0c6.623 0 12 5.377 12 12s-5.377 12-12 12-12-5.377-12-12 5.377-12 12-12zm0 1c6.071 0 11 4.929 11 11s-4.929 11-11 11-11-4.929-11-11 4.929-11 11-11zm.053 17c.466 0 .844-.378.844-.845 0-.466-.378-.844-.844-.844-.466 0-.845.378-.845.844 0 .467.379.845.845.845zm.468-2.822h-.998c-.035-1.162.182-2.054.939-2.943.491-.57 1.607-1.479 1.945-2.058.722-1.229.077-3.177-2.271-3.177-1.439 0-2.615.877-2.928 2.507l-1.018-.102c.28-2.236 1.958-3.405 3.922-3.405 1.964 0 3.615 1.25 3.615 3.22 0 1.806-1.826 2.782-2.638 3.868-.422.563-.555 1.377-.568 2.09z" /></svg>
+                            </i>
+                            <span className={style.itemContent}>
+                              <strong>{(edge as unknown as Edge).title}</strong>
+                              <span>description</span>
+                            </span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   );
                 })}
             </>
-          )}
-        </div>
-
-        <div className={style.preview}>
-          {!active ? (
-            <div className={style.noResults} />
-          ) : (
-            <div>
-              <br />
-              <br />
-              Preview of
-              {' "'}
-              {(active as unknown as Edge).title}
-              {'" '}
-              Edge
-              <br />
-              <button
-                type="button"
-                onClick={() => {
-                  store.activeProject!.activeSpace.addEdge(active);
-                  onClose();
-                }}
-              >
-                Use
-              </button>
-            </div>
           )}
         </div>
       </div>

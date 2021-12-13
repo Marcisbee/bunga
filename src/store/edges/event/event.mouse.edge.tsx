@@ -22,7 +22,7 @@ import { ElementEdge } from '../element/element.edge';
 export class MouseEventEdge extends Edge {
   public static title = 'Mouse Event';
 
-  public style = 'operation';
+  public static style = 'operation';
 
   public input = {
     element: new BehaviorSubject<ElementStore | null>(null),
