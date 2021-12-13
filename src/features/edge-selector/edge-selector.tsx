@@ -193,9 +193,9 @@ export function EdgeSelectorComponent({ onClose }: EdgeSelectorComponentProps) {
                                 active === edge && style.active,
                               ])}
                               style={{
-                                '--edge-color': EdgeStyles[(edge as unknown as Edge).style! || 'operation'].color,
-                                '--edge-bg': EdgeStyles[(edge as unknown as Edge).style! || 'operation'].bg,
-                                '--edge-hr': EdgeStyles[(edge as unknown as Edge).style! || 'operation'].hr,
+                                '--edge-color': EdgeStyles[(edge as unknown as Edge).style! || 'operation']?.color,
+                                '--edge-bg': EdgeStyles[(edge as unknown as Edge).style! || 'operation']?.bg,
+                                '--edge-hr': EdgeStyles[(edge as unknown as Edge).style! || 'operation']?.hr,
                               } as React.CSSProperties}
                             >
                               <i className={style.itemIcon}>

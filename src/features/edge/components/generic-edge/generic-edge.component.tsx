@@ -44,9 +44,9 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
         styles.container,
       ])}
       style={{
-        '--edge-color': EdgeStyles[edge.style! || 'operation'].color,
-        '--edge-bg': EdgeStyles[edge.style! || 'operation'].bg,
-        '--edge-hr': EdgeStyles[edge.style! || 'operation'].hr,
+        '--edge-color': EdgeStyles[edge.style! || 'operation']?.color,
+        '--edge-bg': EdgeStyles[edge.style! || 'operation']?.bg,
+        '--edge-hr': EdgeStyles[edge.style! || 'operation']?.hr,
       } as React.CSSProperties}
     >
       <div className={styles.head}>
