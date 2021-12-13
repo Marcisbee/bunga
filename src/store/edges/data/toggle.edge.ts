@@ -8,6 +8,7 @@ import {
   takeWhile,
 } from 'rxjs';
 
+import { Constructor } from '../../../types/constructor';
 import { interactiveModeStore } from '../../interactive-mode.store';
 import { Connection } from '../connection';
 import { Edge } from '../edge';
@@ -25,7 +26,7 @@ export class ToggleEdge extends Edge {
     off: new BehaviorSubject<Connection | null>(null),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {
+  public connectableTo: Record<string, Constructor<Edge>[]> = {
     initial: [
       BooleanEdge,
     ],

@@ -10,6 +10,7 @@ import {
 } from 'rxjs';
 
 import { useObservable } from '../../../hooks/use-observable';
+import { Constructor } from '../../../types/constructor';
 import { ComponentStore } from '../../component.store';
 import { ElementStore } from '../../element.store';
 import { InteractiveEventType, interactiveModeStore } from '../../interactive-mode.store';
@@ -21,14 +22,14 @@ import { ElementEdge } from '../element/element.edge';
 export class MouseEventEdge extends Edge {
   public static title = 'Mouse Event';
 
-  public style = 'operation';
+  public static style = 'operation';
 
   public input = {
     element: new BehaviorSubject<ElementStore | null>(null),
     type: new BehaviorSubject<keyof typeof InteractiveEventType>(InteractiveEventType.click),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {};
+  public connectableTo: Record<string, Constructor<Edge>[]> = {};
 
   public output: { default: Connection } = {
     default: new Connection(this, 'default'),

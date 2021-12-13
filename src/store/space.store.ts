@@ -61,10 +61,10 @@ export class SpaceStore extends Exome {
       200,
     );
 
-    // Center first component in space.
-    if (this.components.length === 0 && this.edges.length === 0) {
-      position.x = -(position.width / 2);
-      position.y = -(position.height / 2);
+    // When nothing is selected, place component at center of screen.
+    if (this.move.selectedAll.length === 0) {
+      position.x = 0 - this.position.x + -(position.width / 2);
+      position.y = 0 - this.position.y + -(position.height / 2);
     }
 
     const component = new ComponentStore(
@@ -112,10 +112,10 @@ export class SpaceStore extends Exome {
       80,
     );
 
-    // Center first action in space.
-    if (this.components.length === 0 && this.edges.length === 0) {
-      position.x = -(position.width / 2);
-      position.y = -(position.height / 2);
+    // When nothing is selected, place edge at center of screen.
+    if (this.move.selectedAll.length === 0) {
+      position.x = 0 - this.position.x + -(position.width / 2);
+      position.y = 0 - this.position.y + -(position.height / 2);
     }
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -1,5 +1,5 @@
 import { Edge } from '../edge';
 
 export abstract class MathEdge extends Edge {
-  public style = 'operation';
+  public static style = 'operation';
 }

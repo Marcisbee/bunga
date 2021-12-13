@@ -4,6 +4,7 @@ import {
   map,
 } from 'rxjs';
 
+import { Constructor } from '../../../types/constructor';
 import { StyleStore } from '../../style.store';
 import { Connection } from '../connection';
 import { BooleanEdge } from '../data/data.boolean.edge';
@@ -21,7 +22,7 @@ export class LogicGateEdge extends Edge {
     style: new BehaviorSubject<Connection | null>(null),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {
+  public connectableTo: Record<string, Constructor<Edge>[]> = {
     condition: [
       BooleanEdge,
       ToggleEdge,

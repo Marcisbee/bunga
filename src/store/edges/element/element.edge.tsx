@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { DraggablePreview } from '../../../components/draggable-preview/draggable-preview';
 import { useObservable } from '../../../hooks/use-observable';
+import { Constructor } from '../../../types/constructor';
 import { observableToPromise } from '../../../utils/observable-to-promise';
 import { interactiveModeStore } from '../../interactive-mode.store';
 import { store } from '../../store';
@@ -19,14 +20,14 @@ import { StyleEdge } from '../style.edge';
 export class ElementEdge extends Edge {
   public static title = 'Styled Element';
 
-  public style = 'element';
+  public static style = 'element';
 
   public input = {
     name: new BehaviorSubject<string>('Unknown'),
     style: new BehaviorSubject<Connection | null>(null),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {
+  public connectableTo: Record<string, Constructor<Edge>[]> = {
     style: [
       LogicGateEdge,
       StyleEdge,

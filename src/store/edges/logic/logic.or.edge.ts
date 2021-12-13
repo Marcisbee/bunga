@@ -4,6 +4,7 @@ import {
   map,
 } from 'rxjs';
 
+import { Constructor } from '../../../types/constructor';
 import { Connection } from '../connection';
 import { BooleanEdge } from '../data/data.boolean.edge';
 import { NumberEdge } from '../data/data.number.edge';
@@ -21,7 +22,7 @@ export class LogicOrEdge extends LogicEdge {
     b: new BehaviorSubject<Connection | null>(null),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {
+  public connectableTo: Record<string, Constructor<Edge>[]> = {
     a: [
       LogicEdge,
       BooleanEdge,

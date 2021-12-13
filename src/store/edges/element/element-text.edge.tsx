@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { DraggablePreview } from '../../../components/draggable-preview/draggable-preview';
 import { useObservable } from '../../../hooks/use-observable';
+import { Constructor } from '../../../types/constructor';
 import { interactiveModeStore } from '../../interactive-mode.store';
 import { store } from '../../store';
 import { Connection } from '../connection';
@@ -17,13 +18,13 @@ import { EdgePosition } from '../position';
 export class ElementTextEdge extends Edge {
   public static title = 'Text Element';
 
-  public style = 'element';
+  public static style = 'element';
 
   public input = {
     text: new BehaviorSubject<Connection | null>(null),
   };
 
-  public connectableTo: Record<string, typeof Edge[]> = {
+  public connectableTo: Record<string, Constructor<Edge>[]> = {
     text: [
       BooleanEdge,
       StringEdge,
