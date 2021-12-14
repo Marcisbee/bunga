@@ -2,6 +2,7 @@ import { Exome, addMiddleware, registerLoadable } from 'exome';
 import { exomeDevtools } from 'exome/devtools';
 
 import { ProjectStore } from './project.store';
+import { UserStore } from './user.store';
 
 // Enable devtools in dev mode
 if (process.env.NODE_ENV !== 'production') {
@@ -14,8 +15,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export class Store extends Exome {
-  // @TODO: Create user store.
-  public user: unknown;
+  public user = new UserStore();
 
   public projects: Record<string, ProjectStore> = {};
 
