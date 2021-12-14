@@ -13,6 +13,12 @@ test('exports `store` as instance of Exome', () => {
 
 test('default value of store', () => {
   const expected = {
+    user: {
+      isLoggedIn: false,
+      token: null,
+      expiresAt: null,
+      user: null,
+    },
     projects: {},
   };
 
