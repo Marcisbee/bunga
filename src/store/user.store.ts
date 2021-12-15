@@ -5,15 +5,12 @@ import {
   dedupExchange,
   errorExchange,
   fetchExchange,
-  Client,
 } from '@urql/core';
 import { authExchange } from '@urql/exchange-auth';
 import { Exome } from 'exome';
 import jwtDecode from 'jwt-decode';
 
 import { API_URL, AUTH_URL } from '../constants/api';
-
-let cachedClient: Client | null = null;
 
 interface APIAuthResponse {
   jwt_expires_in: number;
@@ -41,97 +38,89 @@ export class UserStore extends Exome {
     this.loadToken();
   }
 
-  public get client(): Client {
-    if (cachedClient) {
-      return cachedClient;
-    }
-
-    cachedClient = createClient({
-      url: API_URL,
-      fetchOptions: {
-        headers: {
-          'x-hasura-role': 'anonymous',
-        },
+  public client = createClient({
+    url: API_URL,
+    fetchOptions: {
+      headers: {
+        'x-hasura-role': 'anonymous',
       },
-      suspense: true,
-      exchanges: [
-        dedupExchange,
-        cacheExchange,
-        errorExchange({
-          onError: (error) => {
-            const isAuthError = error.graphQLErrors.some((e) => e.extensions?.code === 'FORBIDDEN' || e.extensions?.code === 'invalid-jwt');
+    },
+    suspense: false,
+    exchanges: [
+      dedupExchange,
+      cacheExchange,
+      errorExchange({
+        onError: (error) => {
+          const isAuthError = error.graphQLErrors.some((e) => e.extensions?.code === 'FORBIDDEN' || e.extensions?.code === 'invalid-jwt');
 
-            if (isAuthError) {
-              this.logout();
-            }
-          },
-        }),
-        authExchange<{ token: string | null }>({
-          addAuthToOperation: ({ authState, operation }) => {
-            if (!authState || !authState.token) {
-              return operation;
-            }
+          if (isAuthError) {
+            this.logout();
+          }
+        },
+      }),
+      authExchange<{ token: string | null }>({
+        addAuthToOperation: ({ authState, operation }) => {
+          if (!authState || !authState.token) {
+            return operation;
+          }
 
-            const fetchOptions = typeof operation.context.fetchOptions === 'function'
-              ? operation.context.fetchOptions()
-              : operation.context.fetchOptions || {};
+          const fetchOptions = typeof operation.context.fetchOptions === 'function'
+            ? operation.context.fetchOptions()
+            : operation.context.fetchOptions || {};
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            delete fetchOptions!.headers!['x-hasura-role'];
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          delete fetchOptions!.headers!['x-hasura-role'];
 
-            return makeOperation(operation.kind, operation, {
-              ...operation.context,
-              fetchOptions: {
-                ...fetchOptions,
-                headers: {
-                  ...fetchOptions.headers,
-                  Authorization: `Bearer ${authState.token}`,
-                },
+          return makeOperation(operation.kind, operation, {
+            ...operation.context,
+            fetchOptions: {
+              ...fetchOptions,
+              headers: {
+                ...fetchOptions.headers,
+                Authorization: `Bearer ${authState.token}`,
               },
-            });
-          },
-          willAuthError: ({ authState }) => {
-            if (!authState || !this.expiresAt) {
-              return true;
+            },
+          });
+        },
+        willAuthError: ({ authState }) => {
+          if (!authState || !this.expiresAt) {
+            return true;
+          }
+
+          return this.expiresAt < new Date();
+        },
+        getAuth: async ({ authState }) => {
+          if (!authState && this.isLoggedIn && this.expiresAt! >= new Date()) {
+            return {
+              token: this.token,
+            };
+          }
+
+          if ((!authState || !this.expiresAt || this.expiresAt < new Date()) && this.isLoggedIn) {
+            try {
+              await this.refresh();
+            } catch (e) {
+              // do nothing
             }
 
-            return this.expiresAt < new Date();
-          },
-          getAuth: async ({ authState }) => {
-            if (!authState && this.isLoggedIn && this.expiresAt! >= new Date()) {
+            if (this.token) {
               return {
                 token: this.token,
               };
             }
 
-            if ((!authState || !this.expiresAt || this.expiresAt < new Date()) && this.isLoggedIn) {
-              try {
-                await this.refresh();
-              } catch (e) {
-                // do nothing
-              }
+            this.logout();
 
-              if (this.token) {
-                return {
-                  token: this.token,
-                };
-              }
+            return null;
+          }
 
-              this.logout();
-
-              return null;
-            }
-
-            return authState;
-          },
-        }),
-        fetchExchange,
-      ],
-    });
-
-    return cachedClient;
-  }
+          return authState;
+        },
+      }),
+      fetchExchange,
+    ],
+  });
 
   public async refresh() {
     const response = await fetch(
