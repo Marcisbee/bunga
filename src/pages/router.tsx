@@ -9,7 +9,6 @@ import {
 import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { store } from '../store/store';
 
-import { HomePage } from './home/home.page';
 import { LandingPage } from './landing/landing.page';
 import { LoginPage } from './login/login.page';
 import { ProjectPage } from './project/project.page';
@@ -24,16 +23,18 @@ export function Router() {
       <BrowserRouter>
         {isLoggedIn ? (
           <Routes>
-            <Route path="/" element={<Navigate to="/projects" />} />
+            <Route path="/" element={<Navigate to="/projects" replace />} />
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/project/:id" element={<ProjectPage />} />
+            <Route path="*" element={<Navigate to="/projects" replace />} />
           </Routes>
         ) : (
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         )}
       </BrowserRouter>

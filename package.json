@@ -11,6 +11,7 @@
     "exome": "^1.0.1",
     "graphql": "^16.1.0",
     "history": "^5.1.0",
+    "jwt-decode": "^3.1.2",
     "nestie": "^1.0.2",
     "preact": "^10.6.1",
     "react": "^17.0.2",
