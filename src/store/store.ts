@@ -18,18 +18,45 @@ if (process.env.NODE_ENV !== 'production') {
 export class Store extends Exome {
   public user = new UserStore();
 
-  public projects: Record<string, ProjectDetailsStore> = {};
+  public projectsDetails: Record<string, ProjectDetailsStore> = {};
+
+  public projects: Record<string, ProjectStore> = {};
 
   public activeProject?: ProjectStore;
 
-  public setActiveProject(id: string): ProjectStore {
+  public async getProjectById(id: string) {
+    if (!this.user.user) {
+      return;
+    }
+
+    const ProjectsQuery = gql`
+      query ($id: uuid!) {
+        projects_by_pk(id: $id) {
+          id
+          image
+          title
+          content
+          created_at
+          updated_at
+        }
+      }
+    `;
+
+    const output = await this.user.client
+      .query(ProjectsQuery, { id })
+      .toPromise();
+
+    const project = output.data?.projects_by_pk;
+
+    if (!project) {
+      return;
+    }
+
     this.activeProject = (
       this.projects[id] || (
-        this.projects[id].project = new ProjectStore(id, 'Unknown')
+        this.projects[id] = new ProjectStore(id, project.title)
       )
     );
-
-    return this.activeProject;
   }
 
   public async getProjects() {
@@ -60,8 +87,43 @@ export class Store extends Exome {
     }
 
     output.data.projects.forEach((project: any) => {
-      this.projects[project.id] = new ProjectDetailsStore();
+      this.projectsDetails[project.id] = new ProjectDetailsStore(project.title);
     });
+  }
+
+  public async createProject(title = 'Untitled') {
+    if (!this.user.user) {
+      return;
+    }
+
+    const ProjectsMutation = gql`
+      mutation ($content: jsonb, $title: String) {
+        insert_projects_one(object: {content: $content, title: $title}) {
+          id
+        }
+      }
+    `;
+
+    const output = await this.user.client
+      .mutation(ProjectsMutation, {
+        title,
+        content: { name: 123 },
+      })
+      .toPromise();
+
+    const project = output.data?.insert_projects_one;
+
+    if (!project) {
+      return;
+    }
+
+    this.projectsDetails[project.id] = new ProjectDetailsStore(project.title);
+
+    setTimeout(() => {
+      this.getProjects();
+    }, 200);
+
+    return project.id;
   }
 }
 

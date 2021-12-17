@@ -109,7 +109,11 @@ export class ProjectStore extends Exome {
 }
 
 export class ProjectDetailsStore extends Exome {
-  public project: ProjectStore | null = null;
+  constructor(
+    public title: string,
+  ) {
+    super();
+  }
 }
 
 registerLoadable({ ProjectStore, ProjectDetailsStore });
