@@ -108,4 +108,12 @@ export class ProjectStore extends Exome {
   }
 }
 
-registerLoadable({ ProjectStore });
+export class ProjectDetailsStore extends Exome {
+  constructor(
+    public title: string,
+  ) {
+    super();
+  }
+}
+
+registerLoadable({ ProjectStore, ProjectDetailsStore });

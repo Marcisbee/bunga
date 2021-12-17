@@ -22,7 +22,8 @@
     "react-router-dom": "^6.0.2",
     "rxjs": "^7.4.0",
     "superstruct": "^0.15.3",
-    "tinygesture": "^1.1.4"
+    "tinygesture": "^1.1.4",
+    "use-react-suspense": "^0.3.3"
   },
   "scripts": {
     "dev": "vite",

@@ -1,9 +1,11 @@
 import { useStore } from 'exome/react';
+import { Suspense } from 'react';
 import {
   BrowserRouter,
   Routes,
   Route,
   Navigate,
+  Link,
 } from 'react-router-dom';
 
 import { ErrorBoundary } from '../components/error-boundary/error-boundary';
@@ -26,15 +28,42 @@ export function Router() {
             <Route path="/" element={<Navigate to="/projects" replace />} />
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/project/:id" element={<ProjectPage />} />
-            <Route path="*" element={<Navigate to="/projects" replace />} />
+            <Route
+              path="/project/:id"
+              element={(
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ProjectPage />
+                </Suspense>
+              )}
+            />
+            <Route
+              path="*"
+              element={(
+                <h1>
+                  Error 404
+                  <br />
+                  <Link to="/">Back to home</Link>
+                </h1>
+              )}
+            />
           </Routes>
         ) : (
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/projects" element={<Navigate to="/" replace />} />
+            <Route path="/project/:id" element={<Navigate to="/" replace />} />
+            <Route
+              path="*"
+              element={(
+                <h1>
+                  Error 404
+                  <br />
+                  <Link to="/">Back to home</Link>
+                </h1>
+              )}
+            />
           </Routes>
         )}
       </BrowserRouter>

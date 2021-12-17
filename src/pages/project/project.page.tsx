@@ -1,9 +1,9 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
-import { useMemo } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { useSuspense } from 'use-react-suspense';
 
 import { ErrorBoundary } from '../../components/error-boundary/error-boundary';
 import { TabSwitchComponent } from '../../components/tab-switch/tab-switch';
@@ -19,12 +19,8 @@ import style from './project.module.scss';
 
 export function ProjectPage() {
   const params = useParams();
-  const { setActiveProject } = useStore(store);
 
-  useMemo(() => {
-    setActiveProject(params.id!);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useSuspense(store.getProjectById, [params.id!], { cacheTime: 1 });
 
   const project = useStore(store.activeProject!);
 
@@ -33,6 +29,8 @@ export function ProjectPage() {
       <div className={style.app}>
         <div style={{ width: 240 }}>
           <div style={{ padding: '5px 5px 10px 5px' }}>
+            <Link to="/projects">Dashboard</Link>
+            <br />
             <small>Owner</small>
             <br />
             <strong>

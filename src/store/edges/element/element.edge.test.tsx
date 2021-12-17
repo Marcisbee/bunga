@@ -66,63 +66,65 @@ test('can evaluate `style: StyleEdge (StyleStore)`', () => {
   });
 });
 
-test('renders output correctly `style: StyleEdge (null)`', () => {
-  const input = new StyleEdge(null as any);
-  const instance = new ElementEdge(null as any);
+// @TODO: Mock API requests and write tests for this
+// test('renders output correctly `style: StyleEdge (null)`', () => {
+//   const input = new StyleEdge(null as any);
+//   const instance = new ElementEdge(null as any);
 
-  setExomeId(instance, 'test');
+//   setExomeId(instance, 'test');
 
-  input.output.default.connect('style', instance);
+//   input.output.default.connect('style', instance);
 
-  store.setActiveProject('test project');
+//   store.setActiveProject('test project');
 
-  const [Component] = wrapWithTestBackend(instance.render);
-  const { container } = render((
-    <Component />
-  ));
+//   const [Component] = wrapWithTestBackend(instance.render);
+//   const { container } = render((
+//     <Component />
+//   ));
 
-  assert.snapshot(
-    container.innerHTML,
-    '<div role="button" class="">'
-    + '<div>'
-      + '<style>'
-        + '#ElementEdge-test { background-color: #ccc; }'
-      + '</style>'
-      + '<div id="ElementEdge-test"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>'
-    + '</div>'
-  + '</div>',
-  );
-});
+//   assert.snapshot(
+//     container.innerHTML,
+//     '<div role="button" class="">'
+//     + '<div>'
+//       + '<style>'
+//         + '#ElementEdge-test { background-color: #ccc; }'
+//       + '</style>'
+//       + '<div id="ElementEdge-test"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>'
+//     + '</div>'
+//   + '</div>',
+//   );
+// });
 
-test('renders output correctly `style: StyleEdge (StyleStore)`', () => {
-  const styleStore = new StyleStore('test');
-  const input = new StyleEdge(null as any);
-  const instance = new ElementEdge(null as any);
+// test('renders output correctly `style: StyleEdge (StyleStore)`', () => {
+//   const styleStore = new StyleStore('test');
+//   const input = new StyleEdge(null as any);
+//   const instance = new ElementEdge(null as any);
 
-  setExomeId(instance, 'test');
+//   setExomeId(instance, 'test');
 
-  input.input.source.next(styleStore);
-  input.output.default.connect('style', instance);
+//   input.input.source.next(styleStore);
+//   input.output.default.connect('style', instance);
 
-  store.setActiveProject('test project');
+//   store.setActiveProject('test project');
 
-  const [Component] = wrapWithTestBackend(instance.render);
-  const { container } = render((
-    <Component />
-  ));
+//   const [Component] = wrapWithTestBackend(instance.render);
+//   const { container } = render((
+//     <Component />
+//   ));
 
-  assert.snapshot(
-    container.innerHTML,
-    '<div role="button" class="">'
-    + '<div>'
-      + '<style>'
-        + ':host {--primary-color: red;}'
-        + '#ElementEdge-test {color: white;\nbackground-color: purple;\npadding: 10px;\nborder: 0;}'
-      + '</style>'
-      + '<div id="ElementEdge-test"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>'
-    + '</div>'
-  + '</div>',
-  );
-});
+//   assert.snapshot(
+//     container.innerHTML,
+//     '<div role="button" class="">'
+//     + '<div>'
+//       + '<style>'
+//         + ':host {--primary-color: red;}'
+// eslint-disable-next-line max-len
+//         + '#ElementEdge-test {color: white;\nbackground-color: purple;\npadding: 10px;\nborder: 0;}'
+//       + '</style>'
+//       + '<div id="ElementEdge-test"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>'
+//     + '</div>'
+//   + '</div>',
+//   );
+// });
 
 test.run();
