@@ -66,6 +66,7 @@ test('can evaluate `style: StyleEdge (StyleStore)`', () => {
   });
 });
 
+// @TODO: Mock API requests and write tests for this
 // test('renders output correctly `style: StyleEdge (null)`', () => {
 //   const input = new StyleEdge(null as any);
 //   const instance = new ElementEdge(null as any);
@@ -117,6 +118,7 @@ test('can evaluate `style: StyleEdge (StyleStore)`', () => {
 //     + '<div>'
 //       + '<style>'
 //         + ':host {--primary-color: red;}'
+// eslint-disable-next-line max-len
 //         + '#ElementEdge-test {color: white;\nbackground-color: purple;\npadding: 10px;\nborder: 0;}'
 //       + '</style>'
 //       + '<div id="ElementEdge-test"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>'
