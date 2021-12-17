@@ -49,7 +49,7 @@ export class Store extends Exome {
     const project = output.data?.projects_by_pk;
 
     if (!project) {
-      return;
+      throw new Error('Project was not found');
     }
 
     this.activeProject = (
@@ -114,7 +114,7 @@ export class Store extends Exome {
     const project = output.data?.insert_projects_one;
 
     if (!project) {
-      return;
+      throw new Error('Project creation failed');
     }
 
     this.projectsDetails[project.id] = new ProjectDetailsStore(project.title);
