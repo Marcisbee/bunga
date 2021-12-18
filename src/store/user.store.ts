@@ -12,7 +12,7 @@ import jwtDecode from 'jwt-decode';
 
 import { API_URL, AUTH_URL } from '../constants/api';
 
-interface APIAuthResponse {
+export interface APIAuthResponse {
   jwt_expires_in: number;
   jwt_token: string;
   user: {
@@ -124,7 +124,7 @@ export class UserStore extends Exome {
 
   public async refresh() {
     const response = await fetch(
-      `${AUTH_URL}/refresh`,
+      `${AUTH_URL}/v1/refresh`,
       {
         method: 'post',
         credentials: 'include',
@@ -154,7 +154,7 @@ export class UserStore extends Exome {
 
   public async login(email: string, password: string) {
     const response = await fetch(
-      `${AUTH_URL}/login`,
+      `${AUTH_URL}/v1/login`,
       {
         method: 'post',
         credentials: 'include',
@@ -188,7 +188,7 @@ export class UserStore extends Exome {
 
   public async signup(email: string, password: string, name: string) {
     const response = await fetch(
-      `${AUTH_URL}/signup`,
+      `${AUTH_URL}/v1/signup`,
       {
         method: 'post',
         credentials: 'include',

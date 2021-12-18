@@ -30,7 +30,7 @@ export class Store extends Exome {
     }
 
     const ProjectsQuery = gql`
-      query ($id: uuid!) {
+      query GetProjectById($id: uuid!) {
         projects_by_pk(id: $id) {
           id
           image
@@ -52,7 +52,7 @@ export class Store extends Exome {
       throw new Error('Project was not found');
     }
 
-    this.activeProject = (
+    return this.activeProject = (
       this.projects[id] || (
         this.projects[id] = new ProjectStore(id, project.title)
       )
