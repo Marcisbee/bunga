@@ -110,7 +110,10 @@ export class ProjectStore extends Exome {
 
 export class ProjectDetailsStore extends Exome {
   constructor(
+    public id: string,
     public title: string,
+    public updatedAt: Date,
+    public createdAt: Date,
   ) {
     super();
   }

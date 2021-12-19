@@ -5,9 +5,10 @@ import { undoable } from './undo.store';
 export const defaultTokens = '--primary-color: red;';
 
 export class TokenStore extends Exome {
-  public tokens = defaultTokens;
-
-  public constructor(public name: string) {
+  public constructor(
+    public name: string,
+    public tokens = defaultTokens,
+  ) {
     super();
   }
 

@@ -339,8 +339,11 @@ export type Projects_Bool_Exp = {
   image?: InputMaybe<String_Comparison_Exp>;
   owner_user?: InputMaybe<Auth_Users_Bool_Exp>;
   owner_user_id?: InputMaybe<Uuid_Comparison_Exp>;
+  spaces?: InputMaybe<Spaces_Bool_Exp>;
+  styles?: InputMaybe<Styles_Bool_Exp>;
   team_id?: InputMaybe<Uuid_Comparison_Exp>;
   title?: InputMaybe<String_Comparison_Exp>;
+  tokens?: InputMaybe<Tokens_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -374,8 +377,11 @@ export type Projects_Insert_Input = {
   image?: InputMaybe<Scalars['String']>;
   owner_user?: InputMaybe<Auth_Users_Obj_Rel_Insert_Input>;
   owner_user_id?: InputMaybe<Scalars['uuid']>;
+  spaces?: InputMaybe<Spaces_Arr_Rel_Insert_Input>;
+  styles?: InputMaybe<Styles_Arr_Rel_Insert_Input>;
   team_id?: InputMaybe<Scalars['uuid']>;
   title?: InputMaybe<Scalars['String']>;
+  tokens?: InputMaybe<Tokens_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -403,6 +409,13 @@ export type Projects_Min_Order_By = {
   updated_at?: InputMaybe<Order_By>;
 };
 
+/** input type for inserting object relation for remote table "projects" */
+export type Projects_Obj_Rel_Insert_Input = {
+  data: Projects_Insert_Input;
+  /** on conflict condition */
+  on_conflict?: InputMaybe<Projects_On_Conflict>;
+};
+
 /** on conflict condition type for table "projects" */
 export type Projects_On_Conflict = {
   constraint: Projects_Constraint;
@@ -419,8 +432,11 @@ export type Projects_Order_By = {
   image?: InputMaybe<Order_By>;
   owner_user?: InputMaybe<Auth_Users_Order_By>;
   owner_user_id?: InputMaybe<Order_By>;
+  spaces_aggregate?: InputMaybe<Spaces_Aggregate_Order_By>;
+  styles_aggregate?: InputMaybe<Styles_Aggregate_Order_By>;
   team_id?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
+  tokens_aggregate?: InputMaybe<Tokens_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -491,6 +507,289 @@ export enum Projects_Update_Column {
   UpdatedAt = 'updated_at'
 }
 
+/** order by aggregate values of table "spaces" */
+export type Spaces_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Spaces_Max_Order_By>;
+  min?: InputMaybe<Spaces_Min_Order_By>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Spaces_Append_Input = {
+  content?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** input type for inserting array relation for remote table "spaces" */
+export type Spaces_Arr_Rel_Insert_Input = {
+  data: Array<Spaces_Insert_Input>;
+  /** on conflict condition */
+  on_conflict?: InputMaybe<Spaces_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "spaces". All fields are combined with a logical 'AND'. */
+export type Spaces_Bool_Exp = {
+  _and?: InputMaybe<Array<Spaces_Bool_Exp>>;
+  _not?: InputMaybe<Spaces_Bool_Exp>;
+  _or?: InputMaybe<Array<Spaces_Bool_Exp>>;
+  content?: InputMaybe<Jsonb_Comparison_Exp>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  project?: InputMaybe<Projects_Bool_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "spaces" */
+export enum Spaces_Constraint {
+  /** unique or primary key constraint */
+  SpacesPkey = 'spaces_pkey'
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Spaces_Delete_At_Path_Input = {
+  content?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Spaces_Delete_Elem_Input = {
+  content?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Spaces_Delete_Key_Input = {
+  content?: InputMaybe<Scalars['String']>;
+};
+
+/** input type for inserting data into table "spaces" */
+export type Spaces_Insert_Input = {
+  content?: InputMaybe<Scalars['jsonb']>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
+  project_id?: InputMaybe<Scalars['uuid']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** order by max() on columns of table "spaces" */
+export type Spaces_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** order by min() on columns of table "spaces" */
+export type Spaces_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** on conflict condition type for table "spaces" */
+export type Spaces_On_Conflict = {
+  constraint: Spaces_Constraint;
+  update_columns?: Array<Spaces_Update_Column>;
+  where?: InputMaybe<Spaces_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "spaces". */
+export type Spaces_Order_By = {
+  content?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project?: InputMaybe<Projects_Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: spaces */
+export type Spaces_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Spaces_Prepend_Input = {
+  content?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** select columns of table "spaces" */
+export enum Spaces_Select_Column {
+  /** column name */
+  Content = 'content',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "spaces" */
+export type Spaces_Set_Input = {
+  content?: InputMaybe<Scalars['jsonb']>;
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  project_id?: InputMaybe<Scalars['uuid']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** update columns of table "spaces" */
+export enum Spaces_Update_Column {
+  /** column name */
+  Content = 'content',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** order by aggregate values of table "styles" */
+export type Styles_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Styles_Max_Order_By>;
+  min?: InputMaybe<Styles_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "styles" */
+export type Styles_Arr_Rel_Insert_Input = {
+  data: Array<Styles_Insert_Input>;
+  /** on conflict condition */
+  on_conflict?: InputMaybe<Styles_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "styles". All fields are combined with a logical 'AND'. */
+export type Styles_Bool_Exp = {
+  _and?: InputMaybe<Array<Styles_Bool_Exp>>;
+  _not?: InputMaybe<Styles_Bool_Exp>;
+  _or?: InputMaybe<Array<Styles_Bool_Exp>>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  project?: InputMaybe<Projects_Bool_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  style?: InputMaybe<String_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "styles" */
+export enum Styles_Constraint {
+  /** unique or primary key constraint */
+  StylesPkey = 'styles_pkey'
+}
+
+/** input type for inserting data into table "styles" */
+export type Styles_Insert_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
+  project_id?: InputMaybe<Scalars['uuid']>;
+  style?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** order by max() on columns of table "styles" */
+export type Styles_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  style?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** order by min() on columns of table "styles" */
+export type Styles_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  style?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** on conflict condition type for table "styles" */
+export type Styles_On_Conflict = {
+  constraint: Styles_Constraint;
+  update_columns?: Array<Styles_Update_Column>;
+  where?: InputMaybe<Styles_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "styles". */
+export type Styles_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project?: InputMaybe<Projects_Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  style?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: styles */
+export type Styles_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** select columns of table "styles" */
+export enum Styles_Select_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  Style = 'style',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "styles" */
+export type Styles_Set_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  project_id?: InputMaybe<Scalars['uuid']>;
+  style?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** update columns of table "styles" */
+export enum Styles_Update_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  Style = 'style',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
 export type Timestamptz_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['timestamptz']>;
@@ -503,6 +802,136 @@ export type Timestamptz_Comparison_Exp = {
   _neq?: InputMaybe<Scalars['timestamptz']>;
   _nin?: InputMaybe<Array<Scalars['timestamptz']>>;
 };
+
+/** order by aggregate values of table "tokens" */
+export type Tokens_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Tokens_Max_Order_By>;
+  min?: InputMaybe<Tokens_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "tokens" */
+export type Tokens_Arr_Rel_Insert_Input = {
+  data: Array<Tokens_Insert_Input>;
+  /** on conflict condition */
+  on_conflict?: InputMaybe<Tokens_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "tokens". All fields are combined with a logical 'AND'. */
+export type Tokens_Bool_Exp = {
+  _and?: InputMaybe<Array<Tokens_Bool_Exp>>;
+  _not?: InputMaybe<Tokens_Bool_Exp>;
+  _or?: InputMaybe<Array<Tokens_Bool_Exp>>;
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  project?: InputMaybe<Projects_Bool_Exp>;
+  project_id?: InputMaybe<Uuid_Comparison_Exp>;
+  tokens?: InputMaybe<String_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "tokens" */
+export enum Tokens_Constraint {
+  /** unique or primary key constraint */
+  TokensPkey = 'tokens_pkey'
+}
+
+/** input type for inserting data into table "tokens" */
+export type Tokens_Insert_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
+  project_id?: InputMaybe<Scalars['uuid']>;
+  tokens?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** order by max() on columns of table "tokens" */
+export type Tokens_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  tokens?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** order by min() on columns of table "tokens" */
+export type Tokens_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  tokens?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** on conflict condition type for table "tokens" */
+export type Tokens_On_Conflict = {
+  constraint: Tokens_Constraint;
+  update_columns?: Array<Tokens_Update_Column>;
+  where?: InputMaybe<Tokens_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "tokens". */
+export type Tokens_Order_By = {
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  project?: InputMaybe<Projects_Order_By>;
+  project_id?: InputMaybe<Order_By>;
+  tokens?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: tokens */
+export type Tokens_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** select columns of table "tokens" */
+export enum Tokens_Select_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  Tokens = 'tokens',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** input type for updating data in table "tokens" */
+export type Tokens_Set_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  project_id?: InputMaybe<Scalars['uuid']>;
+  tokens?: InputMaybe<Scalars['String']>;
+  updated_at?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** update columns of table "tokens" */
+export enum Tokens_Update_Column {
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  ProjectId = 'project_id',
+  /** column name */
+  Tokens = 'tokens',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
 
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
 export type Uuid_Comparison_Exp = {
@@ -523,14 +952,14 @@ export type InsertProjectMutationVariables = Exact<{
 }>;
 
 
-export type InsertProjectMutation = { insert_projects_one?: { id: any, title: string } | null | undefined };
+export type InsertProjectMutation = { insert_projects_one?: { id: any, image?: string | null | undefined, title: string, created_at: any, updated_at: any } | null | undefined };
 
 export type GetProjectByIdQueryVariables = Exact<{
   id: Scalars['uuid'];
 }>;
 
 
-export type GetProjectByIdQuery = { projects_by_pk?: { id: any, image?: string | null | undefined, title: string, content?: any | null | undefined, created_at: any, updated_at: any } | null | undefined };
+export type GetProjectByIdQuery = { projects_by_pk?: { id: any, image?: string | null | undefined, title: string, content?: any | null | undefined, created_at: any, updated_at: any, spaces: Array<{ id: any, name: string, content?: any | null | undefined }>, styles: Array<{ id: any, name: string, style: string }>, tokens: Array<{ id: any, name: string, tokens?: string | null | undefined }> } | null | undefined };
 
 export type GetProjectsByUserQueryVariables = Exact<{
   id: Scalars['uuid'];
@@ -540,6 +969,6 @@ export type GetProjectsByUserQueryVariables = Exact<{
 export type GetProjectsByUserQuery = { projects: Array<{ id: any, image?: string | null | undefined, title: string, created_at: any, updated_at: any }> };
 
 
-export const InsertProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"InsertProject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"jsonb"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_projects_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"content"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]} as unknown as DocumentNode<InsertProjectMutation, InsertProjectMutationVariables>;
-export const GetProjectByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProjectById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<GetProjectByIdQuery, GetProjectByIdQueryVariables>;
-export const GetProjectsByUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProjectsByUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"owner_user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<GetProjectsByUserQuery, GetProjectsByUserQueryVariables>;
+export const InsertProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"InsertProject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"jsonb"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_projects_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"content"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<InsertProjectMutation, InsertProjectMutationVariables>;
+export const GetProjectByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProjectById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"spaces"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}},{"kind":"Field","name":{"kind":"Name","value":"styles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"style"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tokens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tokens"}}]}}]}}]}}]} as unknown as DocumentNode<GetProjectByIdQuery, GetProjectByIdQueryVariables>;
+export const GetProjectsByUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProjectsByUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"owner_user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"updated_at"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<GetProjectsByUserQuery, GetProjectsByUserQueryVariables>;

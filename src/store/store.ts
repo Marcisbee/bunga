@@ -4,6 +4,9 @@ import { exomeDevtools } from 'exome/devtools';
 import { GetProjectByIdDocument, GetProjectsByUserDocument, InsertProjectDocument } from '../graphql';
 
 import { ProjectDetailsStore, ProjectStore } from './project.store';
+import { SpaceStore } from './space.store';
+import { StyleStore } from './style.store';
+import { TokenStore } from './token.store';
 import { UserStore } from './user.store';
 
 // Enable devtools in dev mode
@@ -40,9 +43,27 @@ export class Store extends Exome {
       throw new Error('Project was not found');
     }
 
+    const spaceStores = project.spaces.map((space) => new SpaceStore(space.name));
+    if (spaceStores.length === 0) {
+      spaceStores.push(new SpaceStore('Space 1'));
+    }
+
+    const styleStores = project.styles.map(({ name, style }) => new StyleStore(name, style || ''));
+    const tokenStores = project.tokens.map(({ name, tokens }) => new TokenStore(name, tokens || ''));
+    if (tokenStores.length === 0) {
+      tokenStores.push(new TokenStore('Tokens 1'));
+    }
+
     return this.activeProject = (
       this.projects[id] || (
-        this.projects[id] = new ProjectStore(id, project.title)
+        this.projects[id] = new ProjectStore(
+          id,
+          project.title,
+          undefined,
+          spaceStores,
+          styleStores,
+          tokenStores,
+        )
       )
     );
   }
@@ -63,7 +84,13 @@ export class Store extends Exome {
     }
 
     output.data.projects.forEach((project) => {
-      this.projectsDetails[project.id] = new ProjectDetailsStore(project.title);
+      this.projectsDetails[project.id] = new ProjectDetailsStore(
+        project.id,
+        // project.image,
+        project.title,
+        new Date(project.updated_at),
+        new Date(project.created_at),
+      );
     });
   }
 
@@ -85,7 +112,13 @@ export class Store extends Exome {
       throw new Error('Project creation failed');
     }
 
-    this.projectsDetails[project.id] = new ProjectDetailsStore(project.title);
+    this.projectsDetails[project.id] = new ProjectDetailsStore(
+      project.id,
+      // project.image,
+      project.title,
+      new Date(project.updated_at),
+      new Date(project.created_at),
+    );
 
     setTimeout(() => {
       this.getProjects();

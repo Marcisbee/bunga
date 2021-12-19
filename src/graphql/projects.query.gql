@@ -6,11 +6,26 @@ query GetProjectById($id: uuid!) {
     content
     created_at
     updated_at
+    spaces {
+      id
+      name
+      content
+    }
+    styles {
+      id
+      name
+      style
+    }
+    tokens {
+      id
+      name
+      tokens
+    }
   }
 }
 
 query GetProjectsByUser($id: uuid!) {
-  projects(where: {owner_user_id: {_eq: $id}}) {
+  projects(where: {owner_user_id: {_eq: $id}}, order_by: {updated_at: desc}) {
     id
     image
     title

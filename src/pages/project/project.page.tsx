@@ -29,14 +29,14 @@ export function ProjectPage() {
       <div className={style.app}>
         <div style={{ width: 240 }}>
           <div style={{ padding: '5px 5px 10px 5px' }}>
-            <Link to="/projects">Dashboard</Link>
+            <Link to="/projects">Back to projects</Link>
             <br />
             <small>Owner</small>
             <br />
             <strong>
               Project:
               {' '}
-              {params.id}
+              {project.name}
             </strong>
           </div>
 
