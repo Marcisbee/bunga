@@ -1,6 +1,7 @@
-import { gql } from '@urql/core';
 import { Exome, addMiddleware, registerLoadable } from 'exome';
 import { exomeDevtools } from 'exome/devtools';
+
+import { GetProjectByIdDocument, GetProjectsByUserDocument, InsertProjectDocument } from '../graphql';
 
 import { ProjectDetailsStore, ProjectStore } from './project.store';
 import { UserStore } from './user.store';
@@ -9,7 +10,7 @@ import { UserStore } from './user.store';
 if (process.env.NODE_ENV !== 'production') {
   addMiddleware(
     exomeDevtools({
-      name: 'Codename: Facade app',
+      name: 'Bunga app',
       maxAge: 30,
     }),
   );
@@ -29,21 +30,8 @@ export class Store extends Exome {
       return;
     }
 
-    const ProjectsQuery = gql`
-      query GetProjectById($id: uuid!) {
-        projects_by_pk(id: $id) {
-          id
-          image
-          title
-          content
-          created_at
-          updated_at
-        }
-      }
-    `;
-
     const output = await this.user.client
-      .query(ProjectsQuery, { id })
+      .query(GetProjectByIdDocument, { id })
       .toPromise();
 
     const project = output.data?.projects_by_pk;
@@ -64,20 +52,8 @@ export class Store extends Exome {
       return;
     }
 
-    const ProjectsQuery = gql`
-      query ($id: uuid!) {
-        projects(where: {owner_user_id: {_eq: $id}}) {
-          id
-          image
-          title
-          created_at
-          updated_at
-        }
-      }
-    `;
-
     const output = await this.user.client
-      .query(ProjectsQuery, {
+      .query(GetProjectsByUserDocument, {
         id: this.user.user.id,
       })
       .toPromise();
@@ -86,7 +62,7 @@ export class Store extends Exome {
       return;
     }
 
-    output.data.projects.forEach((project: any) => {
+    output.data.projects.forEach((project) => {
       this.projectsDetails[project.id] = new ProjectDetailsStore(project.title);
     });
   }
@@ -96,16 +72,8 @@ export class Store extends Exome {
       return;
     }
 
-    const ProjectsMutation = gql`
-      mutation ($content: jsonb, $title: String) {
-        insert_projects_one(object: {content: $content, title: $title}) {
-          id
-        }
-      }
-    `;
-
     const output = await this.user.client
-      .mutation(ProjectsMutation, {
+      .mutation(InsertProjectDocument, {
         title,
         content: { name: 123 },
       })

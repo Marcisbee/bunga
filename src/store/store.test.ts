@@ -4,10 +4,12 @@ import * as assert from 'uvu/assert';
 
 import {
   mockFetch,
-  mockAPI,
+  mockApi,
   mockAuth,
   mockFetchRestore,
 } from '../../config/mock';
+import { API_URL } from '../constants/api';
+import { GetProjectByIdQuery, GetProjectByIdQueryVariables } from '../graphql';
 
 import { store as defaultStore, Store } from './store';
 import { APIAuthResponse } from './user.store';
@@ -29,7 +31,7 @@ test('default value of store', () => {
       expiresAt: null,
       user: null,
       client: {
-        url: 'https://api.bunga.design/v1/graphql',
+        url: API_URL,
         fetchOptions: {
           headers: {
             'x-hasura-role': 'anonymous',
@@ -55,7 +57,7 @@ test('default value of store', () => {
 
 test('sets active project', async () => {
   mockFetch(
-    mockAuth<{ email: string, password: string }, APIAuthResponse>('get', '/v1/login', (data) => {
+    mockAuth.get<{ email: string, password: string }, APIAuthResponse>('/v1/login', (data) => {
       if (data.email !== 'test@test.test' && data.password !== 'test') {
         return;
       }
@@ -71,7 +73,7 @@ test('sets active project', async () => {
         jwt_expires_in: 3600,
       };
     }),
-    mockAPI<{ id: string }, { projects_by_pk: any }>('query', 'GetProjectById', (data) => {
+    mockApi.query<GetProjectByIdQueryVariables, GetProjectByIdQuery>('GetProjectById', (data) => {
       if (data.id !== 'id123') {
         return;
       }

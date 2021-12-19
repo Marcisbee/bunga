@@ -1,0 +1,20 @@
+query GetProjectById($id: uuid!) {
+  projects_by_pk(id: $id) {
+    id
+    image
+    title
+    content
+    created_at
+    updated_at
+  }
+}
+
+query GetProjectsByUser($id: uuid!) {
+  projects(where: {owner_user_id: {_eq: $id}}) {
+    id
+    image
+    title
+    created_at
+    updated_at
+  }
+}

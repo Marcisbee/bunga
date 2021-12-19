@@ -1,0 +1,6 @@
+mutation InsertProject($content: jsonb, $title: String) {
+  insert_projects_one(object: {content: $content, title: $title}) {
+    id
+    title
+  }
+}

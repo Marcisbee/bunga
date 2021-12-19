@@ -6,7 +6,7 @@ import { API_URL, AUTH_URL } from '../src/constants/api';
 
 type MockFetchHandler = (url: RequestInfo, config?: RequestInit) => Promise<Response | void>;
 
-export function mockAPI<
+function mApi<
   Input extends Record<string, any> = Record<string, any>,
   Output extends Record<string, any> = Record<string, any>,
 >(
@@ -55,7 +55,7 @@ export function mockAPI<
   };
 }
 
-export function mockAuth<
+function mAuth<
   Input extends Record<string, any> = Record<string, any>,
   Output extends Record<string, any> = Record<string, any>,
 >(
@@ -98,5 +98,27 @@ export function mockFetch(...handlers: MockFetchHandler[]) {
     } as Response;
   });
 }
+
+export const mockApi = {
+  query: <
+    Input extends Record<string, any> = Record<string, any>,
+    Output extends Record<string, any> = Record<string, any>,
+  >(name: string, response: (data: Input) => Output | undefined) => mApi('query', name, response),
+  post: <
+    Input extends Record<string, any> = Record<string, any>,
+    Output extends Record<string, any> = Record<string, any>,
+  >(name: string, response: (data: Input) => Output | undefined) => mApi('mutation', name, response),
+};
+
+export const mockAuth = {
+  get: <
+    Input extends Record<string, any> = Record<string, any>,
+    Output extends Record<string, any> = Record<string, any>,
+  >(endpoint: string, response: (data: Input) => Output | undefined) => mAuth('get', endpoint, response),
+  post: <
+    Input extends Record<string, any> = Record<string, any>,
+    Output extends Record<string, any> = Record<string, any>,
+  >(endpoint: string, response: (data: Input) => Output | undefined) => mAuth('post', endpoint, response),
+};
 
 export const mockFetchRestore = restoreAll;
