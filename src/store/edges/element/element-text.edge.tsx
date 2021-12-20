@@ -38,8 +38,9 @@ export class ElementTextEdge extends Edge {
 
   constructor(
     public position: EdgePosition,
+    id?: string,
   ) {
-    super(position);
+    super(position, id);
 
     if (store.activeProject) {
       store.activeProject.customTextElements.push(this);

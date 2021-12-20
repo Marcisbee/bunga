@@ -1,4 +1,5 @@
 import { Exome } from 'exome';
+import { nanoid } from 'nanoid';
 import { nestie } from 'nestie';
 import React from 'react';
 import {
@@ -33,6 +34,7 @@ export class Edge extends Exome {
 
   constructor(
     public position: EdgePosition,
+    public id: string = nanoid(20),
   ) {
     super();
   }

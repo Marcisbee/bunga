@@ -39,8 +39,9 @@ export class ElementEdge extends Edge {
 
   constructor(
     public position: EdgePosition,
+    id?: string,
   ) {
-    super(position);
+    super(position, id);
 
     if (store.activeProject) {
       store.activeProject.customBlockElements.push(this);

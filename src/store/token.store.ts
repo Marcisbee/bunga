@@ -1,4 +1,5 @@
 import { Exome } from 'exome';
+import { nanoid } from 'nanoid';
 
 import { undoable } from './undo.store';
 
@@ -8,6 +9,7 @@ export class TokenStore extends Exome {
   public constructor(
     public name: string,
     public tokens = defaultTokens,
+    public id: string = nanoid(20),
   ) {
     super();
   }

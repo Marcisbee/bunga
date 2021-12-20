@@ -1,4 +1,5 @@
 import { Exome, registerLoadable } from 'exome';
+import { nanoid } from 'nanoid';
 
 import { permalink } from '../utils/permalink';
 
@@ -68,7 +69,7 @@ export class SpaceStore extends Exome {
     }
 
     const component = new ComponentStore(
-      Math.random().toString(),
+      nanoid(20),
       position,
       `Component ${this.components.length + 1}`,
     );

@@ -36,7 +36,7 @@ export const edgeGroups: Record<string, Record<string, EdgeConstructor>> = {
     boolean: BooleanEdge,
     array: ArrayEdge,
   },
-  templates: {
+  template: {
     element: ElementEdge,
     text: ElementTextEdge,
   },
@@ -67,7 +67,7 @@ export const edgeGroups: Record<string, Record<string, EdgeConstructor>> = {
     not: LogicNotEdge,
     gate: LogicGateEdge,
   },
-  utilities: {
+  utility: {
     arrayConcat: ArrayConcatEdge,
   },
   debug: {

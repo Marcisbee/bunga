@@ -1,4 +1,5 @@
 import { Exome } from 'exome';
+import { nanoid } from 'nanoid';
 
 import { undoable } from './undo.store';
 
@@ -22,6 +23,7 @@ export class StyleStore extends Exome {
   public constructor(
     public name: string,
     public css = defaultStyleCss,
+    public id: string = nanoid(20),
   ) {
     super();
   }
