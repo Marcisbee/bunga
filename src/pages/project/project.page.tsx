@@ -17,28 +17,53 @@ import { store } from '../../store/store';
 
 import style from './project.module.scss';
 
+function ProjectInfo() {
+  const project = useStore(store.activeProject!);
+
+  return (
+    <div style={{ padding: '5px 5px 10px 5px' }}>
+      <Link to="/projects">Back to projects</Link>
+      <br />
+      {/* <small>Owner</small>
+            <br /> */}
+      <strong>
+        <input
+          value={project.name}
+          onChange={(e) => {
+            project.rename(e.target.value);
+          }}
+          style={{ width: '100%', border: 'none' }}
+        />
+      </strong>
+      <br />
+      <button type="button" onClick={project.save}>
+        Save
+      </button>
+    </div>
+  );
+}
+
+function ProjectCanvas() {
+  const project = useStore(store.activeProject!);
+
+  return (
+    <CanvasComponent
+      key={`canvas-${getExomeId(project.activeSpace)}`}
+      space={project.activeSpace}
+    />
+  );
+}
+
 export function ProjectPage() {
   const params = useParams();
 
   useSuspense(store.getProjectById, [params.id!], { cacheTime: 1 });
 
-  const project = useStore(store.activeProject!);
-
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={style.app}>
         <div style={{ width: 240 }}>
-          <div style={{ padding: '5px 5px 10px 5px' }}>
-            <Link to="/projects">Back to projects</Link>
-            <br />
-            <small>Owner</small>
-            <br />
-            <strong>
-              Project:
-              {' '}
-              {project.name}
-            </strong>
-          </div>
+          <ProjectInfo />
 
           <div style={{ userSelect: 'none' }}>
             <ErrorBoundary>
@@ -55,10 +80,7 @@ export function ProjectPage() {
           <CanvasToolsComponent />
 
           <ErrorBoundary>
-            <CanvasComponent
-              key={`canvas-${getExomeId(project.activeSpace)}`}
-              space={project.activeSpace}
-            />
+            <ProjectCanvas />
           </ErrorBoundary>
         </div>
 

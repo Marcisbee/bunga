@@ -3,7 +3,11 @@ import { Exome, addMiddleware, registerLoadable } from 'exome';
 import { exomeDevtools } from 'exome/devtools';
 import { BehaviorSubject } from 'rxjs';
 
-import { GetProjectByIdDocument, GetProjectsByUserDocument, InsertProjectDocument } from '../graphql';
+import {
+  GetProjectByIdDocument,
+  GetProjectsByUserDocument,
+  InsertProjectDocument,
+} from '../graphql';
 
 import { ComponentPositionStore, ComponentStore } from './component.store';
 import { edgeGroups } from './edges/all-edges';
@@ -29,11 +33,12 @@ if (process.env.NODE_ENV !== 'production') {
   );
 }
 
-type APISpaceElementTypes = {
+export type APISpaceElementTypes = {
   type: 'element';
   ref?: string;
   tag?: string;
-  props: Record<string, never>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  props: Record<string, any>;
   children: APISpaceElementTypes[];
 } | {
   type: 'text';
@@ -48,7 +53,7 @@ interface APISpaceComponentPosition {
   height: number;
 }
 
-interface APISpaceComponent {
+export interface APISpaceComponent {
   id: string;
   name: string;
   position: APISpaceComponentPosition;
@@ -74,7 +79,7 @@ interface APISpaceEdgePosition {
   height: number;
 }
 
-interface APISpaceEdge {
+export interface APISpaceEdge {
   id: string;
   type: string;
   input: Record<string, APISpaceEdgeInputTypes>;
@@ -93,6 +98,11 @@ export class Store extends Exome {
   public async getProjectById(id: string) {
     if (!this.user.user) {
       return;
+    }
+
+    // @TODO: Update the project.
+    if (this.projects[id]) {
+      return this.activeProject = this.projects[id];
     }
 
     const output = await this.user.client
@@ -256,15 +266,13 @@ export class Store extends Exome {
       ));
 
       return new SpaceStore(
+        space.id,
         space.name,
         undefined,
         components,
         edges,
       );
     });
-    if (spaceStores.length === 0) {
-      spaceStores.push(new SpaceStore('Space 1'));
-    }
 
     if (!this.projects[id]) {
       this.projects[id] = new ProjectStore(
@@ -276,8 +284,6 @@ export class Store extends Exome {
         tokenStores,
       );
     }
-
-    // @TODO: Update the project.
 
     return this.activeProject = this.projects[id];
   }

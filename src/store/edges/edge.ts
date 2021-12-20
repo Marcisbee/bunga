@@ -19,6 +19,8 @@ import { EdgePosition } from './position';
 export const EdgeStyles: Record<string, Record<'color' | 'hr' | 'bg', string>> = nestie(style, '-');
 
 export class Edge extends Exome {
+  public static type: string;
+
   public static title: string;
 
   public static style?: keyof typeof EdgeStyles;
@@ -37,6 +39,10 @@ export class Edge extends Exome {
     public id: string = nanoid(20),
   ) {
     super();
+  }
+
+  public get type() {
+    return (this.constructor as typeof Edge).type;
   }
 
   public get title() {

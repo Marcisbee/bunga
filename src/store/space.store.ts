@@ -23,6 +23,7 @@ export class SpaceStore extends Exome {
   public activeElement = new ActiveElementStore();
 
   constructor(
+    public id: string,
     public name: string,
     public path: string = permalink(name),
     public components: ComponentStore[] = [],

@@ -75,5 +75,12 @@ export const edgeGroups: Record<string, Record<string, EdgeConstructor>> = {
   },
 };
 
+const flatGroup = flattie<Record<string, EdgeConstructor>>(edgeGroups);
+
+Object.entries(flatGroup).forEach(([key, edge]) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (edge as any).type = key;
+});
+
 export const allEdges: EdgeConstructor[] = ([] as EdgeConstructor[])
-  .concat(...Object.values(flattie<Record<string, EdgeConstructor[]>>(edgeGroups)));
+  .concat(...Object.values(flatGroup));

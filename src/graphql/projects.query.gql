@@ -3,21 +3,20 @@ query GetProjectById($id: uuid!) {
     id
     image
     title
-    content
     created_at
     updated_at
-    spaces {
+    spaces(order_by: {created_at: asc}) {
       id
       name
       edges
       components
     }
-    styles {
+    styles(order_by: {created_at: asc}) {
       id
       name
       style
     }
-    tokens {
+    tokens(order_by: {created_at: asc}) {
       id
       name
       tokens

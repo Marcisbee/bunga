@@ -1,10 +1,27 @@
 import { Exome, registerLoadable } from 'exome';
 
+import {
+  CreateSpaceDocument,
+  CreateStyleDocument,
+  SaveProjectDocument,
+  SaveSpaceDocument,
+  SaveStyleDocument,
+  SaveTokensDocument,
+} from '../graphql';
 import { permalink } from '../utils/permalink';
 
+import { Connection } from './edges/connection';
 import { ElementTextEdge } from './edges/element/element-text.edge';
 import { ElementEdge } from './edges/element/element.edge';
+import { ElementTextStore } from './element-text.store';
+import { ElementStore } from './element.store';
 import { SpaceStore } from './space.store';
+import {
+  APISpaceComponent,
+  APISpaceEdge,
+  APISpaceElementTypes,
+  store,
+} from './store';
 import { ActiveStyleStore, StyleStore } from './style.store';
 import { TokenStore } from './token.store';
 import { undoable } from './undo.store';
@@ -22,9 +39,7 @@ export class ProjectStore extends Exome {
     public id: string,
     public name: string,
     public path: string = permalink(name),
-    public spaces: SpaceStore[] = [
-      new SpaceStore('Space 1'),
-    ],
+    public spaces: SpaceStore[] = [],
     public styles: StyleStore[] = [],
     public tokens: TokenStore[] = [
       new TokenStore(`${name} Tokens`),
@@ -51,8 +66,20 @@ export class ProjectStore extends Exome {
       'activeSpace',
     ],
   })
-  public addSpace(name = `Space ${this.spaces.length + 1}`) {
-    const space = new SpaceStore(name);
+  public async addSpace(name = `Space ${this.spaces.length + 1}`) {
+    if (!store.user.client) {
+      return;
+    }
+
+    const newSpaceId = await store.user.client
+      .mutation(CreateSpaceDocument, {
+        name,
+        projectId: store.activeProject!.id,
+      })
+      .toPromise()
+      .then((response) => response.data?.insert_spaces_one?.id);
+
+    const space = new SpaceStore(newSpaceId, name);
 
     this.spaces.push(space);
     this.activeSpace = space;
@@ -86,8 +113,21 @@ export class ProjectStore extends Exome {
       'activeStyle',
     ],
   })
-  public addStyle() {
-    const style = new StyleStore(`Style ${this.styles.length + 1}`);
+  public async addStyle() {
+    if (!store.user.client) {
+      return;
+    }
+
+    const name = `Style ${this.styles.length + 1}`;
+    const newStyleId = await store.user.client
+      .mutation(CreateStyleDocument, {
+        name,
+        projectId: store.activeProject!.id,
+      })
+      .toPromise()
+      .then((response) => response.data?.insert_styles_one?.id);
+
+    const style = new StyleStore(name, undefined, newStyleId);
 
     this.styles.push(style);
     this.activeStyle.setActive(style);
@@ -96,7 +136,6 @@ export class ProjectStore extends Exome {
   }
 
   @undoable({
-    saveIntermediateActions: true,
     dependencies: [
       'name',
       'path',
@@ -106,6 +145,160 @@ export class ProjectStore extends Exome {
     this.name = name;
     this.path = path;
   }
+
+  public save = async () => {
+    if (!store.user.user) {
+      return;
+    }
+
+    const stylePromises = this.styles
+      .map(({ id: itemId, name, css }) => (
+        store.user.client
+          .mutation(SaveStyleDocument, {
+            id: itemId,
+            name,
+            style: css,
+          })
+          .toPromise()
+      ));
+
+    const tokensPromises = this.tokens
+      .map(({ id: itemId, name, tokens }) => (
+        store.user.client
+          .mutation(SaveTokensDocument, {
+            id: itemId,
+            name,
+            tokens,
+          })
+          .toPromise()
+      ));
+
+    const spacesPromises = this.spaces
+      .map(({
+        id: itemId,
+        name,
+        edges,
+        components,
+      }) => (
+        store.user.client
+          .mutation(SaveSpaceDocument, {
+            id: itemId,
+            name,
+            edges: edges.map((edge) => {
+              const output: APISpaceEdge = {
+                id: edge.id,
+                type: edge.type,
+                input: {},
+                position: {
+                  x: edge.position.x,
+                  y: edge.position.y,
+                  width: edge.position.width,
+                  height: edge.position.height,
+                },
+              };
+
+              Object.entries(edge.input).forEach(([key, value]) => {
+                const data = value.getValue();
+
+                if (data instanceof Connection) {
+                  output.input[key] = {
+                    type: 'connection',
+                    from: data.from.id,
+                    path: data.path,
+                  };
+                  return;
+                }
+
+                if (data instanceof StyleStore) {
+                  output.input[key] = {
+                    type: 'style',
+                    id: data.id,
+                  };
+                  return;
+                }
+
+                output.input[key] = {
+                  type: 'value',
+                  value: data,
+                };
+              });
+
+              return output;
+            }),
+            components: components.map((component) => {
+              function buildChildrenList(
+                child: ElementStore | ElementTextStore,
+              ): APISpaceElementTypes {
+                if (child instanceof ElementStore) {
+                  if (child.type instanceof ElementEdge) {
+                    return {
+                      type: 'element',
+                      ref: child.type.id,
+                      props: child.props,
+                      children: child.children.map(buildChildrenList),
+                    };
+                  }
+
+                  return {
+                    type: 'element',
+                    tag: child.type,
+                    props: child.props,
+                    children: child.children.map(buildChildrenList),
+                  };
+                }
+
+                if (child instanceof ElementTextStore) {
+                  if (child.text instanceof ElementTextEdge) {
+                    return {
+                      type: 'text',
+                      ref: child.text.id,
+                    };
+                  }
+
+                  return {
+                    type: 'text',
+                    text: child.text,
+                  };
+                }
+
+                return {
+                  type: 'text',
+                  text: '',
+                };
+              }
+
+              const output: APISpaceComponent = {
+                id: component.id,
+                name: component.name,
+                children: component.root.children.map(buildChildrenList),
+                position: {
+                  x: component.position.x,
+                  y: component.position.y,
+                  width: component.position.width,
+                  height: component.position.height,
+                },
+              };
+
+              return output;
+            }),
+          })
+          .toPromise()
+      ));
+
+    const projectPromise = store.user.client
+      .mutation(SaveProjectDocument, {
+        id: this.id,
+        title: this.name,
+      })
+      .toPromise();
+
+    await Promise.all([
+      ...stylePromises,
+      ...tokensPromises,
+      ...spacesPromises,
+      projectPromise,
+    ]);
+  };
 }
 
 export class ProjectDetailsStore extends Exome {
