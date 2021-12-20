@@ -9,7 +9,8 @@ query GetProjectById($id: uuid!) {
     spaces {
       id
       name
-      content
+      edges
+      components
     }
     styles {
       id

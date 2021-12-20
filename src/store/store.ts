@@ -3,6 +3,7 @@ import { exomeDevtools } from 'exome/devtools';
 
 import { GetProjectByIdDocument, GetProjectsByUserDocument, InsertProjectDocument } from '../graphql';
 
+import { ComponentPositionStore, ComponentStore } from './component.store';
 import { ProjectDetailsStore, ProjectStore } from './project.store';
 import { SpaceStore } from './space.store';
 import { StyleStore } from './style.store';
@@ -17,6 +18,20 @@ if (process.env.NODE_ENV !== 'production') {
       maxAge: 30,
     }),
   );
+}
+
+interface APISpaceComponentPosition {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+interface APISpaceComponent {
+  id: string;
+  name: string;
+  position: APISpaceComponentPosition;
+  children: any[];
 }
 
 export class Store extends Exome {
@@ -43,7 +58,25 @@ export class Store extends Exome {
       throw new Error('Project was not found');
     }
 
-    const spaceStores = project.spaces.map((space) => new SpaceStore(space.name));
+    const spaceStores = project.spaces.map((space) => new SpaceStore(
+      space.name,
+      undefined,
+      space.components?.map((component: APISpaceComponent) => (
+        new ComponentStore(
+          component.id,
+          new ComponentPositionStore(
+            component.position.x,
+            component.position.y,
+            component.position.width,
+            component.position.height,
+          ),
+          component.name,
+          undefined,
+          // @TODO: Insert children.
+        )
+      )),
+      // @TODO: Insert edges.
+    ));
     if (spaceStores.length === 0) {
       spaceStores.push(new SpaceStore('Space 1'));
     }
@@ -54,18 +87,20 @@ export class Store extends Exome {
       tokenStores.push(new TokenStore('Tokens 1'));
     }
 
-    return this.activeProject = (
-      this.projects[id] || (
-        this.projects[id] = new ProjectStore(
-          id,
-          project.title,
-          undefined,
-          spaceStores,
-          styleStores,
-          tokenStores,
-        )
-      )
-    );
+    if (!this.projects[id]) {
+      this.projects[id] = new ProjectStore(
+        id,
+        project.title,
+        undefined,
+        spaceStores,
+        styleStores,
+        tokenStores,
+      );
+    }
+
+    // @TODO: Update the project.
+
+    return this.activeProject = this.projects[id];
   }
 
   public async getProjects() {

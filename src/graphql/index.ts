@@ -516,7 +516,8 @@ export type Spaces_Aggregate_Order_By = {
 
 /** append existing jsonb value of filtered columns with new jsonb value */
 export type Spaces_Append_Input = {
-  content?: InputMaybe<Scalars['jsonb']>;
+  components?: InputMaybe<Scalars['jsonb']>;
+  edges?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** input type for inserting array relation for remote table "spaces" */
@@ -531,8 +532,9 @@ export type Spaces_Bool_Exp = {
   _and?: InputMaybe<Array<Spaces_Bool_Exp>>;
   _not?: InputMaybe<Spaces_Bool_Exp>;
   _or?: InputMaybe<Array<Spaces_Bool_Exp>>;
-  content?: InputMaybe<Jsonb_Comparison_Exp>;
+  components?: InputMaybe<Jsonb_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+  edges?: InputMaybe<Jsonb_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   project?: InputMaybe<Projects_Bool_Exp>;
@@ -548,23 +550,27 @@ export enum Spaces_Constraint {
 
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 export type Spaces_Delete_At_Path_Input = {
-  content?: InputMaybe<Array<Scalars['String']>>;
+  components?: InputMaybe<Array<Scalars['String']>>;
+  edges?: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
 export type Spaces_Delete_Elem_Input = {
-  content?: InputMaybe<Scalars['Int']>;
+  components?: InputMaybe<Scalars['Int']>;
+  edges?: InputMaybe<Scalars['Int']>;
 };
 
 /** delete key/value pair or string element. key/value pairs are matched based on their key value */
 export type Spaces_Delete_Key_Input = {
-  content?: InputMaybe<Scalars['String']>;
+  components?: InputMaybe<Scalars['String']>;
+  edges?: InputMaybe<Scalars['String']>;
 };
 
 /** input type for inserting data into table "spaces" */
 export type Spaces_Insert_Input = {
-  content?: InputMaybe<Scalars['jsonb']>;
+  components?: InputMaybe<Scalars['jsonb']>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
+  edges?: InputMaybe<Scalars['jsonb']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
   project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
@@ -599,8 +605,9 @@ export type Spaces_On_Conflict = {
 
 /** Ordering options when selecting data from "spaces". */
 export type Spaces_Order_By = {
-  content?: InputMaybe<Order_By>;
+  components?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
+  edges?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   project?: InputMaybe<Projects_Order_By>;
@@ -615,15 +622,18 @@ export type Spaces_Pk_Columns_Input = {
 
 /** prepend existing jsonb value of filtered columns with new jsonb value */
 export type Spaces_Prepend_Input = {
-  content?: InputMaybe<Scalars['jsonb']>;
+  components?: InputMaybe<Scalars['jsonb']>;
+  edges?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** select columns of table "spaces" */
 export enum Spaces_Select_Column {
   /** column name */
-  Content = 'content',
+  Components = 'components',
   /** column name */
   CreatedAt = 'created_at',
+  /** column name */
+  Edges = 'edges',
   /** column name */
   Id = 'id',
   /** column name */
@@ -636,8 +646,9 @@ export enum Spaces_Select_Column {
 
 /** input type for updating data in table "spaces" */
 export type Spaces_Set_Input = {
-  content?: InputMaybe<Scalars['jsonb']>;
+  components?: InputMaybe<Scalars['jsonb']>;
   created_at?: InputMaybe<Scalars['timestamptz']>;
+  edges?: InputMaybe<Scalars['jsonb']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
   project_id?: InputMaybe<Scalars['uuid']>;
@@ -647,9 +658,11 @@ export type Spaces_Set_Input = {
 /** update columns of table "spaces" */
 export enum Spaces_Update_Column {
   /** column name */
-  Content = 'content',
+  Components = 'components',
   /** column name */
   CreatedAt = 'created_at',
+  /** column name */
+  Edges = 'edges',
   /** column name */
   Id = 'id',
   /** column name */
@@ -959,7 +972,7 @@ export type GetProjectByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetProjectByIdQuery = { projects_by_pk?: { id: any, image?: string | null | undefined, title: string, content?: any | null | undefined, created_at: any, updated_at: any, spaces: Array<{ id: any, name: string, content?: any | null | undefined }>, styles: Array<{ id: any, name: string, style: string }>, tokens: Array<{ id: any, name: string, tokens?: string | null | undefined }> } | null | undefined };
+export type GetProjectByIdQuery = { projects_by_pk?: { id: any, image?: string | null | undefined, title: string, content?: any | null | undefined, created_at: any, updated_at: any, spaces: Array<{ id: any, name: string, edges?: any | null | undefined, components?: any | null | undefined }>, styles: Array<{ id: any, name: string, style: string }>, tokens: Array<{ id: any, name: string, tokens?: string | null | undefined }> } | null | undefined };
 
 export type GetProjectsByUserQueryVariables = Exact<{
   id: Scalars['uuid'];
@@ -970,5 +983,5 @@ export type GetProjectsByUserQuery = { projects: Array<{ id: any, image?: string
 
 
 export const InsertProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"InsertProject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"jsonb"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_projects_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"content"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<InsertProjectMutation, InsertProjectMutationVariables>;
-export const GetProjectByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProjectById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"spaces"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"content"}}]}},{"kind":"Field","name":{"kind":"Name","value":"styles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"style"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tokens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tokens"}}]}}]}}]}}]} as unknown as DocumentNode<GetProjectByIdQuery, GetProjectByIdQueryVariables>;
+export const GetProjectByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProjectById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"spaces"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"edges"}},{"kind":"Field","name":{"kind":"Name","value":"components"}}]}},{"kind":"Field","name":{"kind":"Name","value":"styles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"style"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tokens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tokens"}}]}}]}}]}}]} as unknown as DocumentNode<GetProjectByIdQuery, GetProjectByIdQueryVariables>;
 export const GetProjectsByUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProjectsByUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"owner_user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"updated_at"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<GetProjectsByUserQuery, GetProjectsByUserQueryVariables>;
