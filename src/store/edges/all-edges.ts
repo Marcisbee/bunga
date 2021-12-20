@@ -1,3 +1,5 @@
+import { flattie } from 'flattie';
+
 import { CountEdge } from './data/count.edge';
 import { ArrayConcatEdge } from './data/data.array-concat.edge';
 import { ArrayEdge } from './data/data.array.edge';
@@ -27,51 +29,51 @@ import { StyleEdge } from './style.edge';
 
 export type EdgeConstructor = new (...args: any[]) => Edge;
 
-export const edgeGroups: Record<string, EdgeConstructor[]> = {
-  data: [
-    StringEdge,
-    NumberEdge,
-    BooleanEdge,
-    ArrayEdge,
-  ],
-  templates: [
-    ElementEdge,
-    ElementTextEdge,
-  ],
-  style: [
-    StyleEdge,
-  ],
-  event: [
-    MouseEventEdge,
-  ],
-  state: [
-    CountEdge,
-    ToggleEdge,
-  ],
-  math: [
-    MathAddEdge,
-    MathSubtractEdge,
-    MathMultiplyEdge,
-    MathDivideEdge,
-  ],
-  logic: [
-    LogicEqualsEdge,
-    LogicGreaterThanEdge,
-    LogicGreaterThanOrEqualEdge,
-    LogicLessThanEdge,
-    LogicLessThanOrEqualEdge,
-    LogicAndEdge,
-    LogicOrEdge,
-    LogicNotEdge,
-    LogicGateEdge,
-  ],
-  utilities: [
-    ArrayConcatEdge,
-  ],
-  debug: [
-    DebugLogEdge,
-  ],
+export const edgeGroups: Record<string, Record<string, EdgeConstructor>> = {
+  data: {
+    string: StringEdge,
+    number: NumberEdge,
+    boolean: BooleanEdge,
+    array: ArrayEdge,
+  },
+  templates: {
+    element: ElementEdge,
+    text: ElementTextEdge,
+  },
+  style: {
+    style: StyleEdge,
+  },
+  event: {
+    mouse: MouseEventEdge,
+  },
+  state: {
+    count: CountEdge,
+    toggle: ToggleEdge,
+  },
+  math: {
+    add: MathAddEdge,
+    subtract: MathSubtractEdge,
+    multiply: MathMultiplyEdge,
+    divide: MathDivideEdge,
+  },
+  logic: {
+    equals: LogicEqualsEdge,
+    greaterThan: LogicGreaterThanEdge,
+    greaterThanOrEqual: LogicGreaterThanOrEqualEdge,
+    lessThan: LogicLessThanEdge,
+    lessThanOrEqual: LogicLessThanOrEqualEdge,
+    and: LogicAndEdge,
+    or: LogicOrEdge,
+    not: LogicNotEdge,
+    gate: LogicGateEdge,
+  },
+  utilities: {
+    arrayConcat: ArrayConcatEdge,
+  },
+  debug: {
+    log: DebugLogEdge,
+  },
 };
 
 export const allEdges: EdgeConstructor[] = ([] as EdgeConstructor[])
-  .concat(...Object.values(edgeGroups));
+  .concat(...Object.values(flattie<Record<string, EdgeConstructor[]>>(edgeGroups)));

@@ -136,7 +136,7 @@ export function EdgeSelectorComponent({ onClose }: EdgeSelectorComponentProps) {
               </button>
             </del>
             {Object.entries(edgeGroups).map(([group, edges]) => {
-              const filteredEdges = edges
+              const filteredEdges = Object.values(edges)
                 .filter((edge) => filteredEdgeList.indexOf(edge) !== -1);
 
               if (filteredEdges.length === 0) {
@@ -164,7 +164,7 @@ export function EdgeSelectorComponent({ onClose }: EdgeSelectorComponentProps) {
               <>
                 {Object.entries(edgeGroups)
                   .map(([group, edges]) => {
-                    const filteredEdges = edges
+                    const filteredEdges = Object.values(edges)
                       .filter((edge) => filteredEdgeList.indexOf(edge) !== -1);
 
                     if (filteredEdges.length === 0) {
