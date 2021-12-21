@@ -16,7 +16,12 @@ interface EdgeComponentProps {
 
 export function EdgeComponent({ edge }: EdgeComponentProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { x, y, width } = useStore(edge.position);
+  const {
+    x,
+    y,
+    width,
+    height,
+  } = useStore(edge.position);
   const {
     selectedEdges,
     selectEdge,
@@ -26,8 +31,10 @@ export function EdgeComponent({ edge }: EdgeComponentProps) {
   const isActive = selectedEdges.indexOf(edge) > -1;
 
   useLayoutEffect(() => {
-    edge.position.setHeight(ref.current!.offsetHeight);
-    store.activeProject!.activeSpace.boundary.updateBoundary();
+    if (ref.current!.offsetHeight !== height) {
+      edge.position.setHeight(ref.current!.offsetHeight);
+      store.activeProject!.activeSpace.boundary.updateBoundary();
+    }
 
     const unsubscribe = onAction(EdgePositionSilent, 'moveTo', (instance) => {
       if (instance !== edge.position.silent) {

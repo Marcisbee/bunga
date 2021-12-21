@@ -234,5 +234,17 @@ function EdgeOutputConnection({ edge, id }: { edge: Edge, id: string }): React.R
     return value.name as unknown as React.ReactElement;
   }
 
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => {
+        if (item instanceof StyleStore) {
+          return item.name as unknown as React.ReactElement;
+        }
+
+        return (String(item == null ? '' : item));
+      })
+      .join(', ') as unknown as React.ReactElement;
+  }
+
   return (String(value == null ? '' : value)) as unknown as React.ReactElement;
 }
