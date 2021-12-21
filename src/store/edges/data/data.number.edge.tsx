@@ -50,7 +50,7 @@ function RenderValue({ edge }: { edge: NumberEdge }) {
   return (
     <input
       type="number"
-      value={value || ''}
+      value={String(value)}
       onInput={(event) => {
         updateInputValue(Number((event.target as HTMLInputElement).value));
       }}
