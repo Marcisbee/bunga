@@ -1,13 +1,14 @@
-mutation InsertProject($title: String!) {
+mutation InsertProject($title: String!, $spaceId: String!) {
   insert_projects_one(object: {
     title: $title,
-    spaces: {
-      data: {
+    spaces: [
+      {
+        id: $spaceId,
         name: "Space 1",
         edges: [],
         components: []
       }
-    }
+    ]
     tokens: {
       data: {
         name: "Tokens 1",
@@ -20,28 +21,13 @@ mutation InsertProject($title: String!) {
     title
     created_at
     updated_at
-    spaces {
-      id
-      name
-      edges
-      components
-    }
-    styles {
-      id
-      name
-      style
-    }
+    spaces
+    styles
     tokens {
       id
       name
       tokens
     }
-  }
-}
-
-mutation SaveStyle($id: uuid!, $style: String!, $name: String!) {
-  update_styles_by_pk(pk_columns: {id: $id}, _set: {style: $style, name: $name}) {
-    updated_at
   }
 }
 
@@ -51,32 +37,14 @@ mutation SaveTokens($id: uuid!, $tokens: String!, $name: String!) {
   }
 }
 
-mutation SaveProject($id: uuid!, $title: String!) {
-  update_projects_by_pk(pk_columns: {id: $id}, _set: {title: $title}) {
+mutation SaveProject($id: uuid!, $title: String!, $spaces: jsonb!, $styles: jsonb!) {
+  update_projects_by_pk(pk_columns: {id: $id}, _set: {title: $title, spaces: $spaces, styles: $styles}) {
     updated_at
-  }
-}
-
-mutation SaveSpace($id: uuid!, $name: String!, $edges: jsonb!, $components: jsonb!) {
-  update_spaces_by_pk(pk_columns: {id: $id}, _set: {name: $name, edges: $edges, components: $components}) {
-    updated_at
-  }
-}
-
-mutation CreateStyle($name: String!, $projectId: uuid!) {
-  insert_styles_one(object: {name: $name, project_id: $projectId, style: ""}) {
-    id
   }
 }
 
 mutation CreateTokens($name: String!, $projectId: uuid!) {
   insert_tokens_one(object: {name: $name, project_id: $projectId, tokens: ""}) {
-    id
-  }
-}
-
-mutation CreateSpace($name: String!, $projectId: uuid!) {
-  insert_spaces_one(object: {name: $name, project_id: $projectId}) {
     id
   }
 }

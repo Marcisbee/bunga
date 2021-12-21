@@ -315,6 +315,12 @@ export type Projects_Aggregate_Order_By = {
   min?: InputMaybe<Projects_Min_Order_By>;
 };
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Projects_Append_Input = {
+  spaces?: InputMaybe<Scalars['jsonb']>;
+  styles?: InputMaybe<Scalars['jsonb']>;
+};
+
 /** input type for inserting array relation for remote table "projects" */
 export type Projects_Arr_Rel_Insert_Input = {
   data: Array<Projects_Insert_Input>;
@@ -333,8 +339,8 @@ export type Projects_Bool_Exp = {
   image?: InputMaybe<String_Comparison_Exp>;
   owner_user?: InputMaybe<Auth_Users_Bool_Exp>;
   owner_user_id?: InputMaybe<Uuid_Comparison_Exp>;
-  spaces?: InputMaybe<Spaces_Bool_Exp>;
-  styles?: InputMaybe<Styles_Bool_Exp>;
+  spaces?: InputMaybe<Jsonb_Comparison_Exp>;
+  styles?: InputMaybe<Jsonb_Comparison_Exp>;
   team_id?: InputMaybe<Uuid_Comparison_Exp>;
   title?: InputMaybe<String_Comparison_Exp>;
   tokens?: InputMaybe<Tokens_Bool_Exp>;
@@ -347,6 +353,24 @@ export enum Projects_Constraint {
   ProjectsPkey = 'projects_pkey'
 }
 
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Projects_Delete_At_Path_Input = {
+  spaces?: InputMaybe<Array<Scalars['String']>>;
+  styles?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Projects_Delete_Elem_Input = {
+  spaces?: InputMaybe<Scalars['Int']>;
+  styles?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Projects_Delete_Key_Input = {
+  spaces?: InputMaybe<Scalars['String']>;
+  styles?: InputMaybe<Scalars['String']>;
+};
+
 /** input type for inserting data into table "projects" */
 export type Projects_Insert_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']>;
@@ -355,8 +379,8 @@ export type Projects_Insert_Input = {
   image?: InputMaybe<Scalars['String']>;
   owner_user?: InputMaybe<Auth_Users_Obj_Rel_Insert_Input>;
   owner_user_id?: InputMaybe<Scalars['uuid']>;
-  spaces?: InputMaybe<Spaces_Arr_Rel_Insert_Input>;
-  styles?: InputMaybe<Styles_Arr_Rel_Insert_Input>;
+  spaces?: InputMaybe<Scalars['jsonb']>;
+  styles?: InputMaybe<Scalars['jsonb']>;
   team_id?: InputMaybe<Scalars['uuid']>;
   title?: InputMaybe<Scalars['String']>;
   tokens?: InputMaybe<Tokens_Arr_Rel_Insert_Input>;
@@ -409,8 +433,8 @@ export type Projects_Order_By = {
   image?: InputMaybe<Order_By>;
   owner_user?: InputMaybe<Auth_Users_Order_By>;
   owner_user_id?: InputMaybe<Order_By>;
-  spaces_aggregate?: InputMaybe<Spaces_Aggregate_Order_By>;
-  styles_aggregate?: InputMaybe<Styles_Aggregate_Order_By>;
+  spaces?: InputMaybe<Order_By>;
+  styles?: InputMaybe<Order_By>;
   team_id?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
   tokens_aggregate?: InputMaybe<Tokens_Aggregate_Order_By>;
@@ -420,6 +444,12 @@ export type Projects_Order_By = {
 /** primary key columns input for table: projects */
 export type Projects_Pk_Columns_Input = {
   id: Scalars['uuid'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Projects_Prepend_Input = {
+  spaces?: InputMaybe<Scalars['jsonb']>;
+  styles?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** select columns of table "projects" */
@@ -435,6 +465,10 @@ export enum Projects_Select_Column {
   /** column name */
   OwnerUserId = 'owner_user_id',
   /** column name */
+  Spaces = 'spaces',
+  /** column name */
+  Styles = 'styles',
+  /** column name */
   TeamId = 'team_id',
   /** column name */
   Title = 'title',
@@ -449,6 +483,8 @@ export type Projects_Set_Input = {
   id?: InputMaybe<Scalars['uuid']>;
   image?: InputMaybe<Scalars['String']>;
   owner_user_id?: InputMaybe<Scalars['uuid']>;
+  spaces?: InputMaybe<Scalars['jsonb']>;
+  styles?: InputMaybe<Scalars['jsonb']>;
   team_id?: InputMaybe<Scalars['uuid']>;
   title?: InputMaybe<Scalars['String']>;
   updated_at?: InputMaybe<Scalars['timestamptz']>;
@@ -467,305 +503,13 @@ export enum Projects_Update_Column {
   /** column name */
   OwnerUserId = 'owner_user_id',
   /** column name */
+  Spaces = 'spaces',
+  /** column name */
+  Styles = 'styles',
+  /** column name */
   TeamId = 'team_id',
   /** column name */
   Title = 'title',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
-/** order by aggregate values of table "spaces" */
-export type Spaces_Aggregate_Order_By = {
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Spaces_Max_Order_By>;
-  min?: InputMaybe<Spaces_Min_Order_By>;
-};
-
-/** append existing jsonb value of filtered columns with new jsonb value */
-export type Spaces_Append_Input = {
-  components?: InputMaybe<Scalars['jsonb']>;
-  edges?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** input type for inserting array relation for remote table "spaces" */
-export type Spaces_Arr_Rel_Insert_Input = {
-  data: Array<Spaces_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Spaces_On_Conflict>;
-};
-
-/** Boolean expression to filter rows from the table "spaces". All fields are combined with a logical 'AND'. */
-export type Spaces_Bool_Exp = {
-  _and?: InputMaybe<Array<Spaces_Bool_Exp>>;
-  _not?: InputMaybe<Spaces_Bool_Exp>;
-  _or?: InputMaybe<Array<Spaces_Bool_Exp>>;
-  components?: InputMaybe<Jsonb_Comparison_Exp>;
-  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  edges?: InputMaybe<Jsonb_Comparison_Exp>;
-  id?: InputMaybe<Uuid_Comparison_Exp>;
-  name?: InputMaybe<String_Comparison_Exp>;
-  project?: InputMaybe<Projects_Bool_Exp>;
-  project_id?: InputMaybe<Uuid_Comparison_Exp>;
-  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "spaces" */
-export enum Spaces_Constraint {
-  /** unique or primary key constraint */
-  SpacesPkey = 'spaces_pkey'
-}
-
-/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-export type Spaces_Delete_At_Path_Input = {
-  components?: InputMaybe<Array<Scalars['String']>>;
-  edges?: InputMaybe<Array<Scalars['String']>>;
-};
-
-/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-export type Spaces_Delete_Elem_Input = {
-  components?: InputMaybe<Scalars['Int']>;
-  edges?: InputMaybe<Scalars['Int']>;
-};
-
-/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-export type Spaces_Delete_Key_Input = {
-  components?: InputMaybe<Scalars['String']>;
-  edges?: InputMaybe<Scalars['String']>;
-};
-
-/** input type for inserting data into table "spaces" */
-export type Spaces_Insert_Input = {
-  components?: InputMaybe<Scalars['jsonb']>;
-  created_at?: InputMaybe<Scalars['timestamptz']>;
-  edges?: InputMaybe<Scalars['jsonb']>;
-  id?: InputMaybe<Scalars['uuid']>;
-  name?: InputMaybe<Scalars['String']>;
-  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
-  project_id?: InputMaybe<Scalars['uuid']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** order by max() on columns of table "spaces" */
-export type Spaces_Max_Order_By = {
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-  project_id?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** order by min() on columns of table "spaces" */
-export type Spaces_Min_Order_By = {
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-  project_id?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** on conflict condition type for table "spaces" */
-export type Spaces_On_Conflict = {
-  constraint: Spaces_Constraint;
-  update_columns?: Array<Spaces_Update_Column>;
-  where?: InputMaybe<Spaces_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "spaces". */
-export type Spaces_Order_By = {
-  components?: InputMaybe<Order_By>;
-  created_at?: InputMaybe<Order_By>;
-  edges?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-  project?: InputMaybe<Projects_Order_By>;
-  project_id?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: spaces */
-export type Spaces_Pk_Columns_Input = {
-  id: Scalars['uuid'];
-};
-
-/** prepend existing jsonb value of filtered columns with new jsonb value */
-export type Spaces_Prepend_Input = {
-  components?: InputMaybe<Scalars['jsonb']>;
-  edges?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** select columns of table "spaces" */
-export enum Spaces_Select_Column {
-  /** column name */
-  Components = 'components',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Edges = 'edges',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  ProjectId = 'project_id',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
-/** input type for updating data in table "spaces" */
-export type Spaces_Set_Input = {
-  components?: InputMaybe<Scalars['jsonb']>;
-  created_at?: InputMaybe<Scalars['timestamptz']>;
-  edges?: InputMaybe<Scalars['jsonb']>;
-  id?: InputMaybe<Scalars['uuid']>;
-  name?: InputMaybe<Scalars['String']>;
-  project_id?: InputMaybe<Scalars['uuid']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** update columns of table "spaces" */
-export enum Spaces_Update_Column {
-  /** column name */
-  Components = 'components',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Edges = 'edges',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  ProjectId = 'project_id',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
-/** order by aggregate values of table "styles" */
-export type Styles_Aggregate_Order_By = {
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Styles_Max_Order_By>;
-  min?: InputMaybe<Styles_Min_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "styles" */
-export type Styles_Arr_Rel_Insert_Input = {
-  data: Array<Styles_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Styles_On_Conflict>;
-};
-
-/** Boolean expression to filter rows from the table "styles". All fields are combined with a logical 'AND'. */
-export type Styles_Bool_Exp = {
-  _and?: InputMaybe<Array<Styles_Bool_Exp>>;
-  _not?: InputMaybe<Styles_Bool_Exp>;
-  _or?: InputMaybe<Array<Styles_Bool_Exp>>;
-  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  id?: InputMaybe<Uuid_Comparison_Exp>;
-  name?: InputMaybe<String_Comparison_Exp>;
-  project?: InputMaybe<Projects_Bool_Exp>;
-  project_id?: InputMaybe<Uuid_Comparison_Exp>;
-  style?: InputMaybe<String_Comparison_Exp>;
-  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "styles" */
-export enum Styles_Constraint {
-  /** unique or primary key constraint */
-  StylesPkey = 'styles_pkey'
-}
-
-/** input type for inserting data into table "styles" */
-export type Styles_Insert_Input = {
-  created_at?: InputMaybe<Scalars['timestamptz']>;
-  id?: InputMaybe<Scalars['uuid']>;
-  name?: InputMaybe<Scalars['String']>;
-  project?: InputMaybe<Projects_Obj_Rel_Insert_Input>;
-  project_id?: InputMaybe<Scalars['uuid']>;
-  style?: InputMaybe<Scalars['String']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** order by max() on columns of table "styles" */
-export type Styles_Max_Order_By = {
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-  project_id?: InputMaybe<Order_By>;
-  style?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** order by min() on columns of table "styles" */
-export type Styles_Min_Order_By = {
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-  project_id?: InputMaybe<Order_By>;
-  style?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** on conflict condition type for table "styles" */
-export type Styles_On_Conflict = {
-  constraint: Styles_Constraint;
-  update_columns?: Array<Styles_Update_Column>;
-  where?: InputMaybe<Styles_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "styles". */
-export type Styles_Order_By = {
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  name?: InputMaybe<Order_By>;
-  project?: InputMaybe<Projects_Order_By>;
-  project_id?: InputMaybe<Order_By>;
-  style?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: styles */
-export type Styles_Pk_Columns_Input = {
-  id: Scalars['uuid'];
-};
-
-/** select columns of table "styles" */
-export enum Styles_Select_Column {
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  ProjectId = 'project_id',
-  /** column name */
-  Style = 'style',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
-/** input type for updating data in table "styles" */
-export type Styles_Set_Input = {
-  created_at?: InputMaybe<Scalars['timestamptz']>;
-  id?: InputMaybe<Scalars['uuid']>;
-  name?: InputMaybe<Scalars['String']>;
-  project_id?: InputMaybe<Scalars['uuid']>;
-  style?: InputMaybe<Scalars['String']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** update columns of table "styles" */
-export enum Styles_Update_Column {
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  ProjectId = 'project_id',
-  /** column name */
-  Style = 'style',
   /** column name */
   UpdatedAt = 'updated_at'
 }
@@ -928,19 +672,11 @@ export type Uuid_Comparison_Exp = {
 
 export type InsertProjectMutationVariables = Exact<{
   title: Scalars['String'];
+  spaceId: Scalars['String'];
 }>;
 
 
-export type InsertProjectMutation = { insert_projects_one?: { id: any, image?: string | null | undefined, title: string, created_at: any, updated_at: any, spaces: Array<{ id: any, name: string, edges?: any | null | undefined, components?: any | null | undefined }>, styles: Array<{ id: any, name: string, style: string }>, tokens: Array<{ id: any, name: string, tokens?: string | null | undefined }> } | null | undefined };
-
-export type SaveStyleMutationVariables = Exact<{
-  id: Scalars['uuid'];
-  style: Scalars['String'];
-  name: Scalars['String'];
-}>;
-
-
-export type SaveStyleMutation = { update_styles_by_pk?: { updated_at: any } | null | undefined };
+export type InsertProjectMutation = { insert_projects_one?: { id: any, image?: string | null | undefined, title: string, created_at: any, updated_at: any, spaces: any, styles: any, tokens: Array<{ id: any, name: string, tokens?: string | null | undefined }> } | null | undefined };
 
 export type SaveTokensMutationVariables = Exact<{
   id: Scalars['uuid'];
@@ -954,28 +690,12 @@ export type SaveTokensMutation = { update_tokens_by_pk?: { updated_at: any } | n
 export type SaveProjectMutationVariables = Exact<{
   id: Scalars['uuid'];
   title: Scalars['String'];
+  spaces: Scalars['jsonb'];
+  styles: Scalars['jsonb'];
 }>;
 
 
 export type SaveProjectMutation = { update_projects_by_pk?: { updated_at: any } | null | undefined };
-
-export type SaveSpaceMutationVariables = Exact<{
-  id: Scalars['uuid'];
-  name: Scalars['String'];
-  edges: Scalars['jsonb'];
-  components: Scalars['jsonb'];
-}>;
-
-
-export type SaveSpaceMutation = { update_spaces_by_pk?: { updated_at: any } | null | undefined };
-
-export type CreateStyleMutationVariables = Exact<{
-  name: Scalars['String'];
-  projectId: Scalars['uuid'];
-}>;
-
-
-export type CreateStyleMutation = { insert_styles_one?: { id: any } | null | undefined };
 
 export type CreateTokensMutationVariables = Exact<{
   name: Scalars['String'];
@@ -985,20 +705,12 @@ export type CreateTokensMutationVariables = Exact<{
 
 export type CreateTokensMutation = { insert_tokens_one?: { id: any } | null | undefined };
 
-export type CreateSpaceMutationVariables = Exact<{
-  name: Scalars['String'];
-  projectId: Scalars['uuid'];
-}>;
-
-
-export type CreateSpaceMutation = { insert_spaces_one?: { id: any } | null | undefined };
-
 export type GetProjectByIdQueryVariables = Exact<{
   id: Scalars['uuid'];
 }>;
 
 
-export type GetProjectByIdQuery = { projects_by_pk?: { id: any, image?: string | null | undefined, title: string, created_at: any, updated_at: any, spaces: Array<{ id: any, name: string, edges?: any | null | undefined, components?: any | null | undefined }>, styles: Array<{ id: any, name: string, style: string }>, tokens: Array<{ id: any, name: string, tokens?: string | null | undefined }> } | null | undefined };
+export type GetProjectByIdQuery = { projects_by_pk?: { id: any, image?: string | null | undefined, title: string, created_at: any, updated_at: any, spaces: any, styles: any, tokens: Array<{ id: any, name: string, tokens?: string | null | undefined }> } | null | undefined };
 
 export type GetProjectsByUserQueryVariables = Exact<{
   id: Scalars['uuid'];
@@ -1008,13 +720,9 @@ export type GetProjectsByUserQueryVariables = Exact<{
 export type GetProjectsByUserQuery = { projects: Array<{ id: any, image?: string | null | undefined, title: string, created_at: any, updated_at: any }> };
 
 
-export const InsertProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"InsertProject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_projects_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"spaces"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"data"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"StringValue","value":"Space 1","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"edges"},"value":{"kind":"ListValue","values":[]}},{"kind":"ObjectField","name":{"kind":"Name","value":"components"},"value":{"kind":"ListValue","values":[]}}]}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"tokens"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"data"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"StringValue","value":"Tokens 1","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"tokens"},"value":{"kind":"StringValue","value":"","block":false}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"spaces"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"edges"}},{"kind":"Field","name":{"kind":"Name","value":"components"}}]}},{"kind":"Field","name":{"kind":"Name","value":"styles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"style"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tokens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tokens"}}]}}]}}]}}]} as unknown as DocumentNode<InsertProjectMutation, InsertProjectMutationVariables>;
-export const SaveStyleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SaveStyle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"style"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_styles_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"style"},"value":{"kind":"Variable","name":{"kind":"Name","value":"style"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<SaveStyleMutation, SaveStyleMutationVariables>;
+export const InsertProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"InsertProject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"spaceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_projects_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"spaces"},"value":{"kind":"ListValue","values":[{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"spaceId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"StringValue","value":"Space 1","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"edges"},"value":{"kind":"ListValue","values":[]}},{"kind":"ObjectField","name":{"kind":"Name","value":"components"},"value":{"kind":"ListValue","values":[]}}]}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"tokens"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"data"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"StringValue","value":"Tokens 1","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"tokens"},"value":{"kind":"StringValue","value":"","block":false}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"spaces"}},{"kind":"Field","name":{"kind":"Name","value":"styles"}},{"kind":"Field","name":{"kind":"Name","value":"tokens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tokens"}}]}}]}}]}}]} as unknown as DocumentNode<InsertProjectMutation, InsertProjectMutationVariables>;
 export const SaveTokensDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SaveTokens"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tokens"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_tokens_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"tokens"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tokens"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<SaveTokensMutation, SaveTokensMutationVariables>;
-export const SaveProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SaveProject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_projects_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<SaveProjectMutation, SaveProjectMutationVariables>;
-export const SaveSpaceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SaveSpace"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"edges"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"jsonb"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"components"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"jsonb"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_spaces_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"edges"},"value":{"kind":"Variable","name":{"kind":"Name","value":"edges"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"components"},"value":{"kind":"Variable","name":{"kind":"Name","value":"components"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<SaveSpaceMutation, SaveSpaceMutationVariables>;
-export const CreateStyleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateStyle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_styles_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"project_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"style"},"value":{"kind":"StringValue","value":"","block":false}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateStyleMutation, CreateStyleMutationVariables>;
+export const SaveProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SaveProject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"spaces"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"jsonb"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"styles"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"jsonb"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_projects_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"spaces"},"value":{"kind":"Variable","name":{"kind":"Name","value":"spaces"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"styles"},"value":{"kind":"Variable","name":{"kind":"Name","value":"styles"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<SaveProjectMutation, SaveProjectMutationVariables>;
 export const CreateTokensDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTokens"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_tokens_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"project_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"tokens"},"value":{"kind":"StringValue","value":"","block":false}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateTokensMutation, CreateTokensMutationVariables>;
-export const CreateSpaceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSpace"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_spaces_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"project_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateSpaceMutation, CreateSpaceMutationVariables>;
-export const GetProjectByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProjectById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"spaces"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"created_at"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"edges"}},{"kind":"Field","name":{"kind":"Name","value":"components"}}]}},{"kind":"Field","name":{"kind":"Name","value":"styles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"created_at"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"style"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tokens"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"created_at"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tokens"}}]}}]}}]}}]} as unknown as DocumentNode<GetProjectByIdQuery, GetProjectByIdQueryVariables>;
+export const GetProjectByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProjectById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"spaces"}},{"kind":"Field","name":{"kind":"Name","value":"styles"}},{"kind":"Field","name":{"kind":"Name","value":"tokens"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"created_at"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tokens"}}]}}]}}]}}]} as unknown as DocumentNode<GetProjectByIdQuery, GetProjectByIdQueryVariables>;
 export const GetProjectsByUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProjectsByUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"owner_user_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"updated_at"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]}}]} as unknown as DocumentNode<GetProjectsByUserQuery, GetProjectsByUserQueryVariables>;

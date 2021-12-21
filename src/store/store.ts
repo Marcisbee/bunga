@@ -1,6 +1,7 @@
 import dlv from 'dlv';
 import { Exome, addMiddleware, registerLoadable } from 'exome';
 import { exomeDevtools } from 'exome/devtools';
+import { nanoid } from 'nanoid';
 import { BehaviorSubject } from 'rxjs';
 
 import {
@@ -31,6 +32,19 @@ if (process.env.NODE_ENV !== 'production') {
       maxAge: 30,
     }),
   );
+}
+
+export interface APISpace {
+  id: string;
+  name: string;
+  edges: APISpaceEdge[];
+  components: APISpaceComponent[];
+}
+
+export interface APIStyle {
+  id: string;
+  name: string;
+  style: string;
 }
 
 export type APISpaceElementTypes = {
@@ -115,13 +129,13 @@ export class Store extends Exome {
       throw new Error('Project was not found');
     }
 
-    const styleStores = project.styles.map(({ id: itemId, name, style }) => new StyleStore(name, style || '', itemId));
+    const styleStores = (project.styles as APIStyle[]).map(({ id: itemId, name, style }) => new StyleStore(name, style || '', itemId));
     const tokenStores = project.tokens.map(({ id: itemId, name, tokens }) => new TokenStore(name, tokens || '', itemId));
     if (tokenStores.length === 0) {
       tokenStores.push(new TokenStore('Tokens 1'));
     }
 
-    const spaceStores = project.spaces.map((space) => {
+    const spaceStores = (project.spaces as APISpace[]).map((space) => {
       const edges = (space.edges as APISpaceEdge[])?.map((edgeData) => {
         const EdgeConstructor = dlv(edgeGroups, edgeData.type);
 
@@ -322,7 +336,7 @@ export class Store extends Exome {
     const output = await this.user.client
       .mutation(InsertProjectDocument, {
         title,
-        content: { name: 123 },
+        spaceId: nanoid(20),
       })
       .toPromise();
 

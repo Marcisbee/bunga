@@ -5,17 +5,8 @@ query GetProjectById($id: uuid!) {
     title
     created_at
     updated_at
-    spaces(order_by: {created_at: asc}) {
-      id
-      name
-      edges
-      components
-    }
-    styles(order_by: {created_at: asc}) {
-      id
-      name
-      style
-    }
+    spaces
+    styles
     tokens(order_by: {created_at: asc}) {
       id
       name
