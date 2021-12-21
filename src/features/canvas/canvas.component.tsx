@@ -1,12 +1,19 @@
 import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
-import { useLayoutEffect, useRef, useState } from 'react';
+import {
+  useLayoutEffect,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import TinyGesture from 'tinygesture';
 
 import { SelectionStore } from '../../store/move.store';
 import { SpaceStore } from '../../store/space.store';
+import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 import { onMouseMoveDiff } from '../../utils/on-mouse-move-diff';
 import { canvasToolsStore } from '../canvas-tools/canvas-tools.store';
@@ -146,6 +153,15 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
   const { resetPosition } = useStore(position);
 
   const { activeTool } = useStore(canvasToolsStore);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!store.activeProject?.id) {
+      return;
+    }
+
+    navigate(`/project/${store.activeProject.id}?space=${space.id}`, { replace: true });
+  }, [space.id]);
 
   useLayoutEffect(() => {
     const target = canvasRoot.current!;

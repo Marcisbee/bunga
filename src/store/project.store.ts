@@ -46,7 +46,14 @@ export class ProjectStore extends Exome {
   ) {
     super();
 
-    [this.activeSpace] = this.spaces;
+    const activeSpaceId = new URLSearchParams(window.location.search).get('space');
+    const activeSpace = spaces.find((space) => space.id === activeSpaceId);
+
+    if (activeSpaceId && activeSpace) {
+      this.activeSpace = activeSpace;
+    } else {
+      [this.activeSpace] = this.spaces;
+    }
   }
 
   @undoable({
