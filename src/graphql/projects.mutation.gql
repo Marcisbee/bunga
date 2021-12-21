@@ -1,6 +1,5 @@
-mutation InsertProject($content: jsonb, $title: String!) {
+mutation InsertProject($title: String!) {
   insert_projects_one(object: {
-    content: $content,
     title: $title,
     spaces: {
       data: {
