@@ -84,6 +84,9 @@ type APISpaceEdgeInputTypes = {
 } | {
   type: 'style';
   id: string;
+} | {
+  type: 'element';
+  id: string;
 } | null;
 
 interface APISpaceEdgePosition {

@@ -10,7 +10,7 @@ import style from './projects-list.module.scss';
 export function ProjectsListComponent() {
   const { projectsDetails } = useStore(store);
 
-  useSuspense(store.getProjects, [], { cacheTime: 10000 });
+  useSuspense(store.getProjects, []);
 
   const projectIds = Object.keys(projectsDetails);
 

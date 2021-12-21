@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
+import { Suspense } from 'react';
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 
@@ -15,15 +16,19 @@ test('returns function', () => {
   assert.type(ProjectsListComponent, 'function');
 });
 
-test('renders component correctly', () => {
+test('renders component correctly', async () => {
   const { container } = render((
-    <ProjectsListComponent />
+    <Suspense fallback="Loading">
+      <ProjectsListComponent />
+    </Suspense>
   ));
 
-  assert.snapshot(
-    container.innerHTML,
-    '<div>ProjectsList</div>',
-  );
+  await waitFor(() => {
+    assert.snapshot(
+      container.innerHTML,
+      '<div><div>No projects</div></div>',
+    );
+  });
 });
 
 test.run();

@@ -179,7 +179,7 @@ function Render({ edge }: { edge: ElementEdge }) {
         const style = project.addStyle();
         const styleEdge = space.addEdge(StyleEdge);
 
-        styleEdge.input.source.next(style);
+        styleEdge.input.source.next(style || null);
         styleEdge.output.default.connect('style', edge);
       }}
     >

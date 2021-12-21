@@ -57,7 +57,7 @@ function ProjectCanvas() {
 export function ProjectPage() {
   const params = useParams();
 
-  useSuspense(store.getProjectById, [params.id!], { cacheTime: 1 });
+  useSuspense(store.getProjectById, [params.id!]);
 
   return (
     <DndProvider backend={HTML5Backend}>

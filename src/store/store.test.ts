@@ -83,12 +83,14 @@ test('sets active project', async () => {
           id: 'id123',
           image: null,
           title: 'Test Project',
-          content: {},
+          spaces: [],
+          styles: [],
+          tokens: [],
           created_at: '2021-12-17T13:23:17.274612+00:00',
           updated_at: '2021-12-17T13:36:02.115706+00:00',
           __typename: 'projects',
         },
-      };
+      } as GetProjectByIdQuery;
     }),
   );
 
