@@ -70,6 +70,7 @@ interface APISpaceComponentPosition {
 
 export interface APISpaceComponent {
   id: string;
+  type: 'component' | 'shape';
   name: string;
   position: APISpaceComponentPosition;
   children: APISpaceElementTypes[];
@@ -273,6 +274,7 @@ export class Store extends Exome {
       const components = (space.components as APISpaceComponent[])?.map((component) => (
         new ComponentStore(
           component.id,
+          component.type,
           new ComponentPositionStore(
             component.position.x,
             component.position.y,

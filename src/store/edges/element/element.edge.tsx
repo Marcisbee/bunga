@@ -1,4 +1,3 @@
-import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import { BehaviorSubject } from 'rxjs';
 
@@ -95,60 +94,6 @@ function RenderValue({ edge }: { edge: ElementEdge }) {
   );
 }
 
-export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
-  const { css } = useStore(style);
-  const { tokens } = useStore(store.activeProject!.tokens[0]);
-
-  return (
-    <style>
-      {`:host {${tokens}}`}
-      {`#${id} {${css}}`}
-    </style>
-  );
-}
-
-interface RenderElementProps extends React.HTMLAttributes<HTMLDivElement> {
-  edge: ElementEdge,
-  defaultCss?: string,
-  children?: React.ReactNode,
-}
-
-export function RenderElement({
-  edge,
-  children,
-  defaultCss,
-  ...props
-}: RenderElementProps) {
-  const { select } = useStore(edge);
-
-  const elementStyle = useObservable(select.default);
-
-  const id = getExomeId(edge);
-
-  return (
-    <>
-      {elementStyle ? (
-        elementStyle instanceof Array ? (
-          elementStyle
-            .filter((style) => !!style)
-            .map((style) => (
-              <RenderCss id={id} style={style} />
-            ))
-        ) : (
-          <RenderCss id={id} style={elementStyle} />
-        )
-      ) : (
-        defaultCss && (
-          <style>{`#${id} { ${defaultCss} }`}</style>
-        )
-      )}
-      <div {...props} id={id}>
-        {children}
-      </div>
-    </>
-  );
-}
-
 function Render({ edge }: { edge: ElementEdge }) {
   useStore(edge);
 
@@ -183,7 +128,7 @@ function Render({ edge }: { edge: ElementEdge }) {
         styleEdge.output.default.connect('style', edge);
       }}
     >
-      <RenderElement
+      {/* <RenderElement
         edge={edge}
         defaultCss="background-color: #ccc;"
       >
@@ -193,7 +138,8 @@ function Render({ edge }: { edge: ElementEdge }) {
             __html: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
           }}
         />
-      </RenderElement>
+      </RenderElement> */}
+      TO BE REMOVED
     </div>
   );
 

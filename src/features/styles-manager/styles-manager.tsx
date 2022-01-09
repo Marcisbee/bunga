@@ -2,6 +2,8 @@ import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import { useState } from 'react';
 
+import { ElementStore } from '../../store/element.store';
+import { ShapeStore } from '../../store/shape.edge';
 import { store } from '../../store/store';
 import { ActiveStyleStore, StyleStore } from '../../store/style.store';
 import paneStyle from '../../styles/pane.module.scss';
@@ -71,11 +73,13 @@ function ListStylesComponent({
         type="button"
         onClick={(e) => {
           e.stopPropagation();
-          const component = addComponent();
+          const component = addComponent('shape', `Shape ${name}`);
 
-          // component.root.append(
-          //   new ElementStore(),
-          // );
+          const shape = new ShapeStore(styleStore);
+
+          component.root.append(
+            new ElementStore(shape),
+          );
         }}
       >
         USE

@@ -38,7 +38,10 @@ export class SpaceStore extends Exome {
       'components',
     ],
   })
-  public addComponent() {
+  public addComponent(
+    type: 'component' | 'shape' = 'component',
+    name = `Component ${this.components.length + 1}`,
+  ) {
     this.boundary.updateBoundary();
 
     let {
@@ -71,8 +74,9 @@ export class SpaceStore extends Exome {
 
     const component = new ComponentStore(
       nanoid(20),
+      type,
       position,
-      `Component ${this.components.length + 1}`,
+      name,
     );
     this.components.push(component);
     this.move.selectComponent(component);

@@ -156,6 +156,7 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
       role="button"
       className={cc([
         style.object,
+        component.type === 'shape' && style.shape,
         isActive && style.active,
       ])}
       onDoubleClick={(e) => {

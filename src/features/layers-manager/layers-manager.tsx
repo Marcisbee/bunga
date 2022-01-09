@@ -8,6 +8,7 @@ import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
 import { ElementEdge } from '../../store/edges/element/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
+import { ShapeStore } from '../../store/shape.edge';
 import { store } from '../../store/store';
 import paneStyle from '../../styles/pane.module.scss';
 import { cc } from '../../utils/class-names';
@@ -25,9 +26,9 @@ function TextElementLayerComponent({ edge }: { edge: ElementTextEdge }) {
   );
 }
 
-function ElementLayerComponent({ edge }: { edge: ElementEdge }) {
-  const { input } = useStore(edge);
-  const name = useObservable(input.name);
+function ElementLayerComponent({ shape }: { shape: ShapeStore }) {
+  const { style: styleStore } = useStore(shape);
+  const { name } = useStore(styleStore);
 
   return (
     <span className={style.itemName}>
@@ -90,6 +91,7 @@ function ElementLayersComponent({
         role="button"
         // onClick={(e) => selectComponent(component, e.shiftKey)}
         className={cc([
+          style.shape,
           style.item,
           // selectedComponents.indexOf(component) > -1 && style.active,
         ])}
@@ -100,7 +102,7 @@ function ElementLayersComponent({
             {el.type}
           </span>
         ) : (
-          <ElementLayerComponent edge={el.type} />
+          <ElementLayerComponent shape={el.type} />
         )}
       </div>
 
@@ -145,7 +147,7 @@ function LayersManagerComponentComponent({ component }: { component: ComponentSt
   const { activeSpace } = useStore(store.activeProject!);
   const { move, removeComponent, boundary } = useStore(activeSpace);
   const { selectedComponents, selectComponent } = useStore(move);
-  const { name, rename } = useStore(component);
+  const { name, type, rename } = useStore(component);
 
   const [isRenameMode, setIsRenameMode] = useState(false);
 
@@ -157,6 +159,7 @@ function LayersManagerComponentComponent({ component }: { component: ComponentSt
         className={cc([
           style.item,
           style.component,
+          type === 'shape' && style.shape,
           selectedComponents.indexOf(component) > -1 && style.active,
         ])}
         onClick={(e) => {

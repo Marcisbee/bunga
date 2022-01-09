@@ -50,6 +50,7 @@ export class ComponentPositionStore extends Exome {
 export class ComponentStore extends Exome {
   constructor(
     public id: string,
+    public type: 'component' | 'shape' = 'component',
     public position: ComponentPositionStore,
     public name: string,
     public path: string = permalink(name),

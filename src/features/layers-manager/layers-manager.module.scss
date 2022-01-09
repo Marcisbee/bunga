@@ -7,6 +7,12 @@
 }
 
 .item {
+  --layer-color: var(--layer-color-component);
+
+  &.shape {
+    --layer-color: var(--layer-color-shape);
+  }
+
   display: block;
   position: relative;
   padding: 6px 10px 6px 20px;
@@ -38,11 +44,11 @@
   }
 
   &.component {
-    color: var(--layer-color-component);
+    color: var(--layer-color);
 
     &.active {
       color: #fff;
-      background-color: var(--layer-color-component);
+      background-color: var(--layer-color);
 
       .itemName {
         font-weight: 500;

@@ -12,11 +12,12 @@ import { DropPositionTypes } from '../../constants/drop-position-types';
 import { useObservable } from '../../hooks/use-observable';
 import { StringEdge } from '../../store/edges/data/data.string.edge';
 import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
-import { RenderElement } from '../../store/edges/element/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { interactiveModeStore, useInteractiveEvents } from '../../store/interactive-mode.store';
+import { ShapeStore } from '../../store/shape.edge';
 import { store } from '../../store/store';
+import { StyleStore } from '../../store/style.store';
 
 interface ElementChildrenComponentProps {
   parent: ElementStore;
@@ -196,3 +197,46 @@ const ElementDynamicTextComponent = forwardRef<HTMLElement, { edge: ElementTextE
     return createElement('span', { ref }, value);
   },
 );
+
+export function RenderCss({ style, id }: { style: StyleStore, id: string }) {
+  const { css } = useStore(style);
+  const { tokens } = useStore(store.activeProject!.tokens[0]);
+
+  return (
+    <style>
+      {`:host {${tokens}}`}
+      {`#${id} {${css}}`}
+    </style>
+  );
+}
+
+interface RenderElementProps extends React.HTMLAttributes<HTMLDivElement> {
+  edge: ShapeStore,
+  defaultCss?: string,
+  children?: React.ReactNode,
+}
+
+export function RenderElement({
+  edge,
+  children,
+  defaultCss,
+  ...props
+}: RenderElementProps) {
+  // @TODO: Remove this
+  if (!(edge instanceof ShapeStore)) {
+    return 'OUTDATED';
+  }
+
+  const { style } = useStore(edge);
+
+  // const elementStyle = useObservable(select.default);
+
+  const id = getExomeId(edge);
+
+  return (
+    <>
+      <RenderCss id={id} style={style} />
+      {createElement(style.type, { ...props, id }, children)}
+    </>
+  );
+}

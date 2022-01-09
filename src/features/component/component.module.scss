@@ -40,13 +40,13 @@
 
 .active {
   .name {
-    color: var(--layer-color-component);
+    color: var(--layer-color);
     font-weight: 500;
     letter-spacing: 0.4;
   }
 
   .container::after {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 0 0 1px var(--layer-color-component);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 0 0 1px var(--layer-color);
   }
 
   .resize {
@@ -55,6 +55,12 @@
 }
 
 .object {
+  --layer-color: var(--layer-color-component);
+
+  &.shape {
+    --layer-color: var(--layer-color-shape);
+  }
+
   display: flex;
   position: absolute;
   pointer-events: all;
@@ -69,7 +75,7 @@
   width: 8px;
   height: 8px;
   background-color: #fff;
-  border: 1px solid var(--layer-color-component);
+  border: 1px solid var(--layer-color);
   z-index: 1;
 
   &::before {
@@ -92,7 +98,7 @@
   font-size: 8px;
   font-weight: 900;
   color: #fff;
-  background-color: var(--layer-color-component);
+  background-color: var(--layer-color);
   padding: 1px 6px;
   line-height: 16px;
   height: 18px;
