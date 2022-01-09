@@ -1,0 +1,17 @@
+.draggable {
+  pointer-events: all !important;
+
+  * {
+    pointer-events: none;
+  }
+}
+
+.isDragging {
+  box-shadow: none;
+  pointer-events: none;
+  border-radius: 4px;
+
+  * {
+    pointer-events: none !important;
+  }
+}

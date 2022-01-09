@@ -9,6 +9,7 @@ import {
 import { DraggableElement } from '../../components/draggable-element/draggable-element';
 import { DroppableElement } from '../../components/droppable-element/droppable-element';
 import { DropPositionTypes } from '../../constants/drop-position-types';
+import { ComponentStore } from '../../store/component.store';
 import { StringEdge } from '../../store/edges/data/data.string.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
@@ -126,6 +127,12 @@ const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>
           ref,
         },
         (children && <ElementChildrenComponent parent={element} elements={children} />) || null,
+      );
+    }
+
+    if (type instanceof ComponentStore) {
+      return (
+        <ElementBlockComponent element={type.root} />
       );
     }
 

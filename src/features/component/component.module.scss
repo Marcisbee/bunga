@@ -6,6 +6,26 @@
   padding-bottom: 5px;
   font-weight: normal;
   letter-spacing: 0.55;
+
+  &.component {
+    &:hover {
+      color: var(--layer-color-component);
+    }
+  }
+
+  &.shape {
+    &:hover {
+      color: var(--layer-color-shape);
+    }
+  }
+
+  svg {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    vertical-align: top;
+    margin: 2px 5px 0 0;
+  }
 }
 
 .container {
@@ -35,6 +55,12 @@
 
   &.interactive {
     box-shadow: 0 0 0 3px var(--ternary-color);
+  }
+
+  &:hover {
+    .anchor {
+      display: block;
+    }
   }
 }
 

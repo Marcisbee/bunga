@@ -6,6 +6,7 @@ import {
   useMemo,
 } from 'react';
 
+import { DraggableComponent } from '../../components/draggable-component/draggable-component';
 import { DroppableComponent } from '../../components/droppable-component/droppable-component';
 import { ShadowView } from '../../components/shadow/shadow.component';
 import { ComponentPositionSilentStore, ComponentStore } from '../../store/component.store';
@@ -23,7 +24,12 @@ interface ComponentComponentProps {
 
 export function ComponentRenderComponent({ component }: ComponentComponentProps) {
   const { isInteractive } = useStore(interactiveModeStore);
-  const { name, root, position } = useStore(component);
+  const {
+    type,
+    name,
+    root,
+    position,
+  } = useStore(component);
 
   const onMouseDownTopLeft = useMemo(() => (
     onMouseMoveDiff((diffX, diffY) => {
@@ -54,8 +60,22 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
 
   return (
     <>
-      <span className={style.name}>
-        {name}
+      <span
+        className={cc([
+          style.name,
+          type === 'component' && style.component,
+          type === 'shape' && style.shape,
+        ])}
+      >
+        <DraggableComponent component={component}>
+          {type === 'component' && (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fillRule="evenodd" clipRule="evenodd"><path fill="currentColor" d="M12-.001l11 6v12l-11 6-11-6v-12l11-6z" /></svg>
+          )}
+          {type === 'shape' && (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fillRule="evenodd" clipRule="evenodd"><path fill="currentColor" d="M12 0l-11 6v12l11 6 11-6v-12l-11-6zm-9 16.813v-9.626l9-4.908 9 4.908v9.626l-9 4.909-9-4.909z" /></svg>
+          )}
+          {name}
+        </DraggableComponent>
       </span>
 
       <DroppableComponent

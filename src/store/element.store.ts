@@ -1,5 +1,6 @@
 import { Exome, registerLoadable } from 'exome';
 
+import { ComponentStore } from './component.store';
 import { ElementTextStore } from './element-text.store';
 import { ShapeStore } from './shape.edge';
 // import { undoable } from './undo.store';
@@ -22,7 +23,7 @@ export class ElementStore<T extends Record<string, any> = Record<string, any>> e
   // });
 
   constructor(
-    public type: string | ShapeStore,
+    public type: string | ShapeStore | ComponentStore,
     public props: T = {} as T,
     public children: (ElementStore | ElementTextStore)[] = [],
   ) {

@@ -23,6 +23,16 @@ function ElementLayerComponent({ shape }: { shape: ShapeStore }) {
   );
 }
 
+function ComponentLayerComponent({ component }: { component: ComponentStore }) {
+  const { name } = useStore(component);
+
+  return (
+    <span className={style.itemName}>
+      {name}
+    </span>
+  );
+}
+
 function ElementLayersComponent({
   element,
   depth,
@@ -75,7 +85,11 @@ function ElementLayersComponent({
             {el.type}
           </span>
         ) : (
-          <ElementLayerComponent shape={el.type} />
+          el.type instanceof ShapeStore ? (
+            <ElementLayerComponent shape={el.type} />
+          ) : (
+            <ComponentLayerComponent component={el.type} />
+          )
         )}
       </div>
 

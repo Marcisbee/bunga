@@ -17,7 +17,6 @@ import { EdgePosition } from './edges/position';
 import { ElementTextStore } from './element-text.store';
 import { ElementStore } from './element.store';
 import { ProjectDetailsStore, ProjectStore } from './project.store';
-import { ShapeStore } from './shape.edge';
 import { SpaceStore } from './space.store';
 import { StyleStore } from './style.store';
 import { TokenStore } from './token.store';

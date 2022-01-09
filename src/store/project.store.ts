@@ -7,6 +7,7 @@ import {
 } from '../graphql';
 import { permalink } from '../utils/permalink';
 
+import { ComponentStore } from './component.store';
 import { Connection } from './edges/connection';
 import { ElementTextStore } from './element-text.store';
 import { ElementStore } from './element.store';
@@ -206,6 +207,15 @@ export class ProjectStore extends Exome {
           ): APISpaceElementTypes {
             if (child instanceof ElementStore) {
               if (child.type instanceof ShapeStore) {
+                return {
+                  type: 'element',
+                  ref: child.type.id,
+                  props: child.props,
+                  children: child.children.map(buildChildrenList),
+                };
+              }
+
+              if (child.type instanceof ComponentStore) {
                 return {
                   type: 'element',
                   ref: child.type.id,
