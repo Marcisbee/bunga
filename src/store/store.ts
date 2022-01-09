@@ -149,8 +149,6 @@ export class Store extends Exome {
       const edges = (space.edges as APISpaceEdge[])?.map((edgeData) => {
         const EdgeConstructor = dlv(edgeGroups, edgeData.type);
 
-        console.log(edgeData);
-
         if (!EdgeConstructor) {
           throw new Error(`Edge "${edgeData.type}" not found`);
         }
