@@ -23,7 +23,6 @@ import { MathAddEdge } from './math/math.add.edge';
 import { MathDivideEdge } from './math/math.divide.edge';
 import { MathMultiplyEdge } from './math/math.multiply.edge';
 import { MathSubtractEdge } from './math/math.subtract.edge';
-import { StyleEdge } from './style.edge';
 
 export type EdgeConstructor = new (...args: any[]) => Edge;
 
@@ -33,9 +32,6 @@ export const edgeGroups: Record<string, Record<string, EdgeConstructor>> = {
     number: NumberEdge,
     boolean: BooleanEdge,
     array: ArrayEdge,
-  },
-  style: {
-    style: StyleEdge,
   },
   event: {
     mouse: MouseEventEdge,
