@@ -8,6 +8,7 @@ const test = suite('StyleStore');
 test('default value of StyleStore', () => {
   const expected = {
     name: 'test',
+    type: 'div',
     css: defaultStyleCss,
     id: 'id000',
   };
@@ -23,6 +24,7 @@ test('default value of StyleStore', () => {
 test('sets name', () => {
   const expected = {
     name: 'New Name',
+    type: 'div',
     css: defaultStyleCss,
     id: 'id000',
   };
@@ -41,6 +43,7 @@ test('sets name', () => {
 test('sets css', () => {
   const expected = {
     name: 'test',
+    type: 'div',
     css: 'background: red;',
     id: 'id000',
   };

@@ -8,10 +8,9 @@ import {
 import { permalink } from '../utils/permalink';
 
 import { Connection } from './edges/connection';
-import { ElementTextEdge } from './edges/element/element-text.edge';
-import { ElementEdge } from './edges/element/element.edge';
 import { ElementTextStore } from './element-text.store';
 import { ElementStore } from './element.store';
+import { ShapeStore } from './shape.edge';
 import { SpaceStore } from './space.store';
 import {
   APISpace,
@@ -29,10 +28,6 @@ export class ProjectStore extends Exome {
   public activeSpace: SpaceStore;
 
   public activeStyle = new ActiveStyleStore();
-
-  public customBlockElements: ElementEdge[] = [];
-
-  public customTextElements: ElementTextEdge[] = [];
 
   constructor(
     public id: string,
@@ -210,7 +205,7 @@ export class ProjectStore extends Exome {
             child: ElementStore | ElementTextStore,
           ): APISpaceElementTypes {
             if (child instanceof ElementStore) {
-              if (child.type instanceof ElementEdge) {
+              if (child.type instanceof ShapeStore) {
                 return {
                   type: 'element',
                   ref: child.type.id,
@@ -228,13 +223,6 @@ export class ProjectStore extends Exome {
             }
 
             if (child instanceof ElementTextStore) {
-              if (child.text instanceof ElementTextEdge) {
-                return {
-                  type: 'text',
-                  ref: child.text.id,
-                };
-              }
-
               return {
                 type: 'text',
                 text: child.text,
@@ -249,6 +237,7 @@ export class ProjectStore extends Exome {
 
           const output: APISpaceComponent = {
             id: component.id,
+            type: component.type,
             name: component.name,
             children: component.root.children.map(buildChildrenList),
             position: {

@@ -2,10 +2,7 @@ import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import { useState } from 'react';
 
-import { useObservable } from '../../hooks/use-observable';
 import { ComponentStore } from '../../store/component.store';
-import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
-import { ElementEdge } from '../../store/edges/element/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { ShapeStore } from '../../store/shape.edge';
@@ -14,17 +11,6 @@ import paneStyle from '../../styles/pane.module.scss';
 import { cc } from '../../utils/class-names';
 
 import style from './layers-manager.module.scss';
-
-function TextElementLayerComponent({ edge }: { edge: ElementTextEdge }) {
-  const { select } = useStore(edge);
-  const textValue = useObservable(select.default);
-
-  return (
-    <span className={style.itemName}>
-      {textValue}
-    </span>
-  );
-}
 
 function ElementLayerComponent({ shape }: { shape: ShapeStore }) {
   const { style: styleStore } = useStore(shape);
@@ -69,20 +55,7 @@ function ElementLayersComponent({
       );
     }
 
-    return (
-      <div
-        role="button"
-        // onClick={(e) => selectComponent(component, e.shiftKey)}
-        className={cc([
-          style.item,
-          style.text,
-          // selectedComponents.indexOf(component) > -1 && style.active,
-        ])}
-        style={depthStyle}
-      >
-        <TextElementLayerComponent edge={text} />
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -158,7 +131,7 @@ function LayersManagerComponentComponent({ component }: { component: ComponentSt
         tabIndex={0}
         className={cc([
           style.item,
-          style.component,
+          type === 'component' && style.component,
           type === 'shape' && style.shape,
           selectedComponents.indexOf(component) > -1 && style.active,
         ])}

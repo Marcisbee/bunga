@@ -7,12 +7,6 @@
 }
 
 .item {
-  --layer-color: var(--layer-color-component);
-
-  &.shape {
-    --layer-color: var(--layer-color-shape);
-  }
-
   display: block;
   position: relative;
   padding: 6px 10px 6px 20px;
@@ -43,12 +37,40 @@
     }
   }
 
-  &.component {
-    color: var(--layer-color);
+  &.shape {
+    .itemName {
+      &::before {
+        display: block;
+        position: absolute;
+        content: '';
+        width: 6px;
+        height: 6px;
+        border: 1px solid currentColor;
+        background-color: transparent !important;
+        left: 0;
+        top: 6px;
+        border-radius: 2px;
+        opacity: 0.5;
+      }
+    }
+    color: var(--layer-color-shape);
 
     &.active {
       color: #fff;
-      background-color: var(--layer-color);
+      background-color: var(--layer-color-shape);
+
+      .itemName {
+        font-weight: 500;
+      }
+    }
+  }
+
+  &.component {
+    color: var(--layer-color-component);
+
+    &.active {
+      color: #fff;
+      background-color: var(--layer-color-component);
 
       .itemName {
         font-weight: 500;

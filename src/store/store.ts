@@ -13,12 +13,11 @@ import {
 import { ComponentPositionStore, ComponentStore } from './component.store';
 import { edgeGroups } from './edges/all-edges';
 import { Edge } from './edges/edge';
-import { ElementTextEdge } from './edges/element/element-text.edge';
-import { ElementEdge } from './edges/element/element.edge';
 import { EdgePosition } from './edges/position';
 import { ElementTextStore } from './element-text.store';
 import { ElementStore } from './element.store';
 import { ProjectDetailsStore, ProjectStore } from './project.store';
+import { ShapeStore } from './shape.edge';
 import { SpaceStore } from './space.store';
 import { StyleStore } from './style.store';
 import { TokenStore } from './token.store';
@@ -150,6 +149,8 @@ export class Store extends Exome {
       const edges = (space.edges as APISpaceEdge[])?.map((edgeData) => {
         const EdgeConstructor = dlv(edgeGroups, edgeData.type);
 
+        console.log(edgeData);
+
         if (!EdgeConstructor) {
           throw new Error(`Edge "${edgeData.type}" not found`);
         }
@@ -236,15 +237,21 @@ export class Store extends Exome {
         child: APISpaceElementTypes,
       ): ElementStore | ElementTextStore {
         if (child.type === 'element') {
-          const ref = edges.find((e) => e.id === child.ref);
+          // const ref = components.find((e) => {
+          //   if (e.type !== 'shape') {
+          //     return false;
+          //   }
 
-          if (ref instanceof ElementEdge) {
-            return new ElementStore(
-              ref,
-              child.props,
-              child.children.map(buildRecursiveChildren),
-            );
-          }
+          //   return e.root.type === child.ref;
+          // });
+
+          // if (ref instanceof ShapeStore) {
+          //   return new ElementStore(
+          //     ref,
+          //     child.props,
+          //     child.children.map(buildRecursiveChildren),
+          //   );
+          // }
 
           return new ElementStore(
             child.tag || 'div',
@@ -254,13 +261,7 @@ export class Store extends Exome {
         }
 
         if (child.type === 'text') {
-          const ref = edges.find((e) => e.id === child.ref);
-
-          if (ref instanceof ElementTextEdge) {
-            return new ElementTextStore(
-              ref,
-            );
-          }
+          // const ref = edges.find((e) => e.id === child.ref);
 
           return new ElementTextStore(
             child.text || '',

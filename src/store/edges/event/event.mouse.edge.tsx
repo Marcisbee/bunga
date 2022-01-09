@@ -14,10 +14,10 @@ import { Constructor } from '../../../types/constructor';
 import { ComponentStore } from '../../component.store';
 import { ElementStore } from '../../element.store';
 import { InteractiveEventType, interactiveModeStore } from '../../interactive-mode.store';
+import { ShapeStore } from '../../shape.edge';
 import { store } from '../../store';
 import { Connection } from '../connection';
 import { Edge } from '../edge';
-import { ElementEdge } from '../element/element.edge';
 
 export class MouseEventEdge extends Edge {
   public static title = 'Mouse Event';
@@ -58,15 +58,13 @@ export class MouseEventEdge extends Edge {
 }
 
 function ElementEdgeControlOption({ element, path }: { element: ElementStore, path: string[] }) {
-  const edge = element.type as ElementEdge;
+  const edge = element.type as ShapeStore;
 
-  useStore(edge);
-
-  const value = useObservable(edge.input.name);
+  const { name } = useStore(edge.style);
 
   return (
     <option value={path.join('.')}>
-      {value}
+      {name}
     </option>
   );
 }
@@ -74,7 +72,7 @@ function ElementEdgeControlOption({ element, path }: { element: ElementStore, pa
 function ElementControlOption({ element, path }: { element: ElementStore, path: string[] }) {
   useStore(element);
 
-  if (element.type instanceof ElementEdge) {
+  if (element.type instanceof ShapeStore) {
     return (
       <ElementEdgeControlOption
         element={element}
