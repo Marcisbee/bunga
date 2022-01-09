@@ -22,10 +22,18 @@ export const defaultStyleCss = 'color: white;\nbackground-color: purple;\npaddin
 export class StyleStore extends Exome {
   public constructor(
     public name: string,
+    public type: string = 'div',
     public css = defaultStyleCss,
     public id: string = nanoid(20),
   ) {
     super();
+  }
+
+  @undoable({
+    dependencies: ['type'],
+  })
+  public setType(type: string) {
+    this.type = type;
   }
 
   @undoable({

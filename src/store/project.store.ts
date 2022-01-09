@@ -118,7 +118,7 @@ export class ProjectStore extends Exome {
 
     const name = `Style ${this.styles.length + 1}`;
 
-    const style = new StyleStore(name, undefined, nanoid(20));
+    const style = new StyleStore(name);
 
     this.styles.push(style);
     this.activeStyle.setActive(style);
@@ -143,9 +143,15 @@ export class ProjectStore extends Exome {
     }
 
     const stylesData = this.styles
-      .map(({ id: itemId, name, css }) => ({
+      .map(({
         id: itemId,
         name,
+        type,
+        css,
+      }) => ({
+        id: itemId,
+        name,
+        type,
         style: css,
       } as APIStyle));
 

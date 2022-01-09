@@ -44,6 +44,7 @@ export interface APISpace {
 export interface APIStyle {
   id: string;
   name: string;
+  type: string;
   style: string;
 }
 
@@ -132,7 +133,13 @@ export class Store extends Exome {
       throw new Error('Project was not found');
     }
 
-    const styleStores = (project.styles as APIStyle[]).map(({ id: itemId, name, style }) => new StyleStore(name, style || '', itemId));
+    const styleStores = (project.styles as APIStyle[])
+      .map(({
+        id: itemId,
+        name,
+        type,
+        style,
+      }) => new StyleStore(name, type, style || '', itemId));
     const tokenStores = project.tokens.map(({ id: itemId, name, tokens }) => new TokenStore(name, tokens || '', itemId));
     if (tokenStores.length === 0) {
       tokenStores.push(new TokenStore('Tokens 1'));

@@ -12,7 +12,7 @@ test('default value of StyleStore', () => {
     id: 'id000',
   };
 
-  const store = new StyleStore('test', undefined, 'id000');
+  const store = new StyleStore('test', 'div', undefined, 'id000');
 
   assert.snapshot(
     JSON.stringify(store, null, 2),
@@ -27,7 +27,7 @@ test('sets name', () => {
     id: 'id000',
   };
 
-  const store = new StyleStore('test', undefined, 'id000');
+  const store = new StyleStore('test', 'div', undefined, 'id000');
 
   const output = store.setName('New Name');
 
@@ -45,7 +45,7 @@ test('sets css', () => {
     id: 'id000',
   };
 
-  const store = new StyleStore('test', undefined, 'id000');
+  const store = new StyleStore('test', 'div', undefined, 'id000');
 
   const output = store.setCss(expected.css);
 
@@ -70,7 +70,7 @@ test('default value of ActiveStyleStore', () => {
 });
 
 test('sets active style', () => {
-  const styleStore = new StyleStore('test', undefined, 'id000');
+  const styleStore = new StyleStore('test', 'div', undefined, 'id000');
   const store = new ActiveStyleStore();
 
   const output = store.setActive(styleStore);
