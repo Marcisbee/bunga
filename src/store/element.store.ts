@@ -14,7 +14,10 @@ export class ActiveElementStore extends Exome {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class ElementStore<T extends Record<string, any> = Record<string, any>> extends Exome {
+export class ElementStore<
+  T extends Record<string, any> = Record<string, any>,
+  TYPE = string | ShapeStore | ComponentStore
+> extends Exome {
   // public getPosition = () => ({
   //   x: 0,
   //   y: 0,
@@ -23,7 +26,7 @@ export class ElementStore<T extends Record<string, any> = Record<string, any>> e
   // });
 
   constructor(
-    public type: string | ShapeStore | ComponentStore,
+    public type: TYPE,
     public props: T = {} as T,
     public children: (ElementStore | ElementTextStore)[] = [],
   ) {

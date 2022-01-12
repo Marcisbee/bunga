@@ -101,3 +101,48 @@ export function DroppableElement({
     </>
   );
 }
+
+interface useDroppableElementProps extends React.PropsWithChildren<unknown> {
+  parent: DroppableElementResult['parent'];
+  element: DroppableElementResult['element'];
+  // position: keyof typeof DropPositionTypes;
+  // className?: string;
+  // style?: CSSProperties,
+}
+
+export function useDroppableElement({ element, parent }: useDroppableElementProps) {
+  const [{ isOver, canDrop, handlerId }, drop] = useDrop(() => ({
+    accept: [
+      ItemTypes.ELEMENT,
+    ],
+
+    collect(monitor) {
+      return {
+        isOver: monitor.isOver({ shallow: true }),
+        didDrop: monitor.didDrop(),
+        canDrop: monitor.canDrop(),
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+
+    drop: (e, monitor) => {
+      if (monitor.didDrop()) {
+        // Check whether some nested target already handled drop.
+        return;
+      }
+
+      return ({
+        parent,
+        element,
+        // position,
+      });
+    },
+  }), [parent, element]);
+
+  return {
+    drop,
+    isOver,
+    canDrop,
+    handlerId,
+  };
+}

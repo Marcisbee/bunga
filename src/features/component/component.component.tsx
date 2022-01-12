@@ -14,7 +14,7 @@ import { interactiveModeStore } from '../../store/interactive-mode.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 import { onMouseMoveDiff } from '../../utils/on-mouse-move-diff';
-import { ElementChildrenComponent } from '../element/element.component';
+import { RenderChildrenComponent } from '../element/element.component';
 
 import style from './component.module.scss';
 
@@ -127,7 +127,20 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
         />
 
         <ShadowView>
-          <ElementChildrenComponent
+          <style>
+            {`
+              [draggable="true"]:hover {
+                outline: 1px dashed blue;
+              }
+              [data-can-drop="true"][data-is-over="true"] {
+                outline: 1px dashed red;
+              }
+              [draggable="true"]:active {
+                outline: none;
+              }
+            `}
+          </style>
+          <RenderChildrenComponent
             elements={root.children}
             parent={root}
           />
