@@ -1,7 +1,10 @@
 import { Exome, registerLoadable } from 'exome';
 
+import { observableToPromise } from '../utils/observable-to-promise';
 import { permalink } from '../utils/permalink';
 
+import { Connection } from './edges/connection';
+import { VariableEdge } from './edges/variable';
 import { ElementStore } from './element.store';
 import { undoable } from './undo.store';
 
@@ -48,6 +51,8 @@ export class ComponentPositionStore extends Exome {
 }
 
 export class ComponentStore extends Exome {
+  public variables: VariableEdge[] = [];
+
   constructor(
     public id: string,
     public position: ComponentPositionStore,
@@ -64,6 +69,30 @@ export class ComponentStore extends Exome {
   public rename(name: string, path: string = permalink(name)) {
     this.name = name;
     this.path = path;
+  }
+
+  @undoable({
+    dependencies: ['variables'],
+    batchOnly: true,
+  })
+  public addVariable(edge: VariableEdge) {
+    // Must create a new variable reference to make React happy
+    this.variables = this.variables.concat(edge);
+  }
+
+  @undoable({
+    dependencies: ['variables'],
+    batchOnly: true,
+  })
+  public async removeVariable(edge: VariableEdge) {
+    const index = this.variables.indexOf(edge);
+    this.variables.splice(index, 1);
+
+    const connection = await observableToPromise<Connection>(edge.input.value as never);
+    connection.disconnect('value', edge);
+
+    // Must create a new variable reference to make React happy
+    this.variables = [...this.variables];
   }
 }
 

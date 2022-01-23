@@ -1,20 +1,25 @@
-import { onAction } from 'exome';
+import { getExomeId, onAction } from 'exome';
 import { useStore } from 'exome/react';
 import {
   useLayoutEffect,
   useRef,
   useMemo,
+  useContext,
 } from 'react';
 
 import { DraggableComponent } from '../../components/draggable-component/draggable-component';
 import { DroppableComponent } from '../../components/droppable-component/droppable-component';
 import { ShadowView } from '../../components/shadow/shadow.component';
+import { useObservable } from '../../hooks/use-observable';
 import { ComponentPositionSilentStore, ComponentStore } from '../../store/component.store';
+import { pendingEdge } from '../../store/edges/pending';
+import { VariableEdge } from '../../store/edges/variable';
 import { interactiveModeStore } from '../../store/interactive-mode.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 import { onMouseMoveDiff } from '../../utils/on-mouse-move-diff';
 import { RenderChildrenComponent } from '../element/element.component';
+import { ElementContext } from '../shape/shape.component';
 
 import style from './component.module.scss';
 
@@ -22,13 +27,63 @@ interface ComponentComponentProps {
   component: ComponentStore;
 }
 
+function ComponentVariableComponent({
+  component,
+  variable,
+}: ComponentComponentProps & { variable: VariableEdge }) {
+  const { input } = useStore(variable);
+  const name = useObservable(input.name)!;
+
+  return (
+    <div className={style.variable}>
+      <span
+        className={style.remove}
+        onClick={() => component.removeVariable(variable)}
+      >
+        ×
+      </span>
+
+      <div
+        contentEditable
+        onBlur={(e) => {
+          input.name.next(e.target.textContent || '');
+        }}
+        onDoubleClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onKeyUp={(e) => {
+          e.stopPropagation();
+        }}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+        }}
+        suppressContentEditableWarning
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: name,
+        }}
+      />
+    </div>
+  );
+}
+
 export function ComponentRenderComponent({ component }: ComponentComponentProps) {
+  const { canEdit } = useContext(ElementContext);
   const { isInteractive } = useStore(interactiveModeStore);
   const {
     name,
     root,
     position,
+    variables,
+    addVariable,
   } = useStore(component);
+  const { from, connectTo } = useStore(pendingEdge);
+
+  const contextValue = useMemo(() => ({
+    canEdit,
+    variables,
+  }), [canEdit, variables]);
 
   const onMouseDownTopLeft = useMemo(() => (
     onMouseMoveDiff((diffX, diffY) => {
@@ -59,6 +114,16 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
 
   return (
     <>
+      <div className={style.variables}>
+        {variables.map((variable) => (
+          <ComponentVariableComponent
+            key={getExomeId(variable)}
+            component={component}
+            variable={variable}
+          />
+        ))}
+      </div>
+
       <span
         className={cc([
           style.name,
@@ -75,8 +140,20 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
         container={component}
         className={cc([
           style.container,
+          !!from && style.connectable,
           isInteractive && style.interactive,
         ])}
+        onMouseUp={from ? async () => {
+          if (from) {
+            // @TODO: Maybe use proper edge position type?
+            const variableEdge = new VariableEdge(position as never);
+            connectTo('value', variableEdge);
+
+            variableEdge.input.name.next(`value${variables.length + 1}`);
+
+            addVariable(variableEdge);
+          }
+        } : undefined}
       >
         <i
           className={style.resize}
@@ -116,20 +193,24 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
         />
 
         <ShadowView>
-          <style>
-            {`
-              [draggable="true"]:hover {
-                outline: 1px dashed blue;
-              }
-              [draggable="true"]:active {
-                outline: none;
-              }
-            `}
-          </style>
-          <RenderChildrenComponent
-            elements={root.children}
-            parent={root}
-          />
+          <ElementContext.Provider
+            value={contextValue}
+          >
+            <style>
+              {`
+                [draggable="true"]:hover {
+                  outline: 1px dashed blue;
+                }
+                [draggable="true"]:active {
+                  outline: none;
+                }
+              `}
+            </style>
+            <RenderChildrenComponent
+              elements={root.children}
+              parent={root}
+            />
+          </ElementContext.Provider>
         </ShadowView>
       </DroppableComponent>
     </>

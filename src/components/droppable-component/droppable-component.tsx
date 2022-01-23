@@ -12,12 +12,14 @@ export interface DroppableComponentResult {
 
 interface DroppableComponentProps extends React.PropsWithChildren<unknown> {
   className?: string;
+  onMouseUp?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 export function DroppableComponent({
   className,
   container,
   children,
+  onMouseUp,
 }: DroppableComponentProps & DroppableComponentResult) {
   const [{ isOver, canDrop }, drop] = useDrop(() => ({
     accept: [
@@ -42,6 +44,7 @@ export function DroppableComponent({
         canDrop && style.canDrop,
         isOver && style.isOver,
       ])}
+      onMouseUp={onMouseUp}
     >
       {children}
     </div>

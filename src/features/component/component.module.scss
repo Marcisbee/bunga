@@ -57,6 +57,12 @@
     box-shadow: 0 0 0 3px var(--ternary-color);
   }
 
+  &.connectable {
+    &:hover::after {
+      background-color: rgba(0,129,241,0.16);
+    }
+  }
+
   &:hover {
     .anchor {
       display: block;
@@ -130,4 +136,45 @@
   height: 18px;
   border-radius: 3px;
   white-space: nowrap;
+}
+
+.variables {
+  position: absolute;
+  right: 100%;
+  top: 24px;
+  text-align: right;
+  font-size: 0px;
+}
+
+.variable {
+  display: inline-block;
+  padding: 0 6px;
+  background-color: #fff;
+  white-space: nowrap;
+  position: relative;
+
+  .remove {
+    display: none;
+    position: absolute;
+    cursor: pointer;
+    right: 100%;
+    background-color: pink;
+    font-size: 12px;
+    padding: 0 6px;
+
+    &:hover {
+      background-color: red;
+      color: #fff;
+    }
+  }
+
+  &:hover {
+    .remove {
+      display: block;
+    }
+  }
+
+  > div {
+    font-size: 12px;
+  }
 }
