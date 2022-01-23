@@ -417,7 +417,7 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
       <span
         ref={ref}
         tabIndex={canEdit ? -1 : undefined}
-        contentEditable
+        contentEditable={canEdit}
         onInput={onInput}
         onDoubleClick={canEdit ? onDoubleClick : undefined}
         onMouseDown={onMouseDown}
@@ -425,7 +425,7 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={html}
         style={{
-          cursor: 'text',
+          cursor: canEdit ? 'text' : undefined,
           boxShadow: canEdit ? '0 2px 0 0 #0081f1' : undefined,
         }}
       />
@@ -471,7 +471,7 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
     <span
       ref={ref}
       tabIndex={canEdit ? -1 : undefined}
-      contentEditable
+      contentEditable={canEdit}
       onInput={onInput}
       onDoubleClick={canEdit ? onDoubleClick : undefined}
       onMouseDown={onMouseDown}
@@ -479,7 +479,7 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={html2}
       style={{
-        cursor: 'text',
+        cursor: canEdit ? 'text' : undefined,
         boxShadow: canEdit ? '0 2px 0 0 #0081f1' : undefined,
       }}
     />
@@ -516,9 +516,10 @@ interface RenderShapeComponentProps {
 }
 
 export function RenderShapeComponent({ element, parent }: RenderShapeComponentProps) {
+  const context = useContext(ElementContext);
   const ref = useRef<HTMLElement>(null);
   const { type } = useStore(element);
-  const { style } = useStore(type);
+  const { style, variables } = useStore(type);
   // const { drag } = useDraggableElement({ element, parent });
   // const { drop } = useDroppableElement({ element, parent });
 
@@ -527,18 +528,23 @@ export function RenderShapeComponent({ element, parent }: RenderShapeComponentPr
   const id = getExomeId(type);
 
   return (
-    <>
+    <ElementContext.Provider
+      // eslint-disable-next-line react/jsx-no-constructed-context-values
+      value={{
+        ...context,
+        variables: [...context.variables, ...variables],
+      }}
+    >
       <RenderCssComponent id={id} style={style} />
       {createElement(
         style.type,
         { ...element.props, ref, id },
         createElement(RenderChildrenComponent, {
-          elements: element.children,
-          parent: element,
+          elements: element.type.root.children,
+          parent: element.type.root,
         }),
       )}
-      Hello
-    </>
+    </ElementContext.Provider>
   );
 }
 

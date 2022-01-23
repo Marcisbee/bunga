@@ -145,10 +145,10 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
           style.shape,
         ])}
       >
-        {/* <DraggableComponent component={component}> */}
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fillRule="evenodd" clipRule="evenodd"><path fill="currentColor" d="M12 0l-11 6v12l11 6 11-6v-12l-11-6zm-9 16.813v-9.626l9-4.908 9 4.908v9.626l-9 4.909-9-4.909z" /></svg>
-        {name}
-        {/* </DraggableComponent> */}
+        <DraggableComponent component={shape}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fillRule="evenodd" clipRule="evenodd"><path fill="currentColor" d="M12 0l-11 6v12l11 6 11-6v-12l-11-6zm-9 16.813v-9.626l9-4.908 9 4.908v9.626l-9 4.909-9-4.909z" /></svg>
+          {name}
+        </DraggableComponent>
       </span>
 
       {/* <DroppableComponent

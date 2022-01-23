@@ -6,13 +6,14 @@ import { ItemTypes } from '../../constants/draggable-item-types';
 import { ComponentStore } from '../../store/component.store';
 import { ElementStore } from '../../store/element.store';
 import { interactiveModeStore } from '../../store/interactive-mode.store';
+import { ShapeStore } from '../../store/shape.store';
 import { cc } from '../../utils/class-names';
 import { DroppableComponentResult } from '../droppable-component/droppable-component';
 
 import style from './draggable-component.module.scss';
 
 interface DraggableComponentProps extends React.PropsWithChildren<unknown> {
-  component: ComponentStore;
+  component: ComponentStore | ShapeStore;
 }
 
 export function DraggableComponent({ component, children }: DraggableComponentProps) {
@@ -42,7 +43,7 @@ export function DraggableComponent({ component, children }: DraggableComponentPr
       }
 
       // Avoid creating infinite loops
-      if (item.component.type === 'component' && dropResult.container.type === 'shape') {
+      if (item.component instanceof ComponentStore && dropResult.container instanceof ShapeStore) {
         return;
       }
 
