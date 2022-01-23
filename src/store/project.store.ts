@@ -11,7 +11,7 @@ import { ComponentStore } from './component.store';
 import { Connection } from './edges/connection';
 import { ElementTextStore } from './element-text.store';
 import { ElementStore } from './element.store';
-import { ShapeStore } from './shape.edge';
+import { ShapeStore } from './shape.store';
 import { SpaceStore } from './space.store';
 import {
   APISpace,
@@ -245,20 +245,23 @@ export class ProjectStore extends Exome {
             };
           }
 
-          const output: APISpaceComponent = {
-            id: component.id,
-            type: component.type,
-            name: component.name,
-            children: component.root.children.map(buildChildrenList),
-            position: {
-              x: component.position.x,
-              y: component.position.y,
-              width: component.position.width,
-              height: component.position.height,
-            },
-          };
+          // @TODO:
+          return {} as any;
 
-          return output;
+          // const output: APISpaceComponent = {
+          //   id: component.id,
+          //   type: component.type,
+          //   name: component.name,
+          //   children: component.root.children.map(buildChildrenList),
+          //   position: {
+          //     x: component.position.x,
+          //     y: component.position.y,
+          //     width: component.position.width,
+          //     height: component.position.height,
+          //   },
+          // };
+
+          // return output;
         }),
       } as APISpace));
 

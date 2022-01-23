@@ -22,6 +22,10 @@ export class ElementTextStore extends Exome {
   public addConnection(connection: Connection) {
     this.connection = connection;
   }
+
+  public setText(text: string) {
+    this.text = text;
+  }
 }
 
 registerLoadable({ ElementTextStore });

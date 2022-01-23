@@ -14,7 +14,7 @@ import { Constructor } from '../../../types/constructor';
 import { ComponentStore } from '../../component.store';
 import { ElementStore } from '../../element.store';
 import { InteractiveEventType, interactiveModeStore } from '../../interactive-mode.store';
-import { ShapeStore } from '../../shape.edge';
+import { ShapeStore } from '../../shape.store';
 import { store } from '../../store';
 import { Connection } from '../connection';
 import { Edge } from '../edge';

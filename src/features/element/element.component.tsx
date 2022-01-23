@@ -3,7 +3,9 @@ import { useStore } from 'exome/react';
 import {
   createElement,
   forwardRef,
+  memo,
   useRef,
+  useState,
 } from 'react';
 
 import { useDraggableElement } from '../../components/draggable-element/draggable-element';
@@ -14,7 +16,7 @@ import { StringEdge } from '../../store/edges/data/data.string.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { interactiveModeStore, useInteractiveEvents } from '../../store/interactive-mode.store';
-import { ShapeStore } from '../../store/shape.edge';
+import { ShapeStore } from '../../store/shape.store';
 import { store } from '../../store/store';
 import { StyleStore } from '../../store/style.store';
 
@@ -242,7 +244,7 @@ interface RenderChildrenComponentProps {
   elements: (ElementStore | ElementTextStore)[];
 }
 
-export function RenderChildrenComponent({ parent, elements }: RenderChildrenComponentProps) {
+function RenderChildrenComponentWrapper({ parent, elements }: RenderChildrenComponentProps) {
   // const { isInteractive } = useStore(interactiveModeStore);
   useStore(parent);
 
@@ -276,6 +278,11 @@ export function RenderChildrenComponent({ parent, elements }: RenderChildrenComp
     </>
   );
 }
+
+export const RenderChildrenComponent = memo(
+  RenderChildrenComponentWrapper,
+  (a, b) => a.parent === b.parent && a.elements.length === b.elements.length,
+);
 
 interface RenderElementSwitchComponentProps {
   element: (ElementStore | ElementTextStore);
@@ -331,14 +338,78 @@ interface RenderTextComponentProps {
 }
 
 function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
+  const [editMode, setEditMode] = useState(false);
   const ref = useRef<HTMLElement>(null);
-  const { text } = useStore(element);
+  const { text, setText } = useStore(element);
 
-  if (typeof text === 'string') {
-    return createElement('span', { ref }, text);
+  function onInput(e: React.ChangeEvent<HTMLInputElement>) {
+    e.stopPropagation();
+
+    setText(e.target.value);
   }
 
-  return createElement('span', { ref }, JSON.stringify(text));
+  function onFocus() {
+    setEditMode(true);
+  }
+
+  function onBlur() {
+    setEditMode(false);
+  }
+
+  function onDoubleClick(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function onKeyDown(e: React.KeyboardEvent<HTMLSpanElement>) {
+    e.stopPropagation();
+  }
+
+  if (typeof text === 'string') {
+    return (
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+      <span
+        ref={ref}
+        tabIndex={-1}
+        contentEditable
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onInput={onInput}
+        onDoubleClick={onDoubleClick}
+        onKeyDown={onKeyDown}
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: text,
+        }}
+        style={{
+          cursor: 'text',
+          boxShadow: editMode ? '0 1px 0 0 aqua' : undefined,
+        }}
+      />
+    );
+  }
+
+  return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    <span
+      ref={ref}
+      tabIndex={-1}
+      contentEditable
+      onFocus={onFocus}
+      onBlur={onBlur}
+      onInput={onInput}
+      onDoubleClick={onDoubleClick}
+      onKeyDown={onKeyDown}
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(text),
+      }}
+      style={{
+        cursor: 'text',
+        boxShadow: editMode ? '0 1px 0 0 aqua' : undefined,
+      }}
+    />
+  );
 }
 
 /**
@@ -370,7 +441,7 @@ interface RenderShapeComponentProps {
   element: ElementStore<Record<string, never>, ShapeStore>;
 }
 
-function RenderShapeComponent({ element, parent }: RenderShapeComponentProps) {
+export function RenderShapeComponent({ element, parent }: RenderShapeComponentProps) {
   const ref = useRef<HTMLElement>(null);
   const { type } = useStore(element);
   const { style } = useStore(type);
@@ -384,7 +455,15 @@ function RenderShapeComponent({ element, parent }: RenderShapeComponentProps) {
   return (
     <>
       <RenderCssComponent id={id} style={style} />
-      {createElement(style.type, { ...element.props, ref, id }, element.children)}
+      {createElement(
+        style.type,
+        { ...element.props, ref, id },
+        createElement(RenderChildrenComponent, {
+          elements: element.children,
+          parent: element,
+        }),
+      )}
+      Hello
     </>
   );
 }
@@ -399,29 +478,47 @@ interface RenderComponentComponentProps {
 }
 
 export function RenderComponentComponent({ element, parent }: RenderComponentComponentProps) {
-  const ref = useRef<HTMLElement>(null);
   const { type } = useStore(element);
   const { root } = useStore(type);
-  const { drag } = useDraggableElement({ element, parent });
-  const { drop, canDrop, isOver } = useDroppableElement({ element, parent });
 
-  drag(drop(ref));
+  // const { isInteractive } = useStore(interactiveModeStore);
+  useStore(parent);
 
-  // const id = getExomeId(type);
+  // if (isInteractive) {
+  //   return (
+  //     <>
+  //       {elements.map((element) => (
+  //         <div
+  //           key={`element-c-${getExomeId(element)}`}
+  //           style={{ display: 'inline-block' }}
+  //         >
+  //           <ElementComponent
+  //             element={element}
+  //             parent={parent}
+  //           />
+  //         </div>
+  //       ))}
+  //     </>
+  //   );
+  // }
+
+  // return (
+  //   <>
+  //     {root.children.map((e) => (
+  //       <RenderElementSwitchComponent
+  //         key={`element-c-${getExomeId(e)}`}
+  //         element={e}
+  //         parent={parent}
+  //       />
+  //     ))}
+  //   </>
+  // );
 
   return (
-    <span
-      ref={ref}
-      style={{ display: 'inline-block' }}
-      data-can-drop={String(canDrop)}
-      data-is-over={String(isOver)}
-    >
-      {/* @TODO: Render proper React children */}
-      <RenderChildrenComponent
-        parent={parent}
-        elements={root.children}
-      />
-    </span>
+    <RenderChildrenComponent
+      parent={parent}
+      elements={root.children}
+    />
   );
 }
 

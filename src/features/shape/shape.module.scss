@@ -1,0 +1,133 @@
+.name {
+  display: block;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #b2c0cd;
+  padding-bottom: 5px;
+  font-weight: normal;
+  letter-spacing: 0.55;
+
+  &.component {
+    &:hover {
+      color: var(--layer-color-component);
+    }
+  }
+
+  &.shape {
+    &:hover {
+      color: var(--layer-color-shape);
+    }
+  }
+
+  svg {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    vertical-align: top;
+    margin: 2px 5px 0 0;
+  }
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 1px;
+  // box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+  border-radius: 0;
+  // pointer-events: none;
+  background-color: #fff;
+  position: relative;
+
+  &::after {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    content: '';
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  &.interactive {
+    box-shadow: 0 0 0 3px var(--ternary-color);
+  }
+
+  &:hover {
+    .anchor {
+      display: block;
+    }
+  }
+}
+
+.active {
+  .name {
+    color: var(--layer-color);
+    font-weight: 500;
+    letter-spacing: 0.4;
+  }
+
+  .container::after {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 0 0 1px var(--layer-color);
+  }
+
+  .resize {
+    display: block;
+  }
+}
+
+.object {
+  --layer-color: var(--layer-color-component);
+
+  &.shape {
+    --layer-color: var(--layer-color-shape);
+  }
+
+  display: flex;
+  position: absolute;
+  pointer-events: all;
+  overflow: visible;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.resize {
+  display: none;
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  border: 1px solid var(--layer-color);
+  z-index: 1;
+
+  &::before {
+    display: block;
+    content: '';
+    position: absolute;
+    left: -50%;
+    top: -50%;
+    width: 200%;
+    height: 200%;
+  }
+}
+
+.dimensions {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translate(-50%, 10px);
+  font-size: 8px;
+  font-weight: 900;
+  color: #fff;
+  background-color: var(--layer-color);
+  padding: 1px 6px;
+  line-height: 16px;
+  height: 18px;
+  border-radius: 3px;
+  white-space: nowrap;
+}

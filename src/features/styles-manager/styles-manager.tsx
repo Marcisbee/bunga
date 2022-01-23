@@ -3,7 +3,7 @@ import { useStore } from 'exome/react';
 import { useState } from 'react';
 
 import { ElementStore } from '../../store/element.store';
-import { ShapeStore } from '../../store/shape.edge';
+import { ShapeStore } from '../../store/shape.store';
 import { store } from '../../store/store';
 import { ActiveStyleStore, StyleStore } from '../../store/style.store';
 import paneStyle from '../../styles/pane.module.scss';
@@ -48,7 +48,7 @@ function ListStylesComponent({
   const { active, setActive } = useStore(activeStyle);
   const { name, setName } = useStore(styleStore);
   const { activeSpace } = useStore(store.activeProject!);
-  const { addComponent } = useStore(activeSpace);
+  const { addShape } = useStore(activeSpace);
 
   const [isRenameMode, setIsRenameMode] = useState(false);
 
@@ -73,13 +73,9 @@ function ListStylesComponent({
         type="button"
         onClick={(e) => {
           e.stopPropagation();
-          const component = addComponent('shape', `Shape ${name}`);
+          const shape = addShape(styleStore, `Shape ${name}`);
 
-          const shape = new ShapeStore(styleStore);
 
-          component.root.append(
-            new ElementStore(shape),
-          );
         }}
       >
         USE

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { ComponentStore } from '../../store/component.store';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
-import { ShapeStore } from '../../store/shape.edge';
+import { ShapeStore } from '../../store/shape.store';
 import { store } from '../../store/store';
 import paneStyle from '../../styles/pane.module.scss';
 import { cc } from '../../utils/class-names';
@@ -134,7 +134,7 @@ function LayersManagerComponentComponent({ component }: { component: ComponentSt
   const { activeSpace } = useStore(store.activeProject!);
   const { move, removeComponent, boundary } = useStore(activeSpace);
   const { selectedComponents, selectComponent } = useStore(move);
-  const { name, type, rename } = useStore(component);
+  const { name, rename } = useStore(component);
 
   const [isRenameMode, setIsRenameMode] = useState(false);
 
@@ -145,8 +145,8 @@ function LayersManagerComponentComponent({ component }: { component: ComponentSt
         tabIndex={0}
         className={cc([
           style.item,
-          type === 'component' && style.component,
-          type === 'shape' && style.shape,
+          // type === 'component' && style.component,
+          // type === 'shape' && style.shape,
           selectedComponents.indexOf(component) > -1 && style.active,
         ])}
         onClick={(e) => {

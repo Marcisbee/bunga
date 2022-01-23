@@ -3,15 +3,16 @@ import { Exome, registerLoadable } from 'exome';
 import { permalink } from '../utils/permalink';
 
 import { ElementStore } from './element.store';
+import { StyleStore } from './style.store';
 import { undoable } from './undo.store';
 
-export class ComponentPositionSilentStore extends Exome {
+export class ShapePositionSilentStore extends Exome {
   public x = 0;
 
   public y = 0;
 
   constructor(
-    public parent: ComponentPositionStore,
+    public parent: ShapePositionStore,
   ) {
     super();
   }
@@ -24,8 +25,8 @@ export class ComponentPositionSilentStore extends Exome {
   }
 }
 
-export class ComponentPositionStore extends Exome {
-  public readonly silent = new ComponentPositionSilentStore(this);
+export class ShapePositionStore extends Exome {
+  public readonly silent = new ShapePositionSilentStore(this);
 
   constructor(
     public x = 0,
@@ -47,11 +48,12 @@ export class ComponentPositionStore extends Exome {
   }
 }
 
-export class ComponentStore extends Exome {
+export class ShapeStore extends Exome {
   constructor(
     public id: string,
-    public position: ComponentPositionStore,
+    public position: ShapePositionStore,
     public name: string,
+    public style: StyleStore,
     public path: string = permalink(name),
     public root = new ElementStore('root'),
   ) {
@@ -67,4 +69,4 @@ export class ComponentStore extends Exome {
   }
 }
 
-registerLoadable({ ComponentStore });
+registerLoadable({ ShapeStore });

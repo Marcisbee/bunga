@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 // @ts-ignore
 import TinyGesture from 'tinygesture';
 
+import { ComponentStore } from '../../store/component.store';
 import { SelectionStore } from '../../store/move.store';
 import { SpaceStore } from '../../store/space.store';
 import { store } from '../../store/store';
@@ -21,6 +22,7 @@ import { ComponentComponent } from '../component/component.component';
 import { ConnectionPreviewComponent } from '../connection-preview/connection-preview';
 import { ConnectionComponent } from '../connection/connection.component';
 import { EdgeComponent } from '../edge/edge.component';
+import { ShapeComponent } from '../shape/shape.component';
 
 import styles from './canvas.module.scss';
 
@@ -29,39 +31,39 @@ interface CanvasComponentProps {
 }
 
 // @DEBUG: This is a debug component that renders the canvas boundaries.
-// function DebugBoundary({ space }: CanvasComponentProps) {
-//   const {
-//     x, y, width, height,
-//   } = useStore(space.boundary);
+function DebugBoundary({ space }: CanvasComponentProps) {
+  const {
+    x, y, width, height,
+  } = useStore(space.boundary);
 
-//   return (
-//     <div
-//       style={{
-//         position: 'absolute',
-//         zIndex: 2,
-//         left: x,
-//         top: y,
-//         width,
-//         height,
-//         boxShadow: 'inset 0 0 0 1px orangered',
-//       }}
-//     >
-//       <span
-//         style={{
-//           position: 'absolute',
-//           marginTop: -20,
-//           color: 'orangered',
-//           fontSize: 12,
-//           whiteSpace: 'nowrap',
-//         }}
-//       >
-//         {JSON.stringify({
-//           x, y, w: width, h: height,
-//         })}
-//       </span>
-//     </div>
-//   );
-// }
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        zIndex: 2,
+        left: x,
+        top: y,
+        width,
+        height,
+        boxShadow: 'inset 0 0 0 1px orangered',
+      }}
+    >
+      <span
+        style={{
+          position: 'absolute',
+          marginTop: -20,
+          color: 'orangered',
+          fontSize: 12,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {JSON.stringify({
+          x, y, w: width, h: height,
+        })}
+      </span>
+    </div>
+  );
+}
 
 function CanvasSelectionComponent({ selection }: { selection: SelectionStore }) {
   const ref = useRef<SVGSVGElement>(null);
@@ -361,12 +363,23 @@ export function CanvasComponent({ space }: CanvasComponentProps) {
       >
         {/* <DebugBoundary space={space} /> */}
         <div className={styles.container}>
-          {components.map((component) => (
-            <ComponentComponent
-              key={`canvas-${component.id}`}
-              component={component}
-            />
-          ))}
+          {components.map((component) => {
+            if (component instanceof ComponentStore) {
+              return (
+                <ComponentComponent
+                  key={`canvas-${component.id}`}
+                  component={component}
+                />
+              );
+            }
+
+            return (
+              <ShapeComponent
+                key={`shape-${component.id}`}
+                shape={component}
+              />
+            );
+          })}
           {edges.map((edge) => (
             <EdgeComponent
               key={`edge-${getExomeId(edge)}`}
