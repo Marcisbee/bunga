@@ -59,7 +59,6 @@ export function EdgeSelectorComponent({ onClose }: EdgeSelectorComponentProps) {
         onClick={() => onClose()}
       />
 
-      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
         className={style.popup}
       >

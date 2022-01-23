@@ -78,7 +78,11 @@ function EndConnectionComponent({
   startX, startY, index, position,
 }: EndConnectionComponentProps) {
   const {
-    x, y, width, height, type,
+    x,
+    y,
+    width,
+    height,
+    type,
   } = useStore(position);
 
   useStore(position.silent);

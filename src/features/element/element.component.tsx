@@ -344,10 +344,10 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
   const ref = useRef<HTMLElement>(null);
   const { text, setText } = useStore(element);
 
-  function onInput(e: React.ChangeEvent<HTMLInputElement>) {
+  function onBlur(e: React.ChangeEvent<HTMLSpanElement>) {
     e.stopPropagation();
 
-    setText(e.target.value);
+    setText(e.target.textContent || '');
   }
 
   function onDoubleClick(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
@@ -365,12 +365,11 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
 
   if (typeof text === 'string') {
     return (
-      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <span
         ref={ref}
         tabIndex={canEdit ? -1 : undefined}
         contentEditable={canEdit}
-        onInput={onInput}
+        onBlur={onBlur}
         onDoubleClick={canEdit ? onDoubleClick : undefined}
         onMouseDown={onMouseDown}
         onKeyDown={onKeyDown}
@@ -387,12 +386,11 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
   }
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <span
       ref={ref}
       tabIndex={canEdit ? -1 : undefined}
       contentEditable={canEdit}
-      onInput={onInput}
+      onBlur={onBlur}
       onDoubleClick={canEdit ? onDoubleClick : undefined}
       onMouseDown={onMouseDown}
       onKeyDown={onKeyDown}

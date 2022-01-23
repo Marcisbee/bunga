@@ -57,6 +57,12 @@
     box-shadow: 0 0 0 3px var(--ternary-color);
   }
 
+  &.connectable {
+    &:hover::after {
+      background-color: rgba(0,129,241,0.16);
+    }
+  }
+
   &:hover {
     .anchor {
       display: block;

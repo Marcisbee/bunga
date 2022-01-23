@@ -78,7 +78,6 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
           isInteractive && style.interactive,
         ])}
       >
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <i
           className={style.resize}
           onMouseDown={onMouseDownTopLeft}
@@ -88,7 +87,6 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
             cursor: 'nwse-resize',
           }}
         />
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <i
           className={style.resize}
           onMouseDown={onMouseDownTopRight}
@@ -98,7 +96,6 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
             cursor: 'nesw-resize',
           }}
         />
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <i
           className={style.resize}
           style={{
@@ -108,7 +105,6 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
           }}
           onMouseDown={onMouseDownBottomLeft}
         />
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <i
           className={style.resize}
           style={{

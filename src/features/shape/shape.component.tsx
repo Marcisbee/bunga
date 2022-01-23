@@ -12,11 +12,17 @@ import {
 import { DraggableComponent } from '../../components/draggable-component/draggable-component';
 import { DroppableComponent } from '../../components/droppable-component/droppable-component';
 import { ShadowView } from '../../components/shadow/shadow.component';
+import { useObservable } from '../../hooks/use-observable';
+import { Connection } from '../../store/edges/connection';
+import { pendingEdge } from '../../store/edges/pending';
+import { EdgePosition } from '../../store/edges/position';
+import { VariableEdge } from '../../store/edges/variable';
 import { ElementTextStore } from '../../store/element-text.store';
 import { interactiveModeStore } from '../../store/interactive-mode.store';
 import { ShapePositionSilentStore, ShapePositionStore, ShapeStore } from '../../store/shape.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
+import { observableToPromise } from '../../utils/observable-to-promise';
 import { onMouseMoveDiff } from '../../utils/on-mouse-move-diff';
 import { RenderChildrenComponent, RenderCssComponent, RenderShapeComponent } from '../element/element.component';
 
@@ -30,6 +36,63 @@ export const ElementContext = createContext({
   canEdit: false,
 });
 
+function ShapeVariableComponent({
+  shape,
+  variable,
+}: ShapeComponentProps & { variable: VariableEdge }) {
+  const { input } = useStore(variable);
+  const name = useObservable(input.name)!;
+
+  return (
+    <div
+      style={{
+        display: 'inline-block',
+        padding: '0 6px',
+        backgroundColor: '#fff',
+        whiteSpace: 'nowrap',
+        position: 'relative',
+      }}
+    >
+      <span
+        onClick={() => shape.removeVariable(variable)}
+        style={{
+          position: 'absolute',
+          cursor: 'pointer',
+          right: '100%',
+          backgroundColor: 'pink',
+          fontSize: 12,
+        }}
+      >
+        x
+      </span>
+
+      <div
+        style={{
+          fontSize: 12,
+        }}
+        contentEditable
+        onBlur={(e) => {
+          input.name.next(e.target.textContent || '');
+        }}
+        onDoubleClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onKeyUp={(e) => {
+          e.stopPropagation();
+        }}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+        }}
+        suppressContentEditableWarning
+        dangerouslySetInnerHTML={{
+          __html: name,
+        }}
+      />
+    </div>
+  );
+}
+
 export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
   const { canEdit } = useContext(ElementContext);
   const { isInteractive } = useStore(interactiveModeStore);
@@ -37,9 +100,12 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
     name,
     root,
     position,
+    variables,
+    addVariable,
     style: shapeStyle,
   } = useStore(shape);
   const id = getExomeId(shape);
+  const { from, connectTo } = useStore(pendingEdge);
 
   const onMouseDownTopLeft = useMemo(() => (
     onMouseMoveDiff((diffX, diffY) => {
@@ -70,6 +136,24 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
 
   return (
     <>
+      <div
+        style={{
+          position: 'absolute',
+          right: '100%',
+          top: 24,
+          textAlign: 'right',
+          fontSize: 0,
+        }}
+      >
+        {variables.map((variable) => (
+          <ShapeVariableComponent
+            key={getExomeId(variable)}
+            shape={shape}
+            variable={variable}
+          />
+        ))}
+      </div>
+
       <span
         className={cc([
           style.name,
@@ -92,10 +176,20 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
       <div
         className={cc([
           style.container,
+          !!from && style.connectable,
           isInteractive && style.interactive,
         ])}
+        onMouseUp={from ? async () => {
+          if (from) {
+            const variableEdge = new VariableEdge(position);
+            connectTo('value', variableEdge);
+
+            variableEdge.input.name.next(`value${variables.length + 1}`);
+
+            addVariable(variableEdge);
+          }
+        } : undefined}
       >
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <i
           className={style.resize}
           onMouseDown={onMouseDownTopLeft}
@@ -105,7 +199,6 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
             cursor: 'nwse-resize',
           }}
         />
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <i
           className={style.resize}
           onMouseDown={onMouseDownTopRight}
@@ -115,7 +208,6 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
             cursor: 'nesw-resize',
           }}
         />
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <i
           className={style.resize}
           style={{
@@ -125,7 +217,6 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
           }}
           onMouseDown={onMouseDownBottomLeft}
         />
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <i
           className={style.resize}
           style={{

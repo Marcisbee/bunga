@@ -111,11 +111,11 @@ class Undo extends Exome {
       return;
     }
 
-    undo.forEach((trace) => {
+    undo.reverse().forEach((trace) => {
       (trace.restoreHandler || loadLocalState)(trace.instance, trace.payload, trace.state[0]);
     });
 
-    this.redoStack.push(undo);
+    this.redoStack.push(undo.reverse());
   }
 
   public redo() {
@@ -148,11 +148,11 @@ class Undo extends Exome {
     restoreHandler,
     dependencies,
   }: {
-    saveIntermediateActions?: boolean,
-    batchOnly?: boolean,
-    saveHandler?: TraceSaveHandler<T>,
-    restoreHandler?: TraceRestoreHandler<T, any>,
-    dependencies?: string[],
+    saveIntermediateActions?: boolean;
+    batchOnly?: boolean;
+    saveHandler?: TraceSaveHandler<T>;
+    restoreHandler?: TraceRestoreHandler<T, any>;
+    dependencies?: string[];
   } = {}) => (
     target: T,
     propertyKey: string,
@@ -202,7 +202,7 @@ class Undo extends Exome {
       if (!saveIntermediateActions && lastUndo) {
         const matchingTrace = lastUndo.find((t) => (
           t.instance === trace.instance
-          && t.action === trace.action
+            && t.action === trace.action
         ));
 
         if (lastUndo && matchingTrace) {
