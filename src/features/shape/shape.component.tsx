@@ -48,32 +48,15 @@ function ShapeVariableComponent({
   const name = useObservable(input.name)!;
 
   return (
-    <div
-      style={{
-        display: 'inline-block',
-        padding: '0 6px',
-        backgroundColor: '#fff',
-        whiteSpace: 'nowrap',
-        position: 'relative',
-      }}
-    >
+    <div className={style.variable}>
       <span
+        className={style.remove}
         onClick={() => shape.removeVariable(variable)}
-        style={{
-          position: 'absolute',
-          cursor: 'pointer',
-          right: '100%',
-          backgroundColor: 'pink',
-          fontSize: 12,
-        }}
       >
-        x
+        ×
       </span>
 
       <div
-        style={{
-          fontSize: 12,
-        }}
         contentEditable
         onBlur={(e) => {
           input.name.next(e.target.textContent || '');
@@ -146,15 +129,7 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
 
   return (
     <>
-      <div
-        style={{
-          position: 'absolute',
-          right: '100%',
-          top: 24,
-          textAlign: 'right',
-          fontSize: 0,
-        }}
-      >
+      <div className={style.variables}>
         {variables.map((variable) => (
           <ShapeVariableComponent
             key={getExomeId(variable)}
