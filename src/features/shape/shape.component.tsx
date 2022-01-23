@@ -6,6 +6,7 @@ import {
   useMemo,
   createElement,
   createContext,
+  useContext,
 } from 'react';
 
 import { DraggableComponent } from '../../components/draggable-component/draggable-component';
@@ -30,6 +31,7 @@ export const ElementContext = createContext({
 });
 
 export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
+  const { canEdit } = useContext(ElementContext);
   const { isInteractive } = useStore(interactiveModeStore);
   const {
     name,
@@ -150,14 +152,16 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
             shapeStyle.type,
             {
               id,
-              onDoubleClick: (e: any) => {
-                e.preventDefault();
-                e.stopPropagation();
+              onDoubleClick: canEdit
+                ? (e: any) => {
+                  e.preventDefault();
+                  e.stopPropagation();
 
-                root.append(
-                  new ElementTextStore('text'),
-                );
-              },
+                  root.append(
+                    new ElementTextStore('text'),
+                  );
+                }
+                : undefined,
             },
             <RenderChildrenComponent
               elements={root.children}

@@ -4,6 +4,7 @@ import {
   createElement,
   forwardRef,
   memo,
+  useContext,
   useRef,
   useState,
 } from 'react';
@@ -19,6 +20,7 @@ import { interactiveModeStore, useInteractiveEvents } from '../../store/interact
 import { ShapeStore } from '../../store/shape.store';
 import { store } from '../../store/store';
 import { StyleStore } from '../../store/style.store';
+import { ElementContext } from '../shape/shape.component';
 
 // interface ElementChildrenComponentProps {
 //   parent: ElementStore;
@@ -338,7 +340,7 @@ interface RenderTextComponentProps {
 }
 
 function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
-  const [editMode, setEditMode] = useState(false);
+  const { canEdit } = useContext(ElementContext);
   const ref = useRef<HTMLElement>(null);
   const { text, setText } = useStore(element);
 
@@ -348,16 +350,12 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
     setText(e.target.value);
   }
 
-  function onFocus() {
-    setEditMode(true);
-  }
-
-  function onBlur() {
-    setEditMode(false);
-  }
-
   function onDoubleClick(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
     e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function onMouseDown(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
     e.stopPropagation();
   }
 
@@ -370,12 +368,11 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <span
         ref={ref}
-        tabIndex={-1}
-        contentEditable
-        onFocus={onFocus}
-        onBlur={onBlur}
+        tabIndex={canEdit ? -1 : undefined}
+        contentEditable={canEdit}
         onInput={onInput}
-        onDoubleClick={onDoubleClick}
+        onDoubleClick={canEdit ? onDoubleClick : undefined}
+        onMouseDown={onMouseDown}
         onKeyDown={onKeyDown}
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
@@ -383,7 +380,7 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
         }}
         style={{
           cursor: 'text',
-          boxShadow: editMode ? '0 1px 0 0 aqua' : undefined,
+          boxShadow: canEdit ? '0 2px 0 0 #0081f1' : undefined,
         }}
       />
     );
@@ -393,12 +390,11 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <span
       ref={ref}
-      tabIndex={-1}
-      contentEditable
-      onFocus={onFocus}
-      onBlur={onBlur}
+      tabIndex={canEdit ? -1 : undefined}
+      contentEditable={canEdit}
       onInput={onInput}
-      onDoubleClick={onDoubleClick}
+      onDoubleClick={canEdit ? onDoubleClick : undefined}
+      onMouseDown={onMouseDown}
       onKeyDown={onKeyDown}
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
@@ -406,7 +402,7 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
       }}
       style={{
         cursor: 'text',
-        boxShadow: editMode ? '0 1px 0 0 aqua' : undefined,
+        boxShadow: canEdit ? '0 2px 0 0 #0081f1' : undefined,
       }}
     />
   );
