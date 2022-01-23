@@ -3,10 +3,9 @@ import { BehaviorSubject, combineLatest } from 'rxjs';
 import { Constructor } from '../../types/constructor';
 
 import { Connection } from './connection';
-import { BooleanEdge } from './data/data.boolean.edge';
-import { NumberEdge } from './data/data.number.edge';
-import { StringEdge } from './data/data.string.edge';
+import { DataEdge } from './data/data.edge';
 import { Edge } from './edge';
+import { LogicEdge } from './logic/logic.edge';
 import { MathEdge } from './math/math.edge';
 
 export class VariableEdge extends Edge {
@@ -19,10 +18,9 @@ export class VariableEdge extends Edge {
 
   public connectableTo: Record<string, Constructor<Edge>[]> = {
     value: [
-      BooleanEdge,
-      NumberEdge,
+      LogicEdge,
+      DataEdge,
       MathEdge,
-      StringEdge,
     ],
   };
 
