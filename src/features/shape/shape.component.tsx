@@ -32,8 +32,12 @@ interface ShapeComponentProps {
   shape: ShapeStore;
 }
 
-export const ElementContext = createContext({
+export const ElementContext = createContext<{
+  canEdit: boolean,
+  variables: VariableEdge[],
+}>({
   canEdit: false,
+  variables: [],
 });
 
 function ShapeVariableComponent({
@@ -85,6 +89,7 @@ function ShapeVariableComponent({
           e.stopPropagation();
         }}
         suppressContentEditableWarning
+        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
           __html: name,
         }}
@@ -106,6 +111,11 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
   } = useStore(shape);
   const id = getExomeId(shape);
   const { from, connectTo } = useStore(pendingEdge);
+
+  const contextValue = useMemo(() => ({
+    canEdit,
+    variables,
+  }), [canEdit, variables]);
 
   const onMouseDownTopLeft = useMemo(() => (
     onMouseMoveDiff((diffX, diffY) => {
@@ -181,7 +191,8 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
         ])}
         onMouseUp={from ? async () => {
           if (from) {
-            const variableEdge = new VariableEdge(position);
+            // @TODO: Maybe use proper edge position type?
+            const variableEdge = new VariableEdge(position as never);
             connectTo('value', variableEdge);
 
             variableEdge.input.name.next(`value${variables.length + 1}`);
@@ -228,37 +239,41 @@ export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
         />
 
         <ShadowView>
-          <style>
-            {`
-              [draggable="true"]:hover {
-                outline: 1px dashed blue;
-              }
-              [draggable="true"]:active {
-                outline: none;
-              }
-            `}
-          </style>
-          <RenderCssComponent id={id} style={shapeStyle} />
-          {createElement(
-            shapeStyle.type,
-            {
-              id,
-              onDoubleClick: canEdit
-                ? (e: any) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-
-                  root.append(
-                    new ElementTextStore('text'),
-                  );
+          <ElementContext.Provider
+            value={contextValue}
+          >
+            <style>
+              {`
+                [draggable="true"]:hover {
+                  outline: 1px dashed blue;
                 }
-                : undefined,
-            },
-            <RenderChildrenComponent
-              elements={root.children}
-              parent={root}
-            />,
-          )}
+                [draggable="true"]:active {
+                  outline: none;
+                }
+              `}
+            </style>
+            <RenderCssComponent id={id} style={shapeStyle} />
+            {createElement(
+              shapeStyle.type,
+              {
+                id,
+                onDoubleClick: canEdit
+                  ? (e: any) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    root.append(
+                      new ElementTextStore('text'),
+                    );
+                  }
+                  : undefined,
+              },
+              <RenderChildrenComponent
+                elements={root.children}
+                parent={root}
+              />,
+            )}
+          </ElementContext.Provider>
         </ShadowView>
       </div>
       {/* </DroppableComponent> */}
@@ -285,6 +300,7 @@ export function ShapeComponent({ shape }: ShapeComponentProps) {
   const isActive = selectedComponents.indexOf(shape) > -1;
   const contextValue = useMemo(() => ({
     canEdit: isActive,
+    variables: [],
   }), [isActive]);
 
   useLayoutEffect(() => {

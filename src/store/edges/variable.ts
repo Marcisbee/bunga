@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 
 import { Constructor } from '../../types/constructor';
 
@@ -26,11 +26,11 @@ export class VariableEdge extends Edge {
     ],
   };
 
-  public output: { default: Connection } = {
-    default: new Connection(this, 'default'),
-  };
-
   public select = {
     default: this.selectInput<unknown>('value'),
+    both: combineLatest([
+      this.selectInput<unknown>('name'),
+      this.selectInput<unknown>('value'),
+    ]),
   };
 }

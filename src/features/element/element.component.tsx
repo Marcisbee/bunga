@@ -5,13 +5,16 @@ import {
   forwardRef,
   memo,
   useContext,
+  useMemo,
   useRef,
   useState,
 } from 'react';
+import { combineLatest, map, Observable } from 'rxjs';
 
 import { useDraggableElement } from '../../components/draggable-element/draggable-element';
 import { DroppableElement, useDroppableElement } from '../../components/droppable-element/droppable-element';
 import { DropPositionTypes } from '../../constants/drop-position-types';
+import { useObservable } from '../../hooks/use-observable';
 import { ComponentStore } from '../../store/component.store';
 import { StringEdge } from '../../store/edges/data/data.string.edge';
 import { ElementTextStore } from '../../store/element-text.store';
@@ -339,12 +342,24 @@ interface RenderTextComponentProps {
   element: ElementTextStore;
 }
 
+function RenderDynamicTextComponent({ observable }: { observable: Observable<any> }) {
+  return useObservable(observable);
+}
+
 function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
-  const { canEdit } = useContext(ElementContext);
+  const { isInteractive } = useStore(interactiveModeStore);
+  const { canEdit, variables } = useContext(ElementContext);
   const ref = useRef<HTMLElement>(null);
   const { text, setText } = useStore(element);
 
-  function onBlur(e: React.ChangeEvent<HTMLSpanElement>) {
+  const html = useMemo(() => ({
+    __html: text,
+  }), [isInteractive]);
+  const html2 = useMemo(() => ({
+    __html: JSON.stringify(text),
+  }), [isInteractive]);
+
+  function onInput(e: React.ChangeEvent<HTMLSpanElement>) {
     e.stopPropagation();
 
     setText(e.target.textContent || '');
@@ -364,19 +379,51 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
   }
 
   if (typeof text === 'string') {
+    if (isInteractive) {
+      if (variables.length === 0) {
+        return (
+          <span>
+            {text}
+          </span>
+        );
+      }
+
+      return (
+        <span>
+          <RenderDynamicTextComponent
+            observable={
+              combineLatest(
+                variables.map((variable) => variable.select.both),
+              ).pipe(
+                map((variablesList) => (
+                  text.replace(/\{([\w$]+)\}/g, (substring, name) => {
+                    const variable = variablesList.find((v) => v[0] === name);
+
+                    if (!variable) {
+                      return substring;
+                    }
+
+                    return variable[1] as string;
+                  })
+                )),
+              )
+            }
+          />
+        </span>
+      );
+    }
+
     return (
       <span
         ref={ref}
         tabIndex={canEdit ? -1 : undefined}
-        contentEditable={canEdit}
-        onBlur={onBlur}
+        contentEditable
+        onInput={onInput}
         onDoubleClick={canEdit ? onDoubleClick : undefined}
         onMouseDown={onMouseDown}
         onKeyDown={onKeyDown}
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-          __html: text,
-        }}
+        dangerouslySetInnerHTML={html}
         style={{
           cursor: 'text',
           boxShadow: canEdit ? '0 2px 0 0 #0081f1' : undefined,
@@ -385,19 +432,52 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
     );
   }
 
+  if (isInteractive) {
+    if (variables.length === 0) {
+      return (
+        <span>
+          {JSON.stringify(text)}
+        </span>
+      );
+    }
+
+    return (
+      <span>
+        <RenderDynamicTextComponent
+          observable={
+            combineLatest(
+              variables.map((variable) => variable.select.both),
+            ).pipe(
+              map((variablesList) => (
+                JSON.stringify(text)
+                  .replace(/\{([\w$]+)\}/g, (substring, name) => {
+                    const variable = variablesList.find((v) => v[0] === name);
+
+                    if (!variable) {
+                      return substring;
+                    }
+
+                    return variable[1] as string;
+                  })
+              )),
+            )
+          }
+        />
+      </span>
+    );
+  }
+
   return (
     <span
       ref={ref}
       tabIndex={canEdit ? -1 : undefined}
-      contentEditable={canEdit}
-      onBlur={onBlur}
+      contentEditable
+      onInput={onInput}
       onDoubleClick={canEdit ? onDoubleClick : undefined}
       onMouseDown={onMouseDown}
       onKeyDown={onKeyDown}
       // eslint-disable-next-line react/no-danger
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(text),
-      }}
+      dangerouslySetInnerHTML={html2}
       style={{
         cursor: 'text',
         boxShadow: canEdit ? '0 2px 0 0 #0081f1' : undefined,
