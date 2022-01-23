@@ -520,6 +520,7 @@ export function RenderShapeComponent({ element, parent }: RenderShapeComponentPr
   const ref = useRef<HTMLElement>(null);
   const { type } = useStore(element);
   const { style, variables } = useStore(type);
+  const events = useInteractiveEvents(element);
   // const { drag } = useDraggableElement({ element, parent });
   // const { drop } = useDroppableElement({ element, parent });
 
@@ -538,7 +539,12 @@ export function RenderShapeComponent({ element, parent }: RenderShapeComponentPr
       <RenderCssComponent id={id} style={style} />
       {createElement(
         style.type,
-        { ...element.props, ref, id },
+        {
+          ...element.props,
+          ref,
+          id,
+          ...events,
+        },
         createElement(RenderChildrenComponent, {
           elements: element.type.root.children,
           parent: element.type.root,
