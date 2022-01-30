@@ -245,23 +245,30 @@ export class ProjectStore extends Exome {
             };
           }
 
-          // @TODO:
-          return {} as any;
+          let type!: APISpaceComponent['type'];
 
-          // const output: APISpaceComponent = {
-          //   id: component.id,
-          //   type: component.type,
-          //   name: component.name,
-          //   children: component.root.children.map(buildChildrenList),
-          //   position: {
-          //     x: component.position.x,
-          //     y: component.position.y,
-          //     width: component.position.width,
-          //     height: component.position.height,
-          //   },
-          // };
+          if (component instanceof ShapeStore) {
+            type = 'shape';
+          }
 
-          // return output;
+          if (component instanceof ComponentStore) {
+            type = 'component';
+          }
+
+          const output: APISpaceComponent = {
+            id: component.id,
+            type,
+            name: component.name,
+            children: component.root.children.map(buildChildrenList),
+            position: {
+              x: component.position.x,
+              y: component.position.y,
+              width: component.position.width,
+              height: component.position.height,
+            },
+          };
+
+          return output;
         }),
       } as APISpace));
 
