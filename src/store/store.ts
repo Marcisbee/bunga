@@ -17,6 +17,7 @@ import { EdgePosition } from './edges/position';
 import { ElementTextStore } from './element-text.store';
 import { ElementStore } from './element.store';
 import { ProjectDetailsStore, ProjectStore } from './project.store';
+import { ShapeStore } from './shape.store';
 import { SpaceStore } from './space.store';
 import { StyleStore } from './style.store';
 import { TokenStore } from './token.store';
@@ -66,9 +67,16 @@ interface APISpaceComponentPosition {
   height: number;
 }
 
-export interface APISpaceComponent {
+export type APISpaceComponent = {
   id: string;
-  type: 'component' | 'shape';
+  type: 'component';
+  name: string;
+  position: APISpaceComponentPosition;
+  children: APISpaceElementTypes[];
+} | {
+  id: string;
+  type: 'shape';
+  style: string;
   name: string;
   position: APISpaceComponentPosition;
   children: APISpaceElementTypes[];
@@ -81,12 +89,6 @@ type APISpaceEdgeInputTypes = {
   type: 'connection';
   from: string;
   path: string;
-} | {
-  type: 'style';
-  id: string;
-} | {
-  type: 'element';
-  id: string;
 } | null;
 
 interface APISpaceEdgePosition {
@@ -207,24 +209,6 @@ export class Store extends Exome {
             return;
           }
 
-          if (value.type === 'style') {
-            const target = edge.input[key];
-
-            if (!(target instanceof BehaviorSubject)) {
-              throw new Error(`Edge style "${edgeData.type}.${key}" could not be set`);
-            }
-
-            const styleStore = styleStores.find((s) => s.id === value.id);
-
-            if (!styleStore) {
-              return;
-            }
-
-            target.next(styleStore);
-
-            return;
-          }
-
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           throw new Error(`Unknown edge type "${(value as any)?.type}"`);
         });
@@ -234,21 +218,21 @@ export class Store extends Exome {
         child: APISpaceElementTypes,
       ): ElementStore | ElementTextStore {
         if (child.type === 'element') {
-          // const ref = components.find((e) => {
-          //   if (e.type !== 'shape') {
-          //     return false;
-          //   }
+          const ref = components.find((e) => {
+            if (e instanceof ComponentStore) {
+              return false;
+            }
 
-          //   return e.root.type === child.ref;
-          // });
+            return e.root.type === child.ref;
+          });
 
-          // if (ref instanceof ShapeStore) {
-          //   return new ElementStore(
-          //     ref,
-          //     child.props,
-          //     child.children.map(buildRecursiveChildren),
-          //   );
-          // }
+          if (ref instanceof ShapeStore) {
+            return new ElementStore(
+              ref,
+              child.props,
+              child.children.map(buildRecursiveChildren),
+            );
+          }
 
           return new ElementStore(
             child.tag || 'div',
@@ -269,24 +253,48 @@ export class Store extends Exome {
         throw new Error(`Unknown child type "${(child as any)?.type}"`);
       }
 
-      const components = (space.components as APISpaceComponent[])?.map((component) => (
-        new ComponentStore(
-          component.id,
-          new ComponentPositionStore(
-            component.position.x,
-            component.position.y,
-            component.position.width,
-            component.position.height,
-          ),
-          component.name,
-          undefined,
-          new ElementStore(
-            'root',
-            {},
-            component.children.map(buildRecursiveChildren),
-          ),
-        )
-      ));
+      const components = (space.components as APISpaceComponent[])?.map((component) => {
+        if (component.type === 'component') {
+          return new ComponentStore(
+            component.id,
+            new ComponentPositionStore(
+              component.position.x,
+              component.position.y,
+              component.position.width,
+              component.position.height,
+            ),
+            component.name,
+            undefined,
+            new ElementStore(
+              'root',
+              {},
+              component.children.map(buildRecursiveChildren),
+            ),
+          );
+        }
+
+        if (component.type === 'shape') {
+          return new ShapeStore(
+            component.id,
+            new ComponentPositionStore(
+              component.position.x,
+              component.position.y,
+              component.position.width,
+              component.position.height,
+            ),
+            component.name,
+            styleStores.find((styleStore) => styleStore.id === component.style)!,
+            undefined,
+            new ElementStore(
+              'root',
+              {},
+              component.children.map(buildRecursiveChildren),
+            ),
+          );
+        }
+
+        throw new Error(`Unknown component type "${(component as any).type}"`);
+      });
 
       return new SpaceStore(
         space.id,

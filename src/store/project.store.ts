@@ -185,14 +185,6 @@ export class ProjectStore extends Exome {
               return;
             }
 
-            if (data instanceof StyleStore) {
-              output.input[key] = {
-                type: 'style',
-                id: data.id,
-              };
-              return;
-            }
-
             output.input[key] = {
               type: 'value',
               value: data,
@@ -206,16 +198,7 @@ export class ProjectStore extends Exome {
             child: ElementStore | ElementTextStore,
           ): APISpaceElementTypes {
             if (child instanceof ElementStore) {
-              if (child.type instanceof ShapeStore) {
-                return {
-                  type: 'element',
-                  ref: child.type.id,
-                  props: child.props,
-                  children: child.children.map(buildChildrenList),
-                };
-              }
-
-              if (child.type instanceof ComponentStore) {
+              if (child.type instanceof ShapeStore || child.type instanceof ComponentStore) {
                 return {
                   type: 'element',
                   ref: child.type.id,
@@ -260,6 +243,7 @@ export class ProjectStore extends Exome {
             type,
             name: component.name,
             children: component.root.children.map(buildChildrenList),
+            style: (type === 'shape') ? (component as ShapeStore).style.id : (undefined as any),
             position: {
               x: component.position.x,
               y: component.position.y,
