@@ -7,7 +7,11 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import { combineLatest, map, Observable } from 'rxjs';
+import {
+  combineLatest,
+  map,
+  Observable,
+} from 'rxjs';
 
 import { useObservable } from '../../hooks/use-observable';
 import { ComponentStore } from '../../store/component.store';
@@ -106,7 +110,13 @@ interface RenderTextComponentProps {
 }
 
 function RenderDynamicTextComponent({ observable }: { observable: Observable<any> }) {
-  return useObservable(observable);
+  const value = useObservable(observable);
+
+  return (
+    <span>
+      {value}
+    </span>
+  );
 }
 
 function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
@@ -117,10 +127,10 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
 
   const html = useMemo(() => ({
     __html: text,
-  }), [text, isInteractive]);
+  }), [!canEdit && text, isInteractive]);
   const htmlStringified = useMemo(() => ({
     __html: JSON.stringify(text),
-  }), [text, isInteractive]);
+  }), [!canEdit && text, isInteractive]);
 
   const dynamicText = useMemo(() => (
     combineLatest(
@@ -170,11 +180,9 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
       }
 
       return (
-        <span>
-          <RenderDynamicTextComponent
-            observable={dynamicText}
-          />
-        </span>
+        <RenderDynamicTextComponent
+          observable={dynamicText}
+        />
       );
     }
 
@@ -207,11 +215,9 @@ function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
     }
 
     return (
-      <span>
-        <RenderDynamicTextComponent
-          observable={dynamicText}
-        />
-      </span>
+      <RenderDynamicTextComponent
+        observable={dynamicText}
+      />
     );
   }
 
