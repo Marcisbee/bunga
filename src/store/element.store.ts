@@ -18,13 +18,6 @@ export class ElementStore<
   T extends Record<string, any> = Record<string, any>,
   TYPE = string | ShapeStore | ComponentStore
 > extends Exome {
-  // public getPosition = () => ({
-  //   x: 0,
-  //   y: 0,
-  //   width: 0,
-  //   height: 0,
-  // });
-
   constructor(
     public type: TYPE,
     public props: T = {} as T,

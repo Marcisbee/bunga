@@ -145,8 +145,8 @@ function LayersManagerComponentComponent({ component }: { component: ComponentSt
         tabIndex={0}
         className={cc([
           style.item,
-          // type === 'component' && style.component,
-          // type === 'shape' && style.shape,
+          component instanceof ComponentStore && style.component,
+          component instanceof ShapeStore && style.shape,
           selectedComponents.indexOf(component) > -1 && style.active,
         ])}
         onClick={(e) => {

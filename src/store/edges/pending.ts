@@ -32,8 +32,12 @@ export class PendingEdge extends Exome {
   }
 
   public connectTo(input: string, to: Edge) {
-    this.from![1].output[this.from![0]].connect(input, to);
-    // console.log('Connect', this.from, 'to', [input, to]);
+    const didConnect = this.from![1].output[this.from![0]].connect(input, to);
+
+    if (!didConnect) {
+      throw new Error('Can not connect edge to input.');
+    }
+
     this.unsetFrom();
   }
 }

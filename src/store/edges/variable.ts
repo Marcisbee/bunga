@@ -3,7 +3,9 @@ import { BehaviorSubject, combineLatest } from 'rxjs';
 import { Constructor } from '../../types/constructor';
 
 import { Connection } from './connection';
+import { CountEdge } from './data/count.edge';
 import { DataEdge } from './data/data.edge';
+import { ToggleEdge } from './data/toggle.edge';
 import { Edge } from './edge';
 import { LogicEdge } from './logic/logic.edge';
 import { MathEdge } from './math/math.edge';
@@ -21,6 +23,8 @@ export class VariableEdge extends Edge {
       LogicEdge,
       DataEdge,
       MathEdge,
+      CountEdge,
+      ToggleEdge,
     ],
   };
 

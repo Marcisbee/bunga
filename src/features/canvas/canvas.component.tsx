@@ -31,39 +31,39 @@ interface CanvasComponentProps {
 }
 
 // @DEBUG: This is a debug component that renders the canvas boundaries.
-function DebugBoundary({ space }: CanvasComponentProps) {
-  const {
-    x, y, width, height,
-  } = useStore(space.boundary);
+// function DebugBoundary({ space }: CanvasComponentProps) {
+//   const {
+//     x, y, width, height,
+//   } = useStore(space.boundary);
 
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        zIndex: 2,
-        left: x,
-        top: y,
-        width,
-        height,
-        boxShadow: 'inset 0 0 0 1px orangered',
-      }}
-    >
-      <span
-        style={{
-          position: 'absolute',
-          marginTop: -20,
-          color: 'orangered',
-          fontSize: 12,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {JSON.stringify({
-          x, y, w: width, h: height,
-        })}
-      </span>
-    </div>
-  );
-}
+//   return (
+//     <div
+//       style={{
+//         position: 'absolute',
+//         zIndex: 2,
+//         left: x,
+//         top: y,
+//         width,
+//         height,
+//         boxShadow: 'inset 0 0 0 1px orangered',
+//       }}
+//     >
+//       <span
+//         style={{
+//           position: 'absolute',
+//           marginTop: -20,
+//           color: 'orangered',
+//           fontSize: 12,
+//           whiteSpace: 'nowrap',
+//         }}
+//       >
+//         {JSON.stringify({
+//           x, y, w: width, h: height,
+//         })}
+//       </span>
+//     </div>
+//   );
+// }
 
 function CanvasSelectionComponent({ selection }: { selection: SelectionStore }) {
   const ref = useRef<SVGSVGElement>(null);

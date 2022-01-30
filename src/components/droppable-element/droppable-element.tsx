@@ -7,8 +7,6 @@ import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { cc } from '../../utils/class-names';
 
-// import styles from './droppable-element.module.scss';
-
 export interface DroppableElementResult {
   parent: ElementStore;
   element: ElementStore | ElementTextStore;
@@ -105,9 +103,6 @@ export function DroppableElement({
 interface useDroppableElementProps extends React.PropsWithChildren<unknown> {
   parent: DroppableElementResult['parent'];
   element: DroppableElementResult['element'];
-  // position: keyof typeof DropPositionTypes;
-  // className?: string;
-  // style?: CSSProperties,
 }
 
 export function useDroppableElement({ element, parent }: useDroppableElementProps) {
@@ -134,7 +129,6 @@ export function useDroppableElement({ element, parent }: useDroppableElementProp
       return ({
         parent,
         element,
-        // position,
       });
     },
   }), [parent, element]);

@@ -10,21 +10,17 @@ import {
 } from 'react';
 
 import { DraggableComponent } from '../../components/draggable-component/draggable-component';
-import { DroppableComponent } from '../../components/droppable-component/droppable-component';
 import { ShadowView } from '../../components/shadow/shadow.component';
 import { useObservable } from '../../hooks/use-observable';
-import { Connection } from '../../store/edges/connection';
 import { pendingEdge } from '../../store/edges/pending';
-import { EdgePosition } from '../../store/edges/position';
 import { VariableEdge } from '../../store/edges/variable';
 import { ElementTextStore } from '../../store/element-text.store';
 import { interactiveModeStore } from '../../store/interactive-mode.store';
-import { ShapePositionSilentStore, ShapePositionStore, ShapeStore } from '../../store/shape.store';
+import { ShapePositionSilentStore, ShapeStore } from '../../store/shape.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
-import { observableToPromise } from '../../utils/observable-to-promise';
 import { onMouseMoveDiff } from '../../utils/on-mouse-move-diff';
-import { RenderChildrenComponent, RenderCssComponent, RenderShapeComponent } from '../element/element.component';
+import { RenderChildrenComponent, RenderCssComponent } from '../element/element.component';
 
 import style from './shape.module.scss';
 
@@ -331,10 +327,6 @@ export function ShapeComponent({ shape }: ShapeComponentProps) {
         if (!isActive) {
           return;
         }
-
-        // if (selectedAll.length <= 1) {
-        //   selectComponent(component, e.shiftKey);
-        // }
 
         startMouseMove(e.pageX, e.pageY);
       }}
