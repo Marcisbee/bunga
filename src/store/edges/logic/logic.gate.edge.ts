@@ -10,7 +10,6 @@ import { Connection } from '../connection';
 import { BooleanEdge } from '../data/data.boolean.edge';
 import { ToggleEdge } from '../data/toggle.edge';
 import { Edge } from '../edge';
-import { StyleEdge } from '../style.edge';
 
 import { LogicEqualsEdge } from './logic.equals.edge';
 
@@ -29,7 +28,7 @@ export class LogicGateEdge extends Edge {
       LogicEqualsEdge,
     ],
     style: [
-      StyleEdge,
+
     ],
   };
 

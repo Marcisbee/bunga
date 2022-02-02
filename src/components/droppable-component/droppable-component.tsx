@@ -2,27 +2,28 @@ import { useDrop } from 'react-dnd';
 
 import { ItemTypes } from '../../constants/draggable-item-types';
 import { ComponentStore } from '../../store/component.store';
-import { ElementStore } from '../../store/element.store';
 import { cc } from '../../utils/class-names';
 
 import style from './droppable-component.module.scss';
 
 export interface DroppableComponentResult {
-  container: ElementStore | ComponentStore;
+  container: ComponentStore;
 }
 
 interface DroppableComponentProps extends React.PropsWithChildren<unknown> {
   className?: string;
+  onMouseUp?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 export function DroppableComponent({
   className,
   container,
   children,
+  onMouseUp,
 }: DroppableComponentProps & DroppableComponentResult) {
   const [{ isOver, canDrop }, drop] = useDrop(() => ({
     accept: [
-      ItemTypes.PREVIEW,
+      ItemTypes.COMPONENT,
     ],
 
     collect(monitor) {
@@ -43,6 +44,7 @@ export function DroppableComponent({
         canDrop && style.canDrop,
         isOver && style.isOver,
       ])}
+      onMouseUp={onMouseUp}
     >
       {children}
     </div>

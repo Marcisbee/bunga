@@ -2,6 +2,7 @@ import { Exome } from 'exome';
 
 import { ComponentStore } from './component.store';
 import { Edge } from './edges/edge';
+import { ShapeStore } from './shape.store';
 import { SpaceStore } from './space.store';
 
 export class BoundaryStore extends Exome {
@@ -24,7 +25,7 @@ export class BoundaryStore extends Exome {
     const y: number[] = [];
     const h: number[] = [];
 
-    const combinedItems = ([] as (ComponentStore | Edge)[])
+    const combinedItems = ([] as (ComponentStore | ShapeStore | Edge)[])
       .concat(
         this.space.components,
         this.space.edges,

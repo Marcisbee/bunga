@@ -2,32 +2,29 @@ import { getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import { useState } from 'react';
 
-import { useObservable } from '../../hooks/use-observable';
 import { ComponentStore } from '../../store/component.store';
-import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
-import { ElementEdge } from '../../store/edges/element/element.edge';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
+import { ShapeStore } from '../../store/shape.store';
 import { store } from '../../store/store';
 import paneStyle from '../../styles/pane.module.scss';
 import { cc } from '../../utils/class-names';
 
 import style from './layers-manager.module.scss';
 
-function TextElementLayerComponent({ edge }: { edge: ElementTextEdge }) {
-  const { select } = useStore(edge);
-  const textValue = useObservable(select.default);
+function ElementLayerComponent({ shape }: { shape: ShapeStore }) {
+  const { style: styleStore } = useStore(shape);
+  const { name } = useStore(styleStore);
 
   return (
     <span className={style.itemName}>
-      {textValue}
+      {name}
     </span>
   );
 }
 
-function ElementLayerComponent({ edge }: { edge: ElementEdge }) {
-  const { input } = useStore(edge);
-  const name = useObservable(input.name);
+function ComponentLayerComponent({ component }: { component: ComponentStore }) {
+  const { name } = useStore(component);
 
   return (
     <span className={style.itemName}>
@@ -68,20 +65,7 @@ function ElementLayersComponent({
       );
     }
 
-    return (
-      <div
-        role="button"
-        // onClick={(e) => selectComponent(component, e.shiftKey)}
-        className={cc([
-          style.item,
-          style.text,
-          // selectedComponents.indexOf(component) > -1 && style.active,
-        ])}
-        style={depthStyle}
-      >
-        <TextElementLayerComponent edge={text} />
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -90,6 +74,7 @@ function ElementLayersComponent({
         role="button"
         // onClick={(e) => selectComponent(component, e.shiftKey)}
         className={cc([
+          style.shape,
           style.item,
           // selectedComponents.indexOf(component) > -1 && style.active,
         ])}
@@ -100,7 +85,11 @@ function ElementLayersComponent({
             {el.type}
           </span>
         ) : (
-          <ElementLayerComponent edge={el.type} />
+          el.type instanceof ShapeStore ? (
+            <ElementLayerComponent shape={el.type} />
+          ) : (
+            <ComponentLayerComponent component={el.type} />
+          )
         )}
       </div>
 
@@ -156,7 +145,8 @@ function LayersManagerComponentComponent({ component }: { component: ComponentSt
         tabIndex={0}
         className={cc([
           style.item,
-          style.component,
+          component instanceof ComponentStore && style.component,
+          component instanceof ShapeStore && style.shape,
           selectedComponents.indexOf(component) > -1 && style.active,
         ])}
         onClick={(e) => {

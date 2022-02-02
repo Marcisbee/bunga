@@ -109,7 +109,6 @@ export const GenericEdgeComponent = memo(({ edge }: GenericEdgeComponentProps) =
                   />
                 )}
               </span>
-              {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
               <div
                 onMouseDown={stopPropagation}
                 onMouseMove={stopPropagation}

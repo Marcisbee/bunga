@@ -4,27 +4,25 @@ import { useDrag } from 'react-dnd';
 
 import { ItemTypes } from '../../constants/draggable-item-types';
 import { ComponentStore } from '../../store/component.store';
-import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
-import { ElementEdge } from '../../store/edges/element/element.edge';
-import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { interactiveModeStore } from '../../store/interactive-mode.store';
+import { ShapeStore } from '../../store/shape.store';
 import { cc } from '../../utils/class-names';
 import { DroppableComponentResult } from '../droppable-component/droppable-component';
 
-import style from './draggable-preview.module.scss';
+import style from './draggable-component.module.scss';
 
-interface DraggablePreviewProps extends React.PropsWithChildren<unknown> {
-  preview: ElementEdge | ElementTextEdge;
+interface DraggableComponentProps extends React.PropsWithChildren<unknown> {
+  component: ComponentStore | ShapeStore;
 }
 
-export function DraggablePreview({ preview, children }: DraggablePreviewProps) {
+export function DraggableComponent({ component, children }: DraggableComponentProps) {
   const { isInteractive } = useStore(interactiveModeStore);
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: ItemTypes.PREVIEW,
+  const [{ isDragging, handlerId }, drag] = useDrag(() => ({
+    type: ItemTypes.COMPONENT,
 
     item: {
-      preview,
+      component,
     },
 
     collect: (monitor) => ({
@@ -39,31 +37,25 @@ export function DraggablePreview({ preview, children }: DraggablePreviewProps) {
         return;
       }
 
-      const { container } = dropResult;
-
-      if (container instanceof ComponentStore) {
-        const itemPreview = item.preview;
-
-        if (itemPreview instanceof ElementEdge) {
-          const element = new ElementStore(itemPreview);
-
-          container.root.append(element);
-          return;
-        }
-
-        if (itemPreview instanceof ElementTextEdge) {
-          const element = new ElementTextStore(itemPreview);
-
-          container.root.append(element);
-        }
+      // Don't drop self into self
+      if (item.component === dropResult.container) {
+        return;
       }
+
+      // Avoid creating infinite loops
+      if (item.component instanceof ComponentStore && dropResult.container instanceof ShapeStore) {
+        return;
+      }
+
+      dropResult.container.root.append(new ElementStore(item.component));
     },
   }));
 
   return (
-    <div
+    <span
       ref={isInteractive ? undefined : drag}
       role="button"
+      id={handlerId?.toString()}
       className={cc([
         style.draggable,
         isDragging && style.isDragging,
@@ -75,6 +67,6 @@ export function DraggablePreview({ preview, children }: DraggablePreviewProps) {
         }}
     >
       {children}
-    </div>
+    </span>
   );
 }

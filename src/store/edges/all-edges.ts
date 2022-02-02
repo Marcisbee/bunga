@@ -9,8 +9,6 @@ import { StringEdge } from './data/data.string.edge';
 import { ToggleEdge } from './data/toggle.edge';
 import { DebugLogEdge } from './debug/log.edge';
 import { Edge } from './edge';
-import { ElementTextEdge } from './element/element-text.edge';
-import { ElementEdge } from './element/element.edge';
 import { MouseEventEdge } from './event/event.mouse.edge';
 import { LogicAndEdge } from './logic/logic.and.edge';
 import { LogicEqualsEdge } from './logic/logic.equals.edge';
@@ -25,7 +23,6 @@ import { MathAddEdge } from './math/math.add.edge';
 import { MathDivideEdge } from './math/math.divide.edge';
 import { MathMultiplyEdge } from './math/math.multiply.edge';
 import { MathSubtractEdge } from './math/math.subtract.edge';
-import { StyleEdge } from './style.edge';
 
 export type EdgeConstructor = new (...args: any[]) => Edge;
 
@@ -35,13 +32,6 @@ export const edgeGroups: Record<string, Record<string, EdgeConstructor>> = {
     number: NumberEdge,
     boolean: BooleanEdge,
     array: ArrayEdge,
-  },
-  template: {
-    element: ElementEdge,
-    text: ElementTextEdge,
-  },
-  style: {
-    style: StyleEdge,
   },
   event: {
     mouse: MouseEventEdge,

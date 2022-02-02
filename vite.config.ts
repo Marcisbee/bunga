@@ -32,11 +32,11 @@ export default defineConfig(({ command }) => {
     build: {
       minify: 'esbuild',
     },
-    // resolve: {
-    //   alias: {
-    //     react: 'preact/compat',
-    //     'react-dom': 'preact/compat',
-    //   },
-    // },
+    resolve: {
+      alias: {
+        react: 'preact/compat',
+        'react-dom': 'preact/compat',
+      },
+    },
   };
 });

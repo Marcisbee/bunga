@@ -1,198 +1,349 @@
-import { getExomeId } from 'exome';
+import { Exome, getExomeId } from 'exome';
 import { useStore } from 'exome/react';
 import {
   createElement,
-  forwardRef,
+  memo,
+  useContext,
+  useMemo,
   useRef,
 } from 'react';
+import {
+  combineLatest,
+  map,
+  Observable,
+} from 'rxjs';
 
-import { DraggableElement } from '../../components/draggable-element/draggable-element';
-import { DroppableElement } from '../../components/droppable-element/droppable-element';
-import { DropPositionTypes } from '../../constants/drop-position-types';
 import { useObservable } from '../../hooks/use-observable';
-import { StringEdge } from '../../store/edges/data/data.string.edge';
-import { ElementTextEdge } from '../../store/edges/element/element-text.edge';
-import { RenderElement } from '../../store/edges/element/element.edge';
+import { ComponentStore } from '../../store/component.store';
 import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { interactiveModeStore, useInteractiveEvents } from '../../store/interactive-mode.store';
+import { ShapeStore } from '../../store/shape.store';
 import { store } from '../../store/store';
+import { StyleStore } from '../../store/style.store';
+import { ElementContext } from '../shape/shape.component';
 
-interface ElementChildrenComponentProps {
+function exomeArraySerializer(value: Exome[]): string {
+  return value.map((v) => getExomeId(v)).join('|');
+}
+
+interface RenderChildrenComponentProps {
   parent: ElementStore;
   elements: (ElementStore | ElementTextStore)[];
 }
 
-export function ElementChildrenComponent({ parent, elements }: ElementChildrenComponentProps) {
-  const { isInteractive } = useStore(interactiveModeStore);
+function RenderChildrenComponentWrapper({ parent, elements }: RenderChildrenComponentProps) {
   useStore(parent);
-
-  if (isInteractive) {
-    return (
-      <>
-        {elements.map((element) => (
-          <div
-            key={`element-c-${getExomeId(element)}`}
-            style={{ display: 'inline-block' }}
-          >
-            <ElementComponent
-              element={element}
-            />
-          </div>
-        ))}
-      </>
-    );
-  }
 
   return (
     <>
       {elements.map((element) => (
-        <DraggableElement
+        <RenderElementSwitchComponent
           key={`element-c-${getExomeId(element)}`}
-          parent={parent}
           element={element}
-        >
-          <DroppableElement
-            parent={parent}
-            element={element}
-            position={DropPositionTypes.INSIDE}
-          >
-            <ElementComponent element={element} />
-          </DroppableElement>
-
-          <DroppableElement
-            parent={parent}
-            element={element}
-            position={DropPositionTypes.TOP}
-            style={{
-              position: 'absolute',
-              width: '100%',
-              height: '20%',
-              maxHeight: 20,
-              top: 0,
-              left: 0,
-              overflow: 'hidden',
-            }}
-          />
-          <DroppableElement
-            parent={parent}
-            element={element}
-            position={DropPositionTypes.BOTTOM}
-            style={{
-              position: 'absolute',
-              width: '100%',
-              height: '20%',
-              maxHeight: 20,
-              bottom: 0,
-              left: 0,
-              overflow: 'hidden',
-            }}
-          />
-        </DraggableElement>
+          parent={parent}
+        />
       ))}
     </>
   );
 }
 
-interface ElementComponentProps {
+export const RenderChildrenComponent = memo(
+  RenderChildrenComponentWrapper,
+  (a, b) => (
+    a.parent === b.parent
+    && exomeArraySerializer(a.elements) === exomeArraySerializer(b.elements)
+  ),
+);
+
+interface RenderElementSwitchComponentProps {
   element: (ElementStore | ElementTextStore);
+  parent: ElementStore;
 }
 
-export function ElementComponent({ element }: ElementComponentProps) {
-  const ref = useRef<HTMLElement>(null);
-
+export function RenderElementSwitchComponent({
+  element,
+  parent,
+}: RenderElementSwitchComponentProps) {
   if (element instanceof ElementTextStore) {
     return (
-      <ElementTextComponent ref={ref} element={element} />
+      <RenderTextComponent
+        parent={parent}
+        element={element}
+      />
+    );
+  }
+
+  if (element.type instanceof ComponentStore) {
+    return (
+      <RenderComponentComponent
+        element={element as ElementStore<Record<string, never>, ComponentStore>}
+        parent={parent}
+      />
+    );
+  }
+
+  if (element.type instanceof ShapeStore) {
+    return (
+      <RenderShapeComponent
+        element={element as ElementStore<Record<string, never>, ShapeStore>}
+        parent={parent}
+      />
     );
   }
 
   return (
-    <ElementBlockComponent ref={ref} element={element} />
+    <RenderElementComponent
+      element={element as ElementStore<Record<string, never>, string>}
+      parent={parent}
+    />
   );
 }
 
-const ElementBlockComponent = forwardRef<HTMLElement, { element: ElementStore }>(
-  ({ element }, ref) => {
-    const { isInteractive } = useStore(interactiveModeStore);
-    const { type, props, children } = useStore(element);
-    const events = useInteractiveEvents(element);
+/**
+ *********** Render text ************
+ */
 
-    if (!type || typeof type === 'string') {
-      return createElement(
-        type,
-        {
-          ...props,
-          ...events,
-          ref,
-        },
-        (children && <ElementChildrenComponent parent={element} elements={children} />) || null,
+interface RenderTextComponentProps {
+  parent: ElementStore;
+  element: ElementTextStore;
+}
+
+function RenderDynamicTextComponent({ observable }: { observable: Observable<any> }) {
+  const value = useObservable(observable);
+
+  return (
+    <span>
+      {value}
+    </span>
+  );
+}
+
+function RenderTextComponent({ element, parent }: RenderTextComponentProps) {
+  const { isInteractive } = useStore(interactiveModeStore);
+  const { canEdit, variables } = useContext(ElementContext);
+  const ref = useRef<HTMLElement>(null);
+  const { text, setText } = useStore(element);
+
+  const html = useMemo(() => ({
+    __html: text,
+  }), [!canEdit && text, isInteractive]);
+  const htmlStringified = useMemo(() => ({
+    __html: JSON.stringify(text),
+  }), [!canEdit && text, isInteractive]);
+
+  const dynamicText = useMemo(() => (
+    combineLatest(
+      variables.map((variable) => variable.select.both),
+    ).pipe(
+      map((variablesList) => (
+        (typeof text === 'string' ? text : JSON.stringify(text))
+          .replace(/\{([\w$]+)\}/g, (substring, name) => {
+            const variable = variablesList.find((v) => v[0] === name);
+
+            if (!variable) {
+              return substring;
+            }
+
+            return variable[1] as string;
+          })
+      )),
+    )), [text, exomeArraySerializer(variables)]);
+
+  function onInput(e: React.ChangeEvent<HTMLSpanElement>) {
+    e.stopPropagation();
+
+    setText(e.target.textContent || '');
+  }
+
+  function onDoubleClick(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function onMouseDown(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    e.stopPropagation();
+  }
+
+  function onKeyDown(e: React.KeyboardEvent<HTMLSpanElement>) {
+    e.stopPropagation();
+  }
+
+  if (typeof text === 'string') {
+    if (isInteractive) {
+      if (variables.length === 0) {
+        return (
+          <span>
+            {text}
+          </span>
+        );
+      }
+
+      return (
+        <RenderDynamicTextComponent
+          observable={dynamicText}
+        />
       );
     }
 
     return (
-      <RenderElement
-        edge={type}
-        {...events}
-      >
-        {(children && children.length > 0) ? (
-          <ElementChildrenComponent parent={element} elements={children} />
-        ) : (
-          !isInteractive && (
-            <span
-              // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{
-                __html: '&nbsp;&nbsp;&nbsp;',
-              }}
-              style={{
-                cursor: 'text',
-              }}
-              onDoubleClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const project = store.activeProject!;
-                const space = project.activeSpace;
-
-                const textEdge = space.addEdge(StringEdge);
-                const textElementEdge = space.addEdge(ElementTextEdge);
-
-                // textEdge.setAutofocus();
-                textEdge.output.default.connect('text', textElementEdge);
-
-                element.append(new ElementTextStore(textElementEdge));
-              }}
-            />
-          )
-        )}
-      </RenderElement>
+      <span
+        ref={ref}
+        tabIndex={canEdit ? -1 : undefined}
+        contentEditable={canEdit}
+        onInput={onInput}
+        onDoubleClick={canEdit ? onDoubleClick : undefined}
+        onMouseDown={onMouseDown}
+        onKeyDown={onKeyDown}
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={html}
+        style={{
+          cursor: canEdit ? 'text' : undefined,
+          boxShadow: canEdit ? '0 2px 0 0 #0081f1' : undefined,
+        }}
+      />
     );
-  },
-);
+  }
 
-const ElementTextComponent = forwardRef<HTMLElement, { element: ElementTextStore }>(
-  ({ element }, ref) => {
-    const { text } = useStore(element);
-
-    if (typeof text === 'string') {
-      return createElement('span', { ref }, text);
+  if (isInteractive) {
+    if (variables.length === 0) {
+      return (
+        <span>
+          {JSON.stringify(text)}
+        </span>
+      );
     }
 
     return (
-      <ElementDynamicTextComponent
-        ref={ref}
-        edge={text}
+      <RenderDynamicTextComponent
+        observable={dynamicText}
       />
     );
-  },
-);
+  }
 
-const ElementDynamicTextComponent = forwardRef<HTMLElement, { edge: ElementTextEdge }>(
-  ({ edge }, ref) => {
-    const { select } = useStore(edge);
+  return (
+    <span
+      ref={ref}
+      tabIndex={canEdit ? -1 : undefined}
+      contentEditable={canEdit}
+      onInput={onInput}
+      onDoubleClick={canEdit ? onDoubleClick : undefined}
+      onMouseDown={onMouseDown}
+      onKeyDown={onKeyDown}
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={htmlStringified}
+      style={{
+        cursor: canEdit ? 'text' : undefined,
+        boxShadow: canEdit ? '0 2px 0 0 #0081f1' : undefined,
+      }}
+    />
+  );
+}
 
-    const value = useObservable(select.default);
+/**
+ *********** Render static element ************
+ */
 
-    return createElement('span', { ref }, value);
-  },
-);
+interface RenderElementComponentProps {
+  parent: ElementStore;
+  element: ElementStore<Record<string, never>, string>;
+}
+
+function RenderElementComponent({ element, parent }: RenderElementComponentProps) {
+  const ref = useRef<HTMLElement>(null);
+  const { type } = useStore(element);
+  // const { drag } = useDraggableElement({ element, parent });
+  // const { drop } = useDroppableElement({ element, parent });
+
+  // drag(drop(ref));
+
+  return createElement(type, { ...element.props, ref }, element.children);
+}
+
+/**
+ *********** Render shape element ************
+ */
+
+interface RenderShapeComponentProps {
+  parent: ElementStore;
+  element: ElementStore<Record<string, never>, ShapeStore>;
+}
+
+export function RenderShapeComponent({ element, parent }: RenderShapeComponentProps) {
+  const context = useContext(ElementContext);
+  const ref = useRef<HTMLElement>(null);
+  const { type } = useStore(element);
+  const { style, variables } = useStore(type);
+  const events = useInteractiveEvents(element);
+  // const { drag } = useDraggableElement({ element, parent });
+  // const { drop } = useDroppableElement({ element, parent });
+
+  // drag(drop(ref));
+
+  const id = getExomeId(type);
+
+  return (
+    <ElementContext.Provider
+      // eslint-disable-next-line react/jsx-no-constructed-context-values
+      value={{
+        ...context,
+        variables: [...context.variables, ...variables],
+      }}
+    >
+      <RenderCssComponent id={id} style={style} />
+      {createElement(
+        style.type,
+        {
+          ...element.props,
+          ref,
+          id,
+          ...events,
+        },
+        createElement(RenderChildrenComponent, {
+          elements: element.type.root.children,
+          parent: element.type.root,
+        }),
+      )}
+    </ElementContext.Provider>
+  );
+}
+
+/**
+ *********** Render component element ************
+ */
+
+interface RenderComponentComponentProps {
+  parent: ElementStore;
+  element: ElementStore<Record<string, never>, ComponentStore>;
+}
+
+export function RenderComponentComponent({ element, parent }: RenderComponentComponentProps) {
+  const { type } = useStore(element);
+  const { root } = useStore(type);
+
+  useStore(parent);
+
+  return (
+    <RenderChildrenComponent
+      parent={parent}
+      elements={root.children}
+    />
+  );
+}
+
+/**
+ *********** Render CSS ************
+ */
+
+// @TODO: Move this to root & update via context
+export function RenderCssComponent({ style, id }: { style: StyleStore, id: string }) {
+  const { css } = useStore(style);
+  const { tokens } = useStore(store.activeProject!.tokens[0]);
+
+  return (
+    <style>
+      {`:host {${tokens}}`}
+      {`#${id} {${css}}`}
+    </style>
+  );
+}

@@ -5,7 +5,6 @@ import { StyleStore } from '../../style.store';
 import { Connection } from '../connection';
 import { Edge } from '../edge';
 import { LogicGateEdge } from '../logic/logic.gate.edge';
-import { StyleEdge } from '../style.edge';
 
 import { ArrayEdge } from './data.array.edge';
 import { DataEdge } from './data.edge';
@@ -24,7 +23,6 @@ export class ArrayConcatEdge extends DataEdge {
       ArrayConcatEdge,
     ],
     value: [
-      StyleEdge,
       LogicGateEdge,
     ],
   };

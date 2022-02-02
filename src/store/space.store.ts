@@ -11,6 +11,8 @@ import { EdgePosition } from './edges/position';
 import { ActiveElementStore } from './element.store';
 import { MoveStore } from './move.store';
 import { PositionStore } from './position.store';
+import { ShapePositionStore, ShapeStore } from './shape.store';
+import { StyleStore } from './style.store';
 import { undoable } from './undo.store';
 
 export class SpaceStore extends Exome {
@@ -26,7 +28,7 @@ export class SpaceStore extends Exome {
     public id: string,
     public name: string,
     public path: string = permalink(name),
-    public components: ComponentStore[] = [],
+    public components: (ComponentStore | ShapeStore)[] = [],
     public edges: Edge[] = [],
   ) {
     super();
@@ -38,7 +40,9 @@ export class SpaceStore extends Exome {
       'components',
     ],
   })
-  public addComponent() {
+  public addComponent(
+    name = `Component ${this.components.length + 1}`,
+  ) {
     this.boundary.updateBoundary();
 
     let {
@@ -72,7 +76,7 @@ export class SpaceStore extends Exome {
     const component = new ComponentStore(
       nanoid(20),
       position,
-      `Component ${this.components.length + 1}`,
+      name,
     );
     this.components.push(component);
     this.move.selectComponent(component);
@@ -80,6 +84,60 @@ export class SpaceStore extends Exome {
     this.boundary.updateBoundary();
 
     return component;
+  }
+
+  @undoable({
+    saveIntermediateActions: true,
+    dependencies: [
+      'components',
+    ],
+  })
+  public addShape(
+    style: StyleStore,
+    name = `Shape ${this.components.length + 1}`,
+  ) {
+    this.boundary.updateBoundary();
+
+    let {
+      x,
+      y,
+      width,
+      // height,
+    } = this.boundary;
+
+    const active = this.move.selectedAll[0];
+    if (active) {
+      x = active.position.x;
+      y = active.position.y;
+      width = active.position.width;
+      // height = active.position.height;
+    }
+
+    const position = new ShapePositionStore(
+      width + x + 20,
+      y,
+      270,
+      200,
+    );
+
+    // When nothing is selected, place component at center of screen.
+    if (this.move.selectedAll.length === 0) {
+      position.x = 0 - this.position.x + -(position.width / 2);
+      position.y = 0 - this.position.y + -(position.height / 2);
+    }
+
+    const shape = new ShapeStore(
+      nanoid(20),
+      position,
+      name,
+      style,
+    );
+    this.components.push(shape);
+    this.move.selectComponent(shape);
+
+    this.boundary.updateBoundary();
+
+    return shape;
   }
 
   @undoable({

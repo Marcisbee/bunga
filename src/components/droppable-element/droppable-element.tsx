@@ -7,8 +7,6 @@ import { ElementTextStore } from '../../store/element-text.store';
 import { ElementStore } from '../../store/element.store';
 import { cc } from '../../utils/class-names';
 
-// import styles from './droppable-element.module.scss';
-
 export interface DroppableElementResult {
   parent: ElementStore;
   element: ElementStore | ElementTextStore;
@@ -100,4 +98,45 @@ export function DroppableElement({
       </div>
     </>
   );
+}
+
+interface useDroppableElementProps extends React.PropsWithChildren<unknown> {
+  parent: DroppableElementResult['parent'];
+  element: DroppableElementResult['element'];
+}
+
+export function useDroppableElement({ element, parent }: useDroppableElementProps) {
+  const [{ isOver, canDrop, handlerId }, drop] = useDrop(() => ({
+    accept: [
+      ItemTypes.ELEMENT,
+    ],
+
+    collect(monitor) {
+      return {
+        isOver: monitor.isOver({ shallow: true }),
+        didDrop: monitor.didDrop(),
+        canDrop: monitor.canDrop(),
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+
+    drop: (e, monitor) => {
+      if (monitor.didDrop()) {
+        // Check whether some nested target already handled drop.
+        return;
+      }
+
+      return ({
+        parent,
+        element,
+      });
+    },
+  }), [parent, element]);
+
+  return {
+    drop,
+    isOver,
+    canDrop,
+    handlerId,
+  };
 }

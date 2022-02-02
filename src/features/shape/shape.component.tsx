@@ -4,33 +4,42 @@ import {
   useLayoutEffect,
   useRef,
   useMemo,
+  createElement,
+  createContext,
   useContext,
 } from 'react';
 
 import { DraggableComponent } from '../../components/draggable-component/draggable-component';
-import { DroppableComponent } from '../../components/droppable-component/droppable-component';
 import { ShadowView } from '../../components/shadow/shadow.component';
 import { useObservable } from '../../hooks/use-observable';
-import { ComponentPositionSilentStore, ComponentStore } from '../../store/component.store';
 import { pendingEdge } from '../../store/edges/pending';
 import { VariableEdge } from '../../store/edges/variable';
+import { ElementTextStore } from '../../store/element-text.store';
 import { interactiveModeStore } from '../../store/interactive-mode.store';
+import { ShapePositionSilentStore, ShapeStore } from '../../store/shape.store';
 import { store } from '../../store/store';
 import { cc } from '../../utils/class-names';
 import { onMouseMoveDiff } from '../../utils/on-mouse-move-diff';
-import { RenderChildrenComponent } from '../element/element.component';
-import { ElementContext } from '../shape/shape.component';
+import { RenderChildrenComponent, RenderCssComponent } from '../element/element.component';
 
-import style from './component.module.scss';
+import style from './shape.module.scss';
 
-interface ComponentComponentProps {
-  component: ComponentStore;
+interface ShapeComponentProps {
+  shape: ShapeStore;
 }
 
-function ComponentVariableComponent({
-  component,
+export const ElementContext = createContext<{
+  canEdit: boolean,
+  variables: VariableEdge[],
+}>({
+  canEdit: false,
+  variables: [],
+});
+
+function ShapeVariableComponent({
+  shape,
   variable,
-}: ComponentComponentProps & { variable: VariableEdge }) {
+}: ShapeComponentProps & { variable: VariableEdge }) {
   const { input } = useStore(variable);
   const name = useObservable(input.name)!;
 
@@ -38,7 +47,7 @@ function ComponentVariableComponent({
     <div className={style.variable}>
       <span
         className={style.remove}
-        onClick={() => component.removeVariable(variable)}
+        onClick={() => shape.removeVariable(variable)}
       >
         ×
       </span>
@@ -68,7 +77,7 @@ function ComponentVariableComponent({
   );
 }
 
-export function ComponentRenderComponent({ component }: ComponentComponentProps) {
+export function ShapeRenderComponent({ shape }: ShapeComponentProps) {
   const { canEdit } = useContext(ElementContext);
   const { isInteractive } = useStore(interactiveModeStore);
   const {
@@ -77,7 +86,9 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
     position,
     variables,
     addVariable,
-  } = useStore(component);
+    style: shapeStyle,
+  } = useStore(shape);
+  const id = getExomeId(shape);
   const { from, connectTo } = useStore(pendingEdge);
 
   const contextValue = useMemo(() => ({
@@ -116,9 +127,9 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
     <>
       <div className={style.variables}>
         {variables.map((variable) => (
-          <ComponentVariableComponent
+          <ShapeVariableComponent
             key={getExomeId(variable)}
-            component={component}
+            shape={shape}
             variable={variable}
           />
         ))}
@@ -127,17 +138,23 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
       <span
         className={cc([
           style.name,
-          style.component,
+          style.shape,
         ])}
       >
-        {/* <DraggableComponent component={component}> */}
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fillRule="evenodd" clipRule="evenodd"><path fill="currentColor" d="M12-.001l11 6v12l-11 6-11-6v-12l11-6z" /></svg>
-        {name}
-        {/* </DraggableComponent> */}
+        <DraggableComponent component={shape}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fillRule="evenodd" clipRule="evenodd"><path fill="currentColor" d="M12 0l-11 6v12l11 6 11-6v-12l-11-6zm-9 16.813v-9.626l9-4.908 9 4.908v9.626l-9 4.909-9-4.909z" /></svg>
+          {name}
+        </DraggableComponent>
       </span>
 
-      <DroppableComponent
+      {/* <DroppableComponent
         container={component}
+        className={cc([
+          style.container,
+          isInteractive && style.interactive,
+        ])}
+      > */}
+      <div
         className={cc([
           style.container,
           !!from && style.connectable,
@@ -206,25 +223,43 @@ export function ComponentRenderComponent({ component }: ComponentComponentProps)
                 }
               `}
             </style>
-            <RenderChildrenComponent
-              elements={root.children}
-              parent={root}
-            />
+            <RenderCssComponent id={id} style={shapeStyle} />
+            {createElement(
+              shapeStyle.type,
+              {
+                id,
+                onDoubleClick: canEdit
+                  ? (e: any) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    root.append(
+                      new ElementTextStore('text'),
+                    );
+                  }
+                  : undefined,
+              },
+              <RenderChildrenComponent
+                elements={root.children}
+                parent={root}
+              />,
+            )}
           </ElementContext.Provider>
         </ShadowView>
-      </DroppableComponent>
+      </div>
+      {/* </DroppableComponent> */}
     </>
   );
 }
 
-export function ComponentComponent({ component }: ComponentComponentProps) {
+export function ShapeComponent({ shape }: ShapeComponentProps) {
   const ref = useRef<HTMLDivElement>(null);
   const {
     x,
     y,
     width,
     height,
-  } = useStore(component.position);
+  } = useStore(shape.position);
   const { move } = store.activeProject!.activeSpace;
   const {
     selectedComponents,
@@ -233,11 +268,15 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
   } = useStore(move);
   const { isInteractive } = useStore(interactiveModeStore);
 
-  const isActive = selectedComponents.indexOf(component) > -1;
+  const isActive = selectedComponents.indexOf(shape) > -1;
+  const contextValue = useMemo(() => ({
+    canEdit: isActive,
+    variables: [],
+  }), [isActive]);
 
   useLayoutEffect(() => {
-    const unsubscribe = onAction(ComponentPositionSilentStore, 'moveTo', (instance) => {
-      if (instance !== component.position.silent) {
+    const unsubscribe = onAction(ShapePositionSilentStore, 'moveTo', (instance) => {
+      if (instance !== shape.position.silent) {
         return;
       }
 
@@ -256,6 +295,7 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
       role="button"
       className={cc([
         style.object,
+        style.shape,
         isActive && style.active,
       ])}
       onDoubleClick={(e) => {
@@ -270,7 +310,7 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
           return;
         }
 
-        selectComponent(component, e.shiftKey);
+        selectComponent(shape, e.shiftKey);
       }}
       onMouseDown={(e) => {
         // Stop bubbling to top canvas.
@@ -288,10 +328,6 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
           return;
         }
 
-        // if (selectedAll.length <= 1) {
-        //   selectComponent(component, e.shiftKey);
-        // }
-
         startMouseMove(e.pageX, e.pageY);
       }}
       style={{
@@ -301,7 +337,11 @@ export function ComponentComponent({ component }: ComponentComponentProps) {
       }}
       tabIndex={0}
     >
-      <ComponentRenderComponent component={component} />
+      <ElementContext.Provider
+        value={contextValue}
+      >
+        <ShapeRenderComponent shape={shape} />
+      </ElementContext.Provider>
       {isActive && (
         <div className={style.dimensions}>
           {width}

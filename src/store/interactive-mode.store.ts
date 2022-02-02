@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-constructor */
 import { Exome } from 'exome';
+import { useStore } from 'exome/react';
 import { BehaviorSubject, filter, Subject } from 'rxjs';
 
 import { ElementStore } from './element.store';
@@ -49,7 +50,9 @@ export const InteractiveEventType = {
 } as const;
 
 export function useInteractiveEvents(element: ElementStore): React.HTMLAttributes<HTMLDivElement> {
-  if (!interactiveModeStore.isInteractive) {
+  const { isInteractive, dispatch } = useStore(interactiveModeStore);
+
+  if (!isInteractive) {
     return {};
   }
 
@@ -64,7 +67,7 @@ export function useInteractiveEvents(element: ElementStore): React.HTMLAttribute
         e.nativeEvent,
       );
 
-      interactiveModeStore.dispatch(interactiveEvent);
+      dispatch(interactiveEvent);
     },
     onMouseDown: (e) => {
       e.preventDefault();
@@ -76,7 +79,7 @@ export function useInteractiveEvents(element: ElementStore): React.HTMLAttribute
         e.nativeEvent,
       );
 
-      interactiveModeStore.dispatch(interactiveEvent);
+      dispatch(interactiveEvent);
     },
     onMouseUp: (e) => {
       e.preventDefault();
@@ -88,7 +91,7 @@ export function useInteractiveEvents(element: ElementStore): React.HTMLAttribute
         e.nativeEvent,
       );
 
-      interactiveModeStore.dispatch(interactiveEvent);
+      dispatch(interactiveEvent);
     },
     onMouseOver: (e) => {
       e.preventDefault();
@@ -100,7 +103,7 @@ export function useInteractiveEvents(element: ElementStore): React.HTMLAttribute
         e.nativeEvent,
       );
 
-      interactiveModeStore.dispatch(interactiveEvent);
+      dispatch(interactiveEvent);
     },
     onMouseOut: (e) => {
       e.preventDefault();
@@ -112,7 +115,7 @@ export function useInteractiveEvents(element: ElementStore): React.HTMLAttribute
         e.nativeEvent,
       );
 
-      interactiveModeStore.dispatch(interactiveEvent);
+      dispatch(interactiveEvent);
     },
   };
 }

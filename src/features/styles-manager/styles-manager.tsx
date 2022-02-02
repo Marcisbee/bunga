@@ -11,12 +11,22 @@ import style from './styles-manager.module.scss';
 
 function ActiveStylesComponent({ active }: { active: StyleStore }) {
   const {
+    type,
     css,
+    setType,
     setCss,
   } = useStore(active);
 
   return (
     <div>
+      <input
+        style={{ width: '100%' }}
+        type="text"
+        value={type}
+        onChange={(e) => {
+          setType(e.target.value);
+        }}
+      />
       <textarea
         style={{ width: '100%', resize: 'vertical' }}
         rows={10}
@@ -35,6 +45,8 @@ function ListStylesComponent({
 }: { activeStyle: ActiveStyleStore, styleStore: StyleStore }) {
   const { active, setActive } = useStore(activeStyle);
   const { name, setName } = useStore(styleStore);
+  const { activeSpace } = useStore(store.activeProject!);
+  const { addShape } = useStore(activeSpace);
 
   const [isRenameMode, setIsRenameMode] = useState(false);
 
@@ -55,6 +67,16 @@ function ListStylesComponent({
       }}
       onDoubleClick={() => setIsRenameMode(true)}
     >
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+
+          addShape(styleStore, `Shape ${name}`);
+        }}
+      >
+        USE
+      </button>
       <span className={style.itemName}>
         {isRenameMode ? (
           <input

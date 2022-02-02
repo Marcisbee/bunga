@@ -7,11 +7,11 @@ import {
 } from '../graphql';
 import { permalink } from '../utils/permalink';
 
+import { ComponentStore } from './component.store';
 import { Connection } from './edges/connection';
-import { ElementTextEdge } from './edges/element/element-text.edge';
-import { ElementEdge } from './edges/element/element.edge';
 import { ElementTextStore } from './element-text.store';
 import { ElementStore } from './element.store';
+import { ShapeStore } from './shape.store';
 import { SpaceStore } from './space.store';
 import {
   APISpace,
@@ -29,10 +29,6 @@ export class ProjectStore extends Exome {
   public activeSpace: SpaceStore;
 
   public activeStyle = new ActiveStyleStore();
-
-  public customBlockElements: ElementEdge[] = [];
-
-  public customTextElements: ElementTextEdge[] = [];
 
   constructor(
     public id: string,
@@ -118,7 +114,7 @@ export class ProjectStore extends Exome {
 
     const name = `Style ${this.styles.length + 1}`;
 
-    const style = new StyleStore(name, undefined, nanoid(20));
+    const style = new StyleStore(name);
 
     this.styles.push(style);
     this.activeStyle.setActive(style);
@@ -143,9 +139,15 @@ export class ProjectStore extends Exome {
     }
 
     const stylesData = this.styles
-      .map(({ id: itemId, name, css }) => ({
+      .map(({
         id: itemId,
         name,
+        type,
+        css,
+      }) => ({
+        id: itemId,
+        name,
+        type,
         style: css,
       } as APIStyle));
 
@@ -183,14 +185,6 @@ export class ProjectStore extends Exome {
               return;
             }
 
-            if (data instanceof StyleStore) {
-              output.input[key] = {
-                type: 'style',
-                id: data.id,
-              };
-              return;
-            }
-
             output.input[key] = {
               type: 'value',
               value: data,
@@ -204,7 +198,7 @@ export class ProjectStore extends Exome {
             child: ElementStore | ElementTextStore,
           ): APISpaceElementTypes {
             if (child instanceof ElementStore) {
-              if (child.type instanceof ElementEdge) {
+              if (child.type instanceof ShapeStore || child.type instanceof ComponentStore) {
                 return {
                   type: 'element',
                   ref: child.type.id,
@@ -222,13 +216,6 @@ export class ProjectStore extends Exome {
             }
 
             if (child instanceof ElementTextStore) {
-              if (child.text instanceof ElementTextEdge) {
-                return {
-                  type: 'text',
-                  ref: child.text.id,
-                };
-              }
-
               return {
                 type: 'text',
                 text: child.text,
@@ -241,10 +228,22 @@ export class ProjectStore extends Exome {
             };
           }
 
+          let type!: APISpaceComponent['type'];
+
+          if (component instanceof ShapeStore) {
+            type = 'shape';
+          }
+
+          if (component instanceof ComponentStore) {
+            type = 'component';
+          }
+
           const output: APISpaceComponent = {
             id: component.id,
+            type,
             name: component.name,
             children: component.root.children.map(buildChildrenList),
+            style: (type === 'shape') ? (component as ShapeStore).style.id : (undefined as any),
             position: {
               x: component.position.x,
               y: component.position.y,

@@ -1,7 +1,8 @@
 import { Exome, registerLoadable } from 'exome';
 
-import { ElementEdge } from './edges/element/element.edge';
+import { ComponentStore } from './component.store';
 import { ElementTextStore } from './element-text.store';
+import { ShapeStore } from './shape.store';
 // import { undoable } from './undo.store';
 
 export class ActiveElementStore extends Exome {
@@ -13,16 +14,12 @@ export class ActiveElementStore extends Exome {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class ElementStore<T extends Record<string, any> = Record<string, any>> extends Exome {
-  // public getPosition = () => ({
-  //   x: 0,
-  //   y: 0,
-  //   width: 0,
-  //   height: 0,
-  // });
-
+export class ElementStore<
+  T extends Record<string, any> = Record<string, any>,
+  TYPE = string | ShapeStore | ComponentStore
+> extends Exome {
   constructor(
-    public type: string | ElementEdge,
+    public type: TYPE,
     public props: T = {} as T,
     public children: (ElementStore | ElementTextStore)[] = [],
   ) {
