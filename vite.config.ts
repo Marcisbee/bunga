@@ -17,7 +17,11 @@ export default defineConfig(async ({ command }) => {
     };
   }
 
-  const { visualizer } = await import('rollup-plugin-visualizer');
+  let visualizer: any;
+
+  if (process.env.EXPLORE) {
+    visualizer = (await import('rollup-plugin-visualizer')).visualizer;
+  }
 
   return {
     plugins: [
