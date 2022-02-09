@@ -1,9 +1,8 @@
 import react from '@vitejs/plugin-react';
-import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command }) => {
+export default defineConfig(async ({ command }) => {
   if (command === 'serve') {
     return {
       plugins: [
@@ -17,6 +16,8 @@ export default defineConfig(({ command }) => {
       ],
     };
   }
+
+  const { visualizer } = await import('rollup-plugin-visualizer');
 
   return {
     plugins: [
