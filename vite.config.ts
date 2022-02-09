@@ -29,9 +29,6 @@ export default defineConfig(({ command }) => {
       }),
       process.env.EXPLORE && visualizer(),
     ],
-    build: {
-      minify: 'esbuild',
-    },
     resolve: {
       alias: {
         react: 'preact/compat',
